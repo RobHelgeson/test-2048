@@ -7,6 +7,16 @@
     "playwright": {
       "command": "npx",
       "args": ["@playwright/mcp@latest"]
+    },
+    "shrimp-task-manager": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["mcp-shrimp-task-manager"],
+      "env": {
+        "ENABLE_GUI": "true",
+        "WEB_PORT": "4400",
+        "DATA_DIR": "/Users/rvh/Documents/Code/test-2048/.shrimp/data"
+      }
     }
   }
 }

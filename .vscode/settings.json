@@ -4,5 +4,16 @@
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   },
-  "cSpell.words": ["rgba", "WCAG", "Wireframes"]
+  "cSpell.words": [
+    "AUTOINCREMENT",
+    "bmad",
+    "bridgeless",
+    "Contentful",
+    "prebuild",
+    "rgba",
+    "WCAG",
+    "Wireframes",
+    "worklet",
+    "worklets"
+  ]
 }
