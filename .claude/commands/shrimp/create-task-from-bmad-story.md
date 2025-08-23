@@ -21,7 +21,7 @@ The user has supplied the story number $ARGUMENTS.
    - `relatedFiles` = []
    - `verificationCriteria` =
      ```
-     The Status of `docs/stories/{story number}-story.md is Complete.
+     The Status of `docs/stories/{story number}-story.md` is Complete.
      ```
 3. If this is not the first story of the epic, use shrimp to make the story's task depend on the prior story in the epic.
 4. Use Shrimp to make this story's task depend on the `Starting Epic {number} {description}` task for this story's epic
