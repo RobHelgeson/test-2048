@@ -14,9 +14,9 @@ The user has supplied the story number $ARGUMENTS.
 2. Set the properties of the task
    - `implementationGuide` =
      ```
-     1. Use a sub‑agent to load the BMAD-sm-draft agent, pass 'story {story number}' as arguments.
-     2. Use a sub‑agent to load the BMAD-dev-develop-story agent, pass 'story {story number}' as arguments.
-     3. Use a sub‑agent to load the BMAD-qa-review agent, pass 'story {story number}' as arguments.
+     1. Use a sub‑agent to load the bmad-sm-draft agent, pass 'story {story number}' as arguments.
+     2. Use a sub‑agent to load the bmad-dev-develop-story agent, pass 'story {story number}' as arguments.
+     3. Use a sub‑agent to load the bmad-qa-review agent, pass 'story {story number}' as arguments.
      ```
    - `relatedFiles` = []
    - `verificationCriteria` =
