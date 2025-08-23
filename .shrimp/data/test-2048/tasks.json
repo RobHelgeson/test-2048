@@ -32,7 +32,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:43:49.319Z",
-      "updatedAt": "2025-08-23T18:43:49.319Z",
+      "updatedAt": "2025-08-23T19:20:43.763Z",
       "relatedFiles": [
         {
           "path": ".",
@@ -75,7 +75,7 @@
           "description": "Static assets directory"
         }
       ],
-      "implementationGuide": "1. Initialize Expo project with SDK 50+ using TypeScript template\n2. Configure development environment with Expo Dev Client\n3. Set up TypeScript with expo/tsconfig.base and strict mode\n4. Configure ESLint and Prettier for React Native/TypeScript\n5. Establish recommended Expo folder structure (app/, components/, lib/, assets/)\n6. Initialize Git repository with conventional commit standards\n7. Verify hot reload and TypeScript error checking functionality",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 1.1' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 1.1' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 1.1' as arguments.",
       "verificationCriteria": "Expo project initializes successfully, TypeScript compiles without errors, linting passes, hot reload works, and project follows Expo recommended structure",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -91,7 +91,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:43:49.319Z",
-      "updatedAt": "2025-08-23T18:43:49.319Z",
+      "updatedAt": "2025-08-23T19:20:48.703Z",
       "relatedFiles": [
         {
           "path": "eas.json",
@@ -109,7 +109,7 @@
           "description": "Build process documentation"
         }
       ],
-      "implementationGuide": "1. Install and configure EAS CLI with proper credentials\n2. Create eas.json with build profiles for all platforms\n3. Configure app.config.ts with bundle identifiers and platform settings\n4. Set up build profiles for development, preview, and production\n5. Integrate Expo Updates infrastructure\n6. Test build process for all platforms and verify artifacts\n7. Document build process and configuration decisions",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 1.2' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 1.2' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 1.2' as arguments.",
       "verificationCriteria": "Development builds complete successfully for iOS, Android, and web; build artifacts are downloadable and installable; Expo Updates works correctly",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -125,7 +125,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:43:49.319Z",
-      "updatedAt": "2025-08-23T18:43:49.319Z",
+      "updatedAt": "2025-08-23T19:20:54.546Z",
       "relatedFiles": [
         {
           "path": "app/_layout.tsx",
@@ -148,7 +148,7 @@
           "description": "Settings screen placeholder"
         }
       ],
-      "implementationGuide": "1. Install and configure Expo Router with file-based routing\n2. Create root layout (_layout.tsx) with error boundaries\n3. Implement home screen and placeholder settings screen\n4. Ensure navigation works across iOS, Android, and web\n5. Configure deep linking functionality\n6. Implement platform-appropriate screen transitions\n7. Configure status bar for each platform per NFR12",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 1.3' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 1.3' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 1.3' as arguments.",
       "verificationCriteria": "File-based routing works correctly, navigation functions on all platforms, deep linking is testable, and screen transitions follow platform conventions",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -164,7 +164,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:43:49.319Z",
-      "updatedAt": "2025-08-23T18:43:49.319Z",
+      "updatedAt": "2025-08-23T19:19:01.932Z",
       "relatedFiles": [
         {
           "path": "jest.config.js",
@@ -182,7 +182,7 @@
           "description": "GitHub Actions CI setup"
         }
       ],
-      "implementationGuide": "1. Configure Jest for unit testing with TypeScript support\n2. Install and configure React Native Testing Library\n3. Add test scripts to package.json for different test types\n4. Write sample tests for basic navigation and utilities\n5. Set up testing utilities and custom matchers\n6. Configure test coverage reporting\n7. Prepare CI integration setup for GitHub Actions",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 1.4' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 1.4' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 1.4' as arguments.",
       "verificationCriteria": "Jest runs successfully, React Native Testing Library works, sample tests pass, coverage reporting functions, and CI pipeline is ready",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -198,7 +198,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:43:49.319Z",
-      "updatedAt": "2025-08-23T18:43:49.319Z",
+      "updatedAt": "2025-08-23T19:19:06.177Z",
       "relatedFiles": [
         {
           "path": "app/index.tsx",
@@ -211,7 +211,7 @@
           "description": "Deployment process documentation"
         }
       ],
-      "implementationGuide": "1. Create interactive Hello World screen with platform information\n2. Build and deploy to iOS simulator/device successfully\n3. Build and deploy to Android emulator/device successfully\n4. Build and deploy to web hosting (Vercel/Netlify)\n5. Demonstrate over-the-air update capability\n6. Establish performance baseline measurements\n7. Document complete deployment process for reference",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 1.5' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 1.5' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 1.5' as arguments.",
       "verificationCriteria": "App successfully deploys to all three platforms, OTA updates work, performance baselines are established, and deployment process is documented",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -292,7 +292,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:44:30.344Z",
-      "updatedAt": "2025-08-23T18:44:30.344Z",
+      "updatedAt": "2025-08-23T19:19:09.816Z",
       "relatedFiles": [
         {
           "path": "lib/types/",
@@ -310,7 +310,7 @@
           "description": "Board and tile interfaces"
         }
       ],
-      "implementationGuide": "1. Create GameState interface with board, score, gameStatus, and metadata\n2. Define Tile interface with position, value, and unique identifier\n3. Create Direction enum for game moves (UP, DOWN, LEFT, RIGHT)\n4. Define GameStatus enum for game states (PLAYING, WON, LOST)\n5. Implement Board utilities with 4x4 grid representation using typed arrays\n6. Create initial state factory function with type annotations\n7. Export all interfaces from lib/types with comprehensive JSDoc",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 2.1' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 2.1' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 2.1' as arguments.",
       "verificationCriteria": "All TypeScript interfaces compile without errors, JSDoc documentation is complete, and types provide full type safety for game logic",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -326,7 +326,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:44:30.344Z",
-      "updatedAt": "2025-08-23T18:44:30.344Z",
+      "updatedAt": "2025-08-23T19:19:13.410Z",
       "relatedFiles": [
         {
           "path": "lib/game/",
@@ -344,7 +344,7 @@
           "description": "Game utility functions"
         }
       ],
-      "implementationGuide": "1. Implement move function handling all four directions with tile sliding\n2. Create merge function combining tiles following 2048 rules\n3. Develop spawn function adding new tiles (90% chance of 2, 10% chance of 4)\n4. Implement win detection when 2048 tile is created\n5. Create game over detection when no valid moves remain\n6. Implement score calculation awarding points for merged tiles\n7. Ensure all functions are pure with comprehensive unit tests",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 2.2' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 2.2' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 2.2' as arguments.",
       "verificationCriteria": "All game functions work correctly, are pure with no side effects, and pass comprehensive unit tests covering all game scenarios",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -360,7 +360,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:44:30.344Z",
-      "updatedAt": "2025-08-23T18:44:30.344Z",
+      "updatedAt": "2025-08-23T19:19:17.044Z",
       "relatedFiles": [
         {
           "path": "lib/hooks/",
@@ -378,7 +378,7 @@
           "description": "Game state reducer"
         }
       ],
-      "implementationGuide": "1. Create useGame hook using useReducer for state management\n2. Implement game actions: startNewGame, makeMove, resetGame, continueAfterWin\n3. Return current game state and action dispatchers from hook\n4. Add move validation preventing invalid moves with user feedback\n5. Implement state persistence using AsyncStorage for game resume\n6. Handle all game state transitions following defined state machine\n7. Write comprehensive hook testing with React Testing Library",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 2.3' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 2.3' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 2.3' as arguments.",
       "verificationCriteria": "useGame hook manages state correctly, all actions work properly, state persists correctly, and comprehensive tests pass",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -394,7 +394,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:44:30.344Z",
-      "updatedAt": "2025-08-23T18:44:30.344Z",
+      "updatedAt": "2025-08-23T19:19:20.149Z",
       "relatedFiles": [
         {
           "path": "lib/hooks/useScore.ts",
@@ -412,7 +412,7 @@
           "description": "Score persistence logic"
         }
       ],
-      "implementationGuide": "1. Integrate score calculation logic with tile merging mechanics\n2. Implement high score tracking with AsyncStorage persistence\n3. Create useScore hook for score state management\n4. Add score animation states for UI feedback\n5. Implement score reset functionality tied to new game actions\n6. Add statistics tracking (games played, win rate, average score)\n7. Write comprehensive score logic testing with various scenarios",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 2.4' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 2.4' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 2.4' as arguments.",
       "verificationCriteria": "Score calculation is accurate, high scores persist correctly, statistics track properly, and score animations integrate with UI",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -428,7 +428,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:44:46.767Z",
-      "updatedAt": "2025-08-23T18:44:46.767Z",
+      "updatedAt": "2025-08-23T19:19:24.643Z",
       "relatedFiles": [
         {
           "path": "__tests__/game/",
@@ -446,7 +446,7 @@
           "description": "Performance testing"
         }
       ],
-      "implementationGuide": "1. Write end-to-end game scenarios testing (full game from start to win/loss)\n2. Test edge cases (full board, single tile moves, impossible moves)\n3. Verify score calculation across multiple game sessions\n4. Test state persistence with various game states\n5. Perform performance testing for game logic execution (under 100ms per move)\n6. Test randomness for tile spawning distribution verification\n7. Conduct memory leak testing for state management hooks",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 2.5' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 2.5' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 2.5' as arguments.",
       "verificationCriteria": "All integration tests pass, edge cases are handled correctly, performance meets requirements, and no memory leaks detected",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -527,7 +527,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:45:10.246Z",
-      "updatedAt": "2025-08-23T18:45:10.246Z",
+      "updatedAt": "2025-08-23T19:19:28.942Z",
       "relatedFiles": [
         {
           "path": "lib/theme/",
@@ -545,7 +545,7 @@
           "description": "Design token definitions"
         }
       ],
-      "implementationGuide": "1. Create theme context (useTheme hook) with Classic and Cool themes\n2. Define design tokens for colors, spacing, typography, dimensions (8pt grid)\n3. Implement theme switching with AsyncStorage persistence\n4. Define tile color progression for both themes (light to vibrant hierarchy)\n5. Add platform-appropriate styling considerations (iOS vs Android vs Web)\n6. Ensure WCAG AA color contrast compliance (4.5:1 minimum)\n7. Create theme preview functionality for settings integration",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 3.1' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 3.1' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 3.1' as arguments.",
       "verificationCriteria": "Theme system works correctly, design tokens are consistent, color contrast meets accessibility requirements, and theme switching persists properly",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -561,7 +561,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:45:25.572Z",
-      "updatedAt": "2025-08-23T18:45:25.572Z",
+      "updatedAt": "2025-08-23T19:19:33.499Z",
       "relatedFiles": [
         {
           "path": "components/game/",
@@ -574,7 +574,7 @@
           "description": "Main game board component"
         }
       ],
-      "implementationGuide": "1. Create GameBoard component using responsive grid layout\n2. Scale grid from small phones (375px) to tablets (768px+) per NFR9\n3. Add board background with subtle grid lines or tile placeholders\n4. Implement proper spacing and margins following design system\n5. Add platform-specific adaptations for safe areas and navigation\n6. Ensure full accessibility with screen reader support\n7. Test responsive behavior across different viewport sizes",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 3.2' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 3.2' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 3.2' as arguments.",
       "verificationCriteria": "Game board scales properly across device sizes, accessibility requirements met, and responsive behavior verified",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -590,7 +590,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:45:25.572Z",
-      "updatedAt": "2025-08-23T18:45:25.572Z",
+      "updatedAt": "2025-08-23T19:19:38.212Z",
       "relatedFiles": [
         {
           "path": "components/game/Tile.tsx",
@@ -603,7 +603,7 @@
           "description": "Tile color progression definitions"
         }
       ],
-      "implementationGuide": "1. Create Tile component with styling for different values (2, 4, 8, 16, etc.)\n2. Implement typography scaling for tile numbers with bold weights\n3. Create visual hierarchy through color progression and contrast\n4. Optimize tile size for touch targets (44x44pt iOS, 48x48dp Android)\n5. Ensure number visibility with high contrast text colors\n6. Add special styling for 2048 tile (victory state) with celebration treatment\n7. Test tile component with various values and theme combinations",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 3.3' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 3.3' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 3.3' as arguments.",
       "verificationCriteria": "Tiles display clearly with proper visual hierarchy, touch targets meet platform requirements, and all value ranges render correctly",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -619,7 +619,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:45:45.569Z",
-      "updatedAt": "2025-08-23T18:45:45.569Z",
+      "updatedAt": "2025-08-23T19:19:42.871Z",
       "relatedFiles": [
         {
           "path": "components/game/ScoreDisplay.tsx",
@@ -632,7 +632,7 @@
           "description": "Reusable button component"
         }
       ],
-      "implementationGuide": "1. Create score display component showing current and best scores\n2. Add game status indicators for playing, won, and game over states\n3. Place new game button prominently and make it easily accessible\n4. Add visual feedback for score changes and new best score achievements\n5. Implement responsive layout for both portrait and landscape orientations\n6. Apply platform-appropriate styling following iOS/Android/Web guidelines\n7. Test score display component with various score values and states",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 3.4' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 3.4' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 3.4' as arguments.",
       "verificationCriteria": "Score displays update correctly, game status is clear, new game button is accessible, and layout adapts to orientations",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -648,7 +648,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:45:45.569Z",
-      "updatedAt": "2025-08-23T18:45:45.569Z",
+      "updatedAt": "2025-08-23T19:19:47.724Z",
       "relatedFiles": [
         {
           "path": "app/(tabs)/index.tsx",
@@ -661,7 +661,7 @@
           "description": "Integrated game screen component"
         }
       ],
-      "implementationGuide": "1. Create main game screen combining board, tiles, scores, and controls\n2. Establish proper layout hierarchy with game board as focal point\n3. Implement visual state management reflecting current theme selection\n4. Create responsive layout adapting to different screen sizes and orientations\n5. Integrate with game logic hooks to display live game state\n6. Add visual polish with proper spacing, alignment, and visual balance\n7. Conduct complete integration testing ensuring all components work harmoniously",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 3.5' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 3.5' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 3.5' as arguments.",
       "verificationCriteria": "All UI components integrate seamlessly, game state displays correctly, responsive layout works, and visual polish is complete",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -737,7 +737,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:46:08.162Z",
-      "updatedAt": "2025-08-23T18:46:08.162Z",
+      "updatedAt": "2025-08-23T19:19:52.064Z",
       "relatedFiles": [
         {
           "path": "lib/gestures/",
@@ -755,7 +755,7 @@
           "description": "Gesture wrapper component"
         }
       ],
-      "implementationGuide": "1. Configure React Native Gesture Handler for swipe detection\n2. Implement four-directional swipe recognition (up, down, left, right)\n3. Set proper thresholds to prevent accidental moves with minimum distance requirements\n4. Ensure touch area covers entire game board for generous gesture zones\n5. Resolve gesture conflicts with proper priority handling\n6. Apply platform-specific gesture tuning for iOS vs Android feel\n7. Write comprehensive gesture testing with various swipe speeds and distances",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 4.1' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 4.1' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 4.1' as arguments.",
       "verificationCriteria": "Swipe gestures work reliably across devices, thresholds prevent accidental moves, and platform differences are handled appropriately",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -771,7 +771,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:46:23.416Z",
-      "updatedAt": "2025-08-23T18:46:23.416Z",
+      "updatedAt": "2025-08-23T19:19:56.462Z",
       "relatedFiles": [
         {
           "path": "lib/input/",
@@ -789,7 +789,7 @@
           "description": "Keyboard input hook"
         }
       ],
-      "implementationGuide": "1. Add arrow key event handling for directional moves\n2. Implement visual feedback showing key press states for web users\n3. Configure keyboard navigation accessibility with proper focus management\n4. Add key repeat prevention for rapid key presses\n5. Implement platform detection to enable keyboard controls only on web\n6. Add alternative key bindings (WASD) for different user preferences\n7. Test keyboard interaction across different browsers and operating systems",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 4.2' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 4.2' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 4.2' as arguments.",
       "verificationCriteria": "Arrow keys work correctly on web, visual feedback is clear, accessibility standards met, and cross-browser compatibility verified",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -805,7 +805,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:46:23.416Z",
-      "updatedAt": "2025-08-23T18:46:23.416Z",
+      "updatedAt": "2025-08-23T19:20:01.295Z",
       "relatedFiles": [
         {
           "path": "lib/animations/",
@@ -823,7 +823,7 @@
           "description": "Animated tile component"
         }
       ],
-      "implementationGuide": "1. Configure React Native Reanimated 3 for tile animations\n2. Create tile sliding animations with ~200ms duration for snappy feel\n3. Implement tile merge animations with ~100ms duration and visual effect\n4. Use animation timing functions providing satisfying, natural movement\n5. Handle complex scenarios (multiple merges, long slides)\n6. Optimize performance ensuring 60fps during animations per NFR1\n7. Test animation smoothness across all supported devices",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 4.3' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 4.3' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 4.3' as arguments.",
       "verificationCriteria": "Tile animations are smooth and natural, complex scenarios handled correctly, and 60fps performance maintained",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -839,7 +839,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:46:43.231Z",
-      "updatedAt": "2025-08-23T18:46:43.231Z",
+      "updatedAt": "2025-08-23T19:20:06.607Z",
       "relatedFiles": [
         {
           "path": "lib/haptics/",
@@ -857,7 +857,7 @@
           "description": "Haptic feedback hook"
         }
       ],
-      "implementationGuide": "1. Integrate Expo Haptics for mobile platforms (FR8)\n2. Add light haptic feedback for successful moves\n3. Implement medium haptic feedback for tile merges\n4. Add strong haptic feedback for game over and victory states\n5. Disable haptic feedback on web platform (visual feedback only)\n6. Prepare user preference for haptic on/off in settings (future integration point)\n7. Test haptic intensity on actual iOS and Android devices for appropriate feel",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 4.4' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 4.4' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 4.4' as arguments.",
       "verificationCriteria": "Haptic feedback feels appropriate on mobile devices, is disabled on web, and intensity levels are well-calibrated",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -873,7 +873,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:46:43.231Z",
-      "updatedAt": "2025-08-23T18:46:43.231Z",
+      "updatedAt": "2025-08-23T19:20:11.574Z",
       "relatedFiles": [
         {
           "path": "components/game/InteractiveGame.tsx",
@@ -886,7 +886,7 @@
           "description": "Interaction coordination utilities"
         }
       ],
-      "implementationGuide": "1. Integrate gesture, keyboard, and animation systems smoothly\n2. Prevent overlapping or conflicting interactions with proper input handling\n3. Manage animation state to prevent input during transitions\n4. Ensure platform-appropriate feedback (haptic on mobile, visual on web)\n5. Optimize performance maintaining responsive feel during complex interactions\n6. Handle error states gracefully (invalid moves, gesture failures)\n7. Conduct complete interaction testing across all platforms with various input combinations",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 4.5' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 4.5' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 4.5' as arguments.",
       "verificationCriteria": "All interaction systems work together seamlessly, performance is optimal, and error handling is robust",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -962,7 +962,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:47:08.796Z",
-      "updatedAt": "2025-08-23T18:47:08.796Z",
+      "updatedAt": "2025-08-23T19:20:17.114Z",
       "relatedFiles": [
         {
           "path": "app/tutorial.tsx",
@@ -980,7 +980,7 @@
           "description": "Tutorial completion tracking"
         }
       ],
-      "implementationGuide": "1. Create tutorial screen with interactive swipe gesture demonstration (FR13)\n2. Add step-by-step explanation of game rules (movement, merging, scoring)\n3. Implement practice mode allowing players to try gestures with guidance\n4. Add tutorial completion tracking with AsyncStorage (skip on subsequent launches)\n5. Ensure tutorial accessibility with screen reader support and clear visual cues\n6. Use platform-appropriate tutorial presentation (modal on mobile, overlay on web)\n7. Test tutorial to ensure clear comprehension of game mechanics",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 5.1' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 5.1' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 5.1' as arguments.",
       "verificationCriteria": "Tutorial effectively teaches game mechanics, accessibility requirements met, and completion tracking works correctly",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -996,7 +996,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:47:24.708Z",
-      "updatedAt": "2025-08-23T18:47:24.708Z",
+      "updatedAt": "2025-08-23T19:20:21.355Z",
       "relatedFiles": [
         {
           "path": "components/game/GameOver.tsx",
@@ -1014,7 +1014,7 @@
           "description": "Victory celebration animations"
         }
       ],
-      "implementationGuide": "1. Create game over overlay displaying final score and performance feedback\n2. Implement victory screen with celebration animation when reaching 2048 tile (FR4)\n3. Add continue playing option after victory for higher score attempts\n4. Display new game and restart options prominently\n5. Show score comparison with previous best score and progress indicators\n6. Create smooth transitions between game states with proper animation\n7. Test game end screen with various score scenarios and outcomes",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 5.2' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 5.2' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 5.2' as arguments.",
       "verificationCriteria": "Game end screens provide clear feedback, victory celebration is satisfying, and transition animations are smooth",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -1030,7 +1030,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:47:24.708Z",
-      "updatedAt": "2025-08-23T18:47:24.708Z",
+      "updatedAt": "2025-08-23T19:20:26.656Z",
       "relatedFiles": [
         {
           "path": "app/(tabs)/settings.tsx",
@@ -1048,7 +1048,7 @@
           "description": "Settings persistence logic"
         }
       ],
-      "implementationGuide": "1. Create settings screen accessible through navigation with theme selector (FR14)\n2. Implement theme switching between Classic and Cool with live preview\n3. Add haptic feedback toggle for mobile devices with immediate testing capability\n4. Include about section with game information and development credits\n5. Ensure settings persistence using AsyncStorage with proper error handling\n6. Use platform-appropriate settings presentation (navigation screen on mobile, menu on web)\n7. Test settings functionality across all platforms and preferences",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 5.3' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 5.3' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 5.3' as arguments.",
       "verificationCriteria": "Settings work correctly, preferences persist properly, and interface is accessible across platforms",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -1064,7 +1064,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:47:44.737Z",
-      "updatedAt": "2025-08-23T18:47:44.737Z",
+      "updatedAt": "2025-08-23T19:20:33.432Z",
       "relatedFiles": [
         {
           "path": "app/_layout.tsx",
@@ -1082,7 +1082,7 @@
           "description": "Navigation utilities and deep linking"
         }
       ],
-      "implementationGuide": "1. Configure Expo Router navigation for all app screens\n2. Ensure navigation transitions follow platform conventions and feel natural\n3. Handle back navigation with proper state management\n4. Add deep linking support for direct access to different app sections\n5. Implement navigation accessibility with proper focus management and screen reader support\n6. Use platform-specific navigation patterns (tabs on mobile, menu on web)\n7. Test navigation ensuring smooth flow between all app sections",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 5.4' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 5.4' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 5.4' as arguments.",
       "verificationCriteria": "Navigation works smoothly between screens, deep linking functions, and accessibility requirements met",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
@@ -1098,7 +1098,7 @@
         }
       ],
       "createdAt": "2025-08-23T18:47:44.737Z",
-      "updatedAt": "2025-08-23T18:47:44.737Z",
+      "updatedAt": "2025-08-23T19:20:38.667Z",
       "relatedFiles": [
         {
           "path": "docs/testing/",
@@ -1111,7 +1111,7 @@
           "description": "Deployment verification checklist"
         }
       ],
-      "implementationGuide": "1. Run final integration testing across all platforms and features\n2. Perform performance optimization ensuring smooth experience on minimum supported devices\n3. Conduct accessibility audit confirming WCAG AA compliance across all screens\n4. Execute user acceptance testing with real players to validate usability\n5. Implement error handling and edge case management throughout the application\n6. Complete final deployment verification with production builds and OTA update testing\n7. Prepare application for app store submission with all requirements met",
+      "implementationGuide": "1. Use a sub-agent to load the BMAD-sm-draft agent, pass 'story 5.5' as arguments.\n2. Use a sub-agent to load the BMAD-dev-develop-story agent, pass 'story 5.5' as arguments.\n3. Use a sub-agent to load the BMAD-qa-review agent, pass 'story 5.5' as arguments.",
       "verificationCriteria": "Application meets all quality standards, passes all tests, and is ready for app store submission",
       "analysisResult": "Build a complete cross-platform 2048 game using Expo and React Native with TypeScript, following BMAD methodology with 5 epics covering foundation, game logic, UI design, interactions, and user experience."
     },
