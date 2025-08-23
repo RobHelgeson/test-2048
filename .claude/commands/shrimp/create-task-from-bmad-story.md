@@ -9,18 +9,20 @@ Shrimp Task Manager is tool you have access to use. Sometimes it will be referre
 The user has supplied the story number $ARGUMENTS.
 
 1. Determine if there already is a task for this story
-   - If so, use Shrimp to set the implementationGuide for the task:
-   ```
-   1. Use a sub‑agent to load the BMAD-sm-draft agent, pass 'story {story number}' as arguments.
-   2. Use a sub‑agent to load the BMAD-dev-develop-story agent, pass 'story {story number}' as arguments.
-   3. Use a sub‑agent to load the BMAD-qa-review agent, pass 'story {story number}' as arguments.
-   ```
-2. Create a task for this story. The implementationGuide of this task is:
-   ```
-   1. Use a sub‑agent to load the BMAD-sm-draft agent, pass 'story {story number}' as arguments.
-   2. Use a sub‑agent to load the BMAD-dev-develop-story agent, pass 'story {story number}' as arguments.
-   3. Use a sub‑agent to load the BMAD-qa-review agent, pass 'story {story number}' as arguments.
-   ```
+   - If so, AND the status of the existing task is NOT "pending", return without following the rest of these directions.
+   - If not, create a task for this story
+2. Set the properties of the task
+   - `implementationGuide` =
+     ```
+     1. Use a sub‑agent to load the bmad-sm-draft agent, pass 'story {story number}' as arguments.
+     2. Use a sub‑agent to load the bmad-dev-develop-story agent, pass 'story {story number}' as arguments.
+     3. Use a sub‑agent to load the bmad-qa-review agent, pass 'story {story number}' as arguments.
+     ```
+   - `relatedFiles` = []
+   - `verificationCriteria` =
+     ```
+     The Status of `docs/stories/{story number}-story.md` is Complete.
+     ```
 3. If this is not the first story of the epic, use shrimp to make the story's task depend on the prior story in the epic.
 4. Use Shrimp to make this story's task depend on the `Starting Epic {number} {description}` task for this story's epic
 5. Use Shrimp to make the `Completing Epic {number} {description}` task for this story's epic depend on this story's task
