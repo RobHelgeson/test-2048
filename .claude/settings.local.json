@@ -1,11 +1,6 @@
 {
   "permissions": {
-    "allow": [
-      "mcp__context7",
-      "mcp__playwright",
-      "mcp__shrimp-task-manager",
-      "WebSearch"
-    ]
+    "allow": ["mcp__context7", "mcp__playwright", "mcp__shrimp-task-manager", "WebSearch"]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": ["context7", "playwright", "shrimp-task-manager"]

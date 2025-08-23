@@ -1046,7 +1046,7 @@ export const useGameStore = create<GameState & GameActions>()((set, get) => ({
   isAnimating: false,
 
   // Actions
-  makeMove: (direction) => {
+  makeMove: direction => {
     const currentState = get();
     if (currentState.isAnimating) return;
 
@@ -1079,24 +1079,22 @@ interface ThemeActions {
   toggleTheme: () => void;
 }
 
-export const useThemeStore = create<ThemeState & ThemeActions>()(
-  (set, get) => ({
-    currentTheme: 'classic',
-    colors: classicTheme,
-    isDark: false,
+export const useThemeStore = create<ThemeState & ThemeActions>()((set, get) => ({
+  currentTheme: 'classic',
+  colors: classicTheme,
+  isDark: false,
 
-    setTheme: (theme) => {
-      const colors = getThemeColors(theme);
-      set({ currentTheme: theme, colors, isDark: theme.includes('dark') });
-    },
+  setTheme: theme => {
+    const colors = getThemeColors(theme);
+    set({ currentTheme: theme, colors, isDark: theme.includes('dark') });
+  },
 
-    toggleTheme: () => {
-      const current = get().currentTheme;
-      const newTheme = current === 'classic' ? 'cool' : 'classic';
-      get().setTheme(newTheme);
-    },
-  })
-);
+  toggleTheme: () => {
+    const current = get().currentTheme;
+    const newTheme = current === 'classic' ? 'cool' : 'classic';
+    get().setTheme(newTheme);
+  },
+}));
 ```
 
 #### State Management Patterns
@@ -1237,7 +1235,7 @@ class GameEngineService {
   }
 
   checkWinCondition(board: Board): boolean {
-    return board.some((row) => row.some((tile) => tile && tile.value >= 2048));
+    return board.some(row => row.some(tile => tile && tile.value >= 2048));
   }
 
   checkLoseCondition(board: Board): boolean {
@@ -1247,12 +1245,8 @@ class GameEngineService {
 
 // Animation Service - Reanimated 3 integration
 class AnimationService {
-  animateTileMovement(
-    tileId: string,
-    fromPosition: Position,
-    toPosition: Position
-  ): Promise<void> {
-    return new Promise((resolve) => {
+  animateTileMovement(tileId: string, fromPosition: Position, toPosition: Position): Promise<void> {
+    return new Promise(resolve => {
       const translateX = useSharedValue(fromPosition.x);
       const translateY = useSharedValue(fromPosition.y);
 
@@ -1265,7 +1259,7 @@ class AnimationService {
   }
 
   animateTileMerge(tiles: Tile[]): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const scale = useSharedValue(1);
 
       scale.value = withSequence(
@@ -2051,12 +2045,9 @@ class AnimationOptimizer {
     // Reduce animation complexity during rapid moves
   }
 
-  static createPerformantTileAnimation(
-    from: Position,
-    to: Position
-  ): Promise<void> {
+  static createPerformantTileAnimation(from: Position, to: Position): Promise<void> {
     'worklet';
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       runOnUI(() => {
         // Animation runs on UI thread for 60fps performance
         const translateX = withSpring(to.x, this.SPRING_CONFIG);
@@ -2085,11 +2076,7 @@ class DatabaseOptimizer {
       await this.executeBatched([
         {
           query: statement,
-          params: [
-            JSON.stringify(gameState.board),
-            gameState.score,
-            Date.now(),
-          ],
+          params: [JSON.stringify(gameState.board), gameState.score, Date.now()],
         },
       ]);
     } catch (error) {
@@ -2165,7 +2152,7 @@ class PerformanceMonitor {
   }
 
   static getAverageMetric(name: string): number {
-    const relevant = this.metrics.filter((m) => m.name === name);
+    const relevant = this.metrics.filter(m => m.name === name);
     if (relevant.length === 0) return 0;
 
     const sum = relevant.reduce((acc, m) => acc + m.value, 0);
@@ -2183,8 +2170,7 @@ const PERFORMANCE_BUDGETS = {
 
 class PerformanceAlerts {
   static checkBudgets(): void {
-    const moveDuration =
-      PerformanceMonitor.getAverageMetric('game_move_duration');
+    const moveDuration = PerformanceMonitor.getAverageMetric('game_move_duration');
     if (moveDuration > PERFORMANCE_BUDGETS.MAX_MOVE_DURATION) {
       console.warn(`Game move duration exceeded budget: ${moveDuration}ms`);
     }
@@ -2403,30 +2389,10 @@ describe('GameEngine', () => {
 
     it('should not move when no valid moves available', () => {
       const board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(2, 0, 2),
-          createTile(4, 0, 3),
-        ],
-        [
-          createTile(4, 1, 0),
-          createTile(2, 1, 1),
-          createTile(4, 1, 2),
-          createTile(2, 1, 3),
-        ],
-        [
-          createTile(2, 2, 0),
-          createTile(4, 2, 1),
-          createTile(2, 2, 2),
-          createTile(4, 2, 3),
-        ],
-        [
-          createTile(4, 3, 0),
-          createTile(2, 3, 1),
-          createTile(4, 3, 2),
-          createTile(2, 3, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(2, 0, 2), createTile(4, 0, 3)],
+        [createTile(4, 1, 0), createTile(2, 1, 1), createTile(4, 1, 2), createTile(2, 1, 3)],
+        [createTile(2, 2, 0), createTile(4, 2, 1), createTile(2, 2, 2), createTile(4, 2, 3)],
+        [createTile(4, 3, 0), createTile(2, 3, 1), createTile(4, 3, 2), createTile(2, 3, 3)],
       ];
 
       const result = gameEngine.makeMove(board, 'right');
@@ -3378,9 +3344,7 @@ class StorageService {
         }
 
         // Wait before retrying with exponential backoff
-        await new Promise((resolve) =>
-          setTimeout(resolve, delay * Math.pow(2, attempt - 1))
-        );
+        await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, attempt - 1)));
       }
     }
 
@@ -3466,10 +3430,10 @@ class GameEngine {
     }
 
     return board.every(
-      (row) =>
+      row =>
         Array.isArray(row) &&
         row.length === 4 &&
-        row.every((tile) => tile === null || this.validateTile(tile))
+        row.every(tile => tile === null || this.validateTile(tile))
     );
   }
 
@@ -3513,14 +3477,12 @@ class GameEngine {
 **Frontend Performance Metrics:**
 
 - **Core Web Vitals (Web Platform):**
-
   - First Contentful Paint (FCP) < 1.5 seconds
   - Largest Contentful Paint (LCP) < 2.5 seconds
   - Cumulative Layout Shift (CLS) < 0.1
   - First Input Delay (FID) < 100ms
 
 - **Mobile App Performance:**
-
   - App launch time < 3 seconds cold start
   - Game move response time < 16ms (60fps requirement)
   - Memory usage < 100MB peak consumption
@@ -3535,7 +3497,6 @@ class GameEngine {
 **User Experience Metrics:**
 
 - **Engagement Metrics:**
-
   - Session duration
   - Games completed per session
   - Feature usage (settings, themes)
@@ -3634,9 +3595,7 @@ class PerformanceMonitor {
 
       // Alert if database operation is slow
       if (duration > 100) {
-        console.warn(
-          `Slow database operation: ${duration}ms for ${operationType}`
-        );
+        console.warn(`Slow database operation: ${duration}ms for ${operationType}`);
       }
 
       return result;
@@ -3674,9 +3633,7 @@ class PerformanceMonitor {
       return null;
     }
 
-    const durations = metrics
-      .filter((m) => typeof m.duration === 'number')
-      .map((m) => m.duration);
+    const durations = metrics.filter(m => typeof m.duration === 'number').map(m => m.duration);
 
     if (durations.length === 0) {
       return null;
@@ -3692,8 +3649,7 @@ class PerformanceMonitor {
       p99: sorted[Math.floor(sorted.length * 0.99)],
       min: sorted[0],
       max: sorted[sorted.length - 1],
-      successRate:
-        metrics.filter((m) => m.success !== false).length / metrics.length,
+      successRate: metrics.filter(m => m.success !== false).length / metrics.length,
     };
   }
 
@@ -3746,11 +3702,7 @@ class PerformanceMonitor {
       alerts.push({
         type: 'MEMORY',
         severity: 'MEDIUM',
-        message: `High memory usage detected (${(
-          memoryUsage /
-          1024 /
-          1024
-        ).toFixed(2)}MB)`,
+        message: `High memory usage detected (${(memoryUsage / 1024 / 1024).toFixed(2)}MB)`,
         metric: 'memory_usage',
         threshold: 100 * 1024 * 1024,
         actual: memoryUsage,
@@ -3872,10 +3824,10 @@ class HealthMonitor {
   }
 
   private calculateOverallHealth(results: HealthCheckResult[]): HealthStatus {
-    if (results.some((r) => r.status === 'ERROR')) {
+    if (results.some(r => r.status === 'ERROR')) {
       return 'ERROR';
     }
-    if (results.some((r) => r.status === 'UNHEALTHY')) {
+    if (results.some(r => r.status === 'UNHEALTHY')) {
       return 'UNHEALTHY';
     }
     return 'HEALTHY';
@@ -3945,8 +3897,7 @@ const gameStateHealthCheck: HealthCheckFunction = async () => {
 
 const memoryHealthCheck: HealthCheckFunction = async () => {
   try {
-    const memoryUsage =
-      'memory' in performance ? (performance as any).memory.usedJSHeapSize : 0;
+    const memoryUsage = 'memory' in performance ? (performance as any).memory.usedJSHeapSize : 0;
 
     const memoryMB = memoryUsage / 1024 / 1024;
     const healthy = memoryMB < 100; // 100MB threshold
@@ -4042,8 +3993,7 @@ class DevMonitor {
 
     // Log performance summary
     setInterval(() => {
-      const gameStats =
-        this.performanceMonitor.getPerformanceStats('game_move');
+      const gameStats = this.performanceMonitor.getPerformanceStats('game_move');
       if (gameStats) {
         console.info('Game Performance Summary:', {
           averageMoveTime: `${gameStats.average.toFixed(2)}ms`,

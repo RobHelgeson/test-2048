@@ -191,30 +191,10 @@ describe('GameEngine', () => {
 
     it('should not move when no valid moves available', () => {
       const board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(2, 0, 2),
-          createTile(4, 0, 3),
-        ],
-        [
-          createTile(4, 1, 0),
-          createTile(2, 1, 1),
-          createTile(4, 1, 2),
-          createTile(2, 1, 3),
-        ],
-        [
-          createTile(2, 2, 0),
-          createTile(4, 2, 1),
-          createTile(2, 2, 2),
-          createTile(4, 2, 3),
-        ],
-        [
-          createTile(4, 3, 0),
-          createTile(2, 3, 1),
-          createTile(4, 3, 2),
-          createTile(2, 3, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(2, 0, 2), createTile(4, 0, 3)],
+        [createTile(4, 1, 0), createTile(2, 1, 1), createTile(4, 1, 2), createTile(2, 1, 3)],
+        [createTile(2, 2, 0), createTile(4, 2, 1), createTile(2, 2, 2), createTile(4, 2, 3)],
+        [createTile(4, 3, 0), createTile(2, 3, 1), createTile(4, 3, 2), createTile(2, 3, 3)],
       ];
 
       const result = gameEngine.makeMove(board, 'right');

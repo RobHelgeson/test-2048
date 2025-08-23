@@ -144,7 +144,7 @@ export const useGameStore = create<GameState & GameActions>()((set, get) => ({
   isAnimating: false,
 
   // Actions
-  makeMove: (direction) => {
+  makeMove: direction => {
     const currentState = get();
     if (currentState.isAnimating) return;
 
@@ -177,24 +177,22 @@ interface ThemeActions {
   toggleTheme: () => void;
 }
 
-export const useThemeStore = create<ThemeState & ThemeActions>()(
-  (set, get) => ({
-    currentTheme: 'classic',
-    colors: classicTheme,
-    isDark: false,
+export const useThemeStore = create<ThemeState & ThemeActions>()((set, get) => ({
+  currentTheme: 'classic',
+  colors: classicTheme,
+  isDark: false,
 
-    setTheme: (theme) => {
-      const colors = getThemeColors(theme);
-      set({ currentTheme: theme, colors, isDark: theme.includes('dark') });
-    },
+  setTheme: theme => {
+    const colors = getThemeColors(theme);
+    set({ currentTheme: theme, colors, isDark: theme.includes('dark') });
+  },
 
-    toggleTheme: () => {
-      const current = get().currentTheme;
-      const newTheme = current === 'classic' ? 'cool' : 'classic';
-      get().setTheme(newTheme);
-    },
-  })
-);
+  toggleTheme: () => {
+    const current = get().currentTheme;
+    const newTheme = current === 'classic' ? 'cool' : 'classic';
+    get().setTheme(newTheme);
+  },
+}));
 ```
 
 ### State Management Patterns
@@ -335,7 +333,7 @@ class GameEngineService {
   }
 
   checkWinCondition(board: Board): boolean {
-    return board.some((row) => row.some((tile) => tile && tile.value >= 2048));
+    return board.some(row => row.some(tile => tile && tile.value >= 2048));
   }
 
   checkLoseCondition(board: Board): boolean {
@@ -345,12 +343,8 @@ class GameEngineService {
 
 // Animation Service - Reanimated 3 integration
 class AnimationService {
-  animateTileMovement(
-    tileId: string,
-    fromPosition: Position,
-    toPosition: Position
-  ): Promise<void> {
-    return new Promise((resolve) => {
+  animateTileMovement(tileId: string, fromPosition: Position, toPosition: Position): Promise<void> {
+    return new Promise(resolve => {
       const translateX = useSharedValue(fromPosition.x);
       const translateY = useSharedValue(fromPosition.y);
 
@@ -363,7 +357,7 @@ class AnimationService {
   }
 
   animateTileMerge(tiles: Tile[]): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const scale = useSharedValue(1);
 
       scale.value = withSequence(

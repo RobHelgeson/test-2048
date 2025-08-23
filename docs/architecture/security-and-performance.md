@@ -146,12 +146,9 @@ class AnimationOptimizer {
     // Reduce animation complexity during rapid moves
   }
 
-  static createPerformantTileAnimation(
-    from: Position,
-    to: Position
-  ): Promise<void> {
+  static createPerformantTileAnimation(from: Position, to: Position): Promise<void> {
     'worklet';
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       runOnUI(() => {
         // Animation runs on UI thread for 60fps performance
         const translateX = withSpring(to.x, this.SPRING_CONFIG);
@@ -180,11 +177,7 @@ class DatabaseOptimizer {
       await this.executeBatched([
         {
           query: statement,
-          params: [
-            JSON.stringify(gameState.board),
-            gameState.score,
-            Date.now(),
-          ],
+          params: [JSON.stringify(gameState.board), gameState.score, Date.now()],
         },
       ]);
     } catch (error) {
@@ -260,7 +253,7 @@ class PerformanceMonitor {
   }
 
   static getAverageMetric(name: string): number {
-    const relevant = this.metrics.filter((m) => m.name === name);
+    const relevant = this.metrics.filter(m => m.name === name);
     if (relevant.length === 0) return 0;
 
     const sum = relevant.reduce((acc, m) => acc + m.value, 0);
@@ -278,8 +271,7 @@ const PERFORMANCE_BUDGETS = {
 
 class PerformanceAlerts {
   static checkBudgets(): void {
-    const moveDuration =
-      PerformanceMonitor.getAverageMetric('game_move_duration');
+    const moveDuration = PerformanceMonitor.getAverageMetric('game_move_duration');
     if (moveDuration > PERFORMANCE_BUDGETS.MAX_MOVE_DURATION) {
       console.warn(`Game move duration exceeded budget: ${moveDuration}ms`);
     }

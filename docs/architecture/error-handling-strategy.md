@@ -386,9 +386,7 @@ class StorageService {
         }
 
         // Wait before retrying with exponential backoff
-        await new Promise((resolve) =>
-          setTimeout(resolve, delay * Math.pow(2, attempt - 1))
-        );
+        await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, attempt - 1)));
       }
     }
 
@@ -474,10 +472,10 @@ class GameEngine {
     }
 
     return board.every(
-      (row) =>
+      row =>
         Array.isArray(row) &&
         row.length === 4 &&
-        row.every((tile) => tile === null || this.validateTile(tile))
+        row.every(tile => tile === null || this.validateTile(tile))
     );
   }
 
