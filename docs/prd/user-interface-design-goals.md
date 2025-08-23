@@ -29,6 +29,7 @@ The game will meet WCAG AA standards with proper color contrast ratios (4.5:1 mi
 ## Branding
 
 Clean, modern aesthetic with two selectable themes accessible from settings:
+
 - **Classic Theme:** Original 2048 color scheme with warm yellows/oranges progressing to reds
 - **Cool Theme:** Blue-Red-Purple gradient progression for a modern twist on the classic
 

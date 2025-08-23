@@ -9,6 +9,7 @@ I want to implement a comprehensive theme system with design tokens,
 so that I can support multiple color schemes and maintain consistent styling across all components.
 
 ### Acceptance Criteria
+
 1. Theme context (useTheme hook) with Classic and Cool theme definitions
 2. Design tokens for colors, spacing, typography, and dimensions following 8pt grid system
 3. Theme switching functionality with AsyncStorage persistence (FR14)
@@ -24,6 +25,7 @@ I want to create a responsive 4x4 game board that adapts to different screen siz
 so that I can provide optimal touch targets and visual layout across all devices.
 
 ### Acceptance Criteria
+
 1. GameBoard component using responsive grid layout with proper touch target sizing
 2. Grid scales appropriately from small phones (375px) to tablets (768px+) per NFR9
 3. Board background with subtle grid lines or tile placeholders
@@ -39,6 +41,7 @@ I want to create tile components that clearly display values with visual hierarc
 so that I can provide immediate visual feedback about game state and tile relationships.
 
 ### Acceptance Criteria
+
 1. Tile component with proper styling for different values (2, 4, 8, 16, etc.)
 2. Typography scaling for tile numbers with bold weights for readability
 3. Visual hierarchy through color progression and contrast in both themes
@@ -54,6 +57,7 @@ I want to display current score, best score, and game status prominently,
 so that I can provide clear feedback about player progress and game state.
 
 ### Acceptance Criteria
+
 1. Score display component showing current and best scores
 2. Game status indicators for playing, won, and game over states
 3. New game button prominently placed and easily accessible
@@ -69,6 +73,7 @@ I want to integrate all UI components into a cohesive game screen,
 so that I can deliver a visually complete game that displays all game state correctly.
 
 ### Acceptance Criteria
+
 1. Main game screen combining board, tiles, scores, and controls
 2. Proper layout hierarchy with game board as focal point
 3. Visual state management reflecting current theme selection

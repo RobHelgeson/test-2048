@@ -3,6 +3,7 @@
 ## Repository Structure: Monorepo
 
 Single repository following Expo's recommended structure:
+
 - **app/** - File-based routing directory with layouts and navigation
 - **components/** - Reusable UI components and game board elements
 - **lib/** - Core game logic, hooks, and utilities (shareable modules)

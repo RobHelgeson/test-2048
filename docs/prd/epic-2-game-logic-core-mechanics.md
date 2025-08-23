@@ -9,6 +9,7 @@ I want to define comprehensive TypeScript interfaces and state management for th
 so that I have type-safe, well-structured game data and state transitions.
 
 ### Acceptance Criteria
+
 1. GameState interface defined with board, score, gameStatus, and metadata
 2. Tile interface with position, value, and unique identifier properties
 3. Direction enum for game moves (UP, DOWN, LEFT, RIGHT)
@@ -24,6 +25,7 @@ I want to implement the complete 2048 game algorithm with pure functions,
 so that I have testable, predictable game mechanics independent of UI.
 
 ### Acceptance Criteria
+
 1. Move function that handles all four directions with proper tile sliding logic
 2. Merge function that combines tiles of equal value following 2048 rules
 3. Spawn function that adds new tiles (90% chance of 2, 10% chance of 4) to random empty positions
@@ -39,6 +41,7 @@ I want a custom useGame hook that manages game state and actions,
 so that I can easily integrate game logic with React components using standard patterns.
 
 ### Acceptance Criteria
+
 1. useGame hook using useReducer for predictable state management
 2. Game actions: startNewGame, makeMove, resetGame, continueAfterWin
 3. Hook returns current game state and action dispatchers
@@ -54,6 +57,7 @@ I want score tracking and high score persistence,
 so that I can provide meaningful feedback and progression tracking for players.
 
 ### Acceptance Criteria
+
 1. Score calculation logic integrated with tile merging mechanics
 2. High score tracking with AsyncStorage persistence (FR9)
 3. useScore hook for score state management with current and best scores
@@ -69,6 +73,7 @@ I want comprehensive integration tests for the complete game engine,
 so that I can ensure all game mechanics work correctly together before UI implementation.
 
 ### Acceptance Criteria
+
 1. End-to-end game scenarios tested (full game from start to win/loss)
 2. Edge case testing (full board, single tile moves, impossible moves)
 3. Score calculation verification across multiple game sessions

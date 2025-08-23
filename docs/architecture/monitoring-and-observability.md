@@ -21,14 +21,12 @@
 **Frontend Performance Metrics:**
 
 - **Core Web Vitals (Web Platform):**
-
   - First Contentful Paint (FCP) < 1.5 seconds
   - Largest Contentful Paint (LCP) < 2.5 seconds
   - Cumulative Layout Shift (CLS) < 0.1
   - First Input Delay (FID) < 100ms
 
 - **Mobile App Performance:**
-
   - App launch time < 3 seconds cold start
   - Game move response time < 16ms (60fps requirement)
   - Memory usage < 100MB peak consumption
@@ -43,7 +41,6 @@
 **User Experience Metrics:**
 
 - **Engagement Metrics:**
-
   - Session duration
   - Games completed per session
   - Feature usage (settings, themes)

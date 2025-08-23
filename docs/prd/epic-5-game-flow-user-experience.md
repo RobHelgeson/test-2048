@@ -9,6 +9,7 @@ I want an interactive tutorial that teaches me how to play 2048,
 so that I can quickly understand the game mechanics and start playing confidently.
 
 ### Acceptance Criteria
+
 1. Tutorial screen with interactive swipe gesture demonstration (FR13)
 2. Step-by-step explanation of game rules (movement, merging, scoring)
 3. Practice mode allowing players to try gestures with guidance
@@ -24,6 +25,7 @@ I want clear feedback when games end and options for next actions,
 so that I can understand my performance and continue playing seamlessly.
 
 ### Acceptance Criteria
+
 1. Game over overlay displaying final score and performance feedback
 2. Victory screen with celebration animation when reaching 2048 tile (FR4)
 3. Continue playing option after victory for higher score attempts
@@ -39,6 +41,7 @@ I want to customize my game experience through accessible settings,
 so that I can personalize the app to my preferences.
 
 ### Acceptance Criteria
+
 1. Settings screen accessible through navigation with theme selector (FR14)
 2. Theme switching between Classic and Cool with live preview
 3. Haptic feedback toggle for mobile devices with immediate testing capability
@@ -54,6 +57,7 @@ I want smooth navigation between game, tutorial, and settings screens,
 so that I can access all app features seamlessly.
 
 ### Acceptance Criteria
+
 1. Expo Router navigation configured for all app screens
 2. Navigation transitions follow platform conventions and feel natural
 3. Back navigation handling with proper state management
@@ -69,6 +73,7 @@ I want a polished, professional application experience,
 so that I can enjoy playing 2048 without technical issues or poor usability.
 
 ### Acceptance Criteria
+
 1. Final integration testing across all platforms and features
 2. Performance optimization ensuring smooth experience on minimum supported devices
 3. Accessibility audit confirming WCAG AA compliance across all screens
