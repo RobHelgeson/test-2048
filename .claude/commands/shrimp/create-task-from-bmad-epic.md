@@ -4,7 +4,6 @@ argument-hint: [epic number]
 description: Create a Shrimp Task Manager task from a BMAD Epic
 ---
 
-An example command
 Shrimp Task Manager is tool you have access to use. Sometimes it will be referred to just as "Shrimp" for brevity.
 
 The user has supplied the epic number $ARGUMENTS.
