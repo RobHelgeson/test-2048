@@ -1,278 +1,723 @@
-// Sample game engine service tests demonstrating testing patterns
-describe('Game Engine Service', () => {
-  describe('Board Manipulation', () => {
-    it('should create empty board with correct dimensions', () => {
-      const createEmptyBoard = (size: number): number[][] => {
-        return Array(size)
-          .fill(null)
-          .map(() => Array(size).fill(0));
-      };
+import {
+  processMove,
+  makeMove,
+  spawnRandomTile,
+  validateGameState,
+  checkWinCondition,
+  checkGameOver,
+} from '@/services/gameEngine';
+import { GameState, Direction, Tile, Board, GameStatus } from '@/types/game';
 
-      const board4x4 = createEmptyBoard(4);
-      expect(board4x4).toHaveLength(4);
-      expect(board4x4[0]).toHaveLength(4);
-      expect(board4x4.every((row) => row.every((cell) => cell === 0))).toBe(
-        true
-      );
+// Test utilities for creating board configurations
+const createTile = (
+  value: number,
+  row: number,
+  col: number,
+  id?: string
+): Tile => ({
+  id: id || `tile-${row}-${col}-${Date.now()}`,
+  value,
+  row,
+  col,
+  isNew: false,
+});
 
-      const board2x2 = createEmptyBoard(2);
-      expect(board2x2).toHaveLength(2);
-      expect(board2x2[0]).toHaveLength(2);
-    });
+const createEmptyBoard = (): Board => [
+  [null, null, null, null],
+  [null, null, null, null],
+  [null, null, null, null],
+  [null, null, null, null],
+];
 
-    it('should add random tile to empty position', () => {
-      const board = [
-        [2, 0, 4, 0],
-        [0, 8, 0, 16],
-        [0, 0, 0, 0],
-        [32, 0, 64, 0],
+const createGameState = (board: Board, score = 0): GameState => ({
+  board,
+  score,
+  bestScore: score,
+  gameStatus: GameStatus.PLAYING,
+  moveCount: 0,
+  startTime: Date.now(),
+  lastMoveTime: Date.now(),
+  canUndo: false,
+});
+
+describe('Game Engine Core Logic', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('makeMove - LEFT direction', () => {
+    it('should move single tile to leftmost position', () => {
+      const board: Board = [
+        [null, null, createTile(2, 0, 2, 'tile1'), null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
       ];
 
-      const addRandomTile = (board: number[][]): number[][] => {
-        const emptyCells: { row: number; col: number }[] = [];
-        board.forEach((row, rowIndex) => {
-          row.forEach((cell, colIndex) => {
-            if (cell === 0) {
-              emptyCells.push({ row: rowIndex, col: colIndex });
-            }
-          });
-        });
+      const result = makeMove(board, Direction.LEFT);
 
-        if (emptyCells.length === 0) return board;
+      expect(result.moved).toBe(true);
+      expect(result.score).toBe(0);
+      expect(result.board[0][0]?.value).toBe(2);
+      expect(result.board[0][0]?.col).toBe(0);
+    });
 
-        const newBoard = board.map((row) => [...row]);
-        const randomIndex = Math.floor(Math.random() * emptyCells.length);
-        const { row, col } = emptyCells[randomIndex];
-        newBoard[row][col] = Math.random() < 0.9 ? 2 : 4;
+    it('should merge two identical tiles', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0, 'tile1'),
+          createTile(2, 0, 1, 'tile2'),
+          null,
+          null,
+        ],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
 
-        return newBoard;
-      };
+      const result = makeMove(board, Direction.LEFT);
 
-      // Mock Math.random for this test
-      const mockRandom = jest.spyOn(Math, 'random').mockReturnValue(0.5);
+      expect(result.moved).toBe(true);
+      expect(result.score).toBe(4);
+      expect(result.board[0][0]?.value).toBe(4);
+      expect(result.mergedTiles).toContain('tile1');
+      expect(result.mergedTiles).toContain('tile2');
+    });
 
-      const newBoard = addRandomTile(board);
+    it('should handle multiple merges in one row', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(2, 0, 1),
+          createTile(4, 0, 2),
+          createTile(4, 0, 3),
+        ],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
 
-      // Verify a tile was added
-      const originalEmpty = board.flat().filter((cell) => cell === 0).length;
-      const newEmpty = newBoard.flat().filter((cell) => cell === 0).length;
-      expect(newEmpty).toBe(originalEmpty - 1);
+      const result = makeMove(board, Direction.LEFT);
 
-      // Restore Math.random
+      expect(result.moved).toBe(true);
+      expect(result.score).toBe(12); // 4 + 8 = 12
+      expect(result.board[0][0]?.value).toBe(4);
+      expect(result.board[0][1]?.value).toBe(8);
+      expect(result.board[0][2]).toBe(null);
+      expect(result.board[0][3]).toBe(null);
+    });
+
+    it('should handle row with gaps', () => {
+      const board: Board = [
+        [createTile(2, 0, 0), null, createTile(2, 0, 2), null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const result = makeMove(board, Direction.LEFT);
+
+      expect(result.moved).toBe(true);
+      expect(result.score).toBe(4);
+      expect(result.board[0][0]?.value).toBe(4);
+      expect(result.board[0][1]).toBe(null);
+    });
+
+    it('should not move tiles that are already at leftmost positions', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const result = makeMove(board, Direction.LEFT);
+
+      expect(result.moved).toBe(false);
+      expect(result.score).toBe(0);
+    });
+  });
+
+  describe('makeMove - RIGHT direction', () => {
+    it('should move single tile to rightmost position', () => {
+      const board: Board = [
+        [null, createTile(2, 0, 1), null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const result = makeMove(board, Direction.RIGHT);
+
+      expect(result.moved).toBe(true);
+      expect(result.board[0][3]?.value).toBe(2);
+      expect(result.board[0][3]?.col).toBe(3);
+    });
+
+    it('should merge tiles moving right', () => {
+      const board: Board = [
+        [null, null, createTile(2, 0, 2), createTile(2, 0, 3)],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const result = makeMove(board, Direction.RIGHT);
+
+      expect(result.moved).toBe(true);
+      expect(result.score).toBe(4);
+      expect(result.board[0][3]?.value).toBe(4);
+    });
+  });
+
+  describe('makeMove - UP direction', () => {
+    it('should move tile to top row', () => {
+      const board: Board = [
+        [null, null, null, null],
+        [null, null, null, null],
+        [createTile(2, 2, 0), null, null, null],
+        [null, null, null, null],
+      ];
+
+      const result = makeMove(board, Direction.UP);
+
+      expect(result.moved).toBe(true);
+      expect(result.board[0][0]?.value).toBe(2);
+      expect(result.board[0][0]?.row).toBe(0);
+    });
+
+    it('should merge tiles moving up', () => {
+      const board: Board = [
+        [createTile(2, 0, 0), null, null, null],
+        [createTile(2, 1, 0), null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const result = makeMove(board, Direction.UP);
+
+      expect(result.moved).toBe(true);
+      expect(result.score).toBe(4);
+      expect(result.board[0][0]?.value).toBe(4);
+    });
+  });
+
+  describe('makeMove - DOWN direction', () => {
+    it('should move tile to bottom row', () => {
+      const board: Board = [
+        [createTile(2, 0, 0), null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const result = makeMove(board, Direction.DOWN);
+
+      expect(result.moved).toBe(true);
+      expect(result.board[3][0]?.value).toBe(2);
+      expect(result.board[3][0]?.row).toBe(3);
+    });
+  });
+
+  describe('spawnRandomTile', () => {
+    let mockRandom: jest.SpyInstance;
+
+    beforeEach(() => {
+      mockRandom = jest.spyOn(Math, 'random');
+    });
+
+    afterEach(() => {
       mockRandom.mockRestore();
     });
-  });
 
-  describe('Move Logic', () => {
-    it('should move tiles left correctly', () => {
-      const moveLeft = (row: number[]): { newRow: number[]; score: number } => {
-        const filtered = row.filter((cell) => cell !== 0);
-        const merged: number[] = [];
-        let score = 0;
-        let i = 0;
+    it('should spawn tile with value 2 when random < 0.9', () => {
+      mockRandom.mockReturnValueOnce(0.5).mockReturnValueOnce(0.8); // position selection, then value selection
 
-        while (i < filtered.length) {
-          if (i < filtered.length - 1 && filtered[i] === filtered[i + 1]) {
-            const mergedValue = filtered[i] * 2;
-            merged.push(mergedValue);
-            score += mergedValue;
-            i += 2;
-          } else {
-            merged.push(filtered[i]);
-            i += 1;
-          }
-        }
+      const board = createEmptyBoard();
+      const result = spawnRandomTile(board);
 
-        while (merged.length < 4) {
-          merged.push(0);
-        }
-
-        return { newRow: merged, score };
-      };
-
-      // Test basic move
-      expect(moveLeft([2, 0, 2, 0])).toEqual({
-        newRow: [4, 0, 0, 0],
-        score: 4,
-      });
-
-      // Test no merge
-      expect(moveLeft([2, 4, 8, 16])).toEqual({
-        newRow: [2, 4, 8, 16],
-        score: 0,
-      });
-
-      // Test multiple merges
-      expect(moveLeft([2, 2, 4, 4])).toEqual({
-        newRow: [4, 8, 0, 0],
-        score: 12,
-      });
-
-      // Test with zeros
-      expect(moveLeft([0, 2, 0, 2])).toEqual({
-        newRow: [4, 0, 0, 0],
-        score: 4,
-      });
+      expect(result.success).toBe(true);
+      expect(result.tile?.value).toBe(2);
+      expect(result.tile?.isNew).toBe(true);
     });
 
-    it('should detect when no moves are possible', () => {
-      const canMove = (board: number[][]): boolean => {
-        // Check for empty cells
-        for (let row = 0; row < board.length; row++) {
-          for (let col = 0; col < board[row].length; col++) {
-            if (board[row][col] === 0) return true;
-          }
-        }
+    it('should spawn tile with value 4 when random >= 0.9', () => {
+      mockRandom.mockReturnValueOnce(0.5).mockReturnValueOnce(0.95); // position selection, then value selection
 
-        // Check for possible merges
-        for (let row = 0; row < board.length; row++) {
-          for (let col = 0; col < board[row].length; col++) {
-            const currentValue = board[row][col];
-            // Check right neighbor
-            if (
-              col < board[row].length - 1 &&
-              board[row][col + 1] === currentValue
-            ) {
-              return true;
-            }
-            // Check down neighbor
-            if (
-              row < board.length - 1 &&
-              board[row + 1][col] === currentValue
-            ) {
-              return true;
-            }
-          }
-        }
+      const board = createEmptyBoard();
+      const result = spawnRandomTile(board);
 
-        return false;
-      };
+      expect(result.success).toBe(true);
+      expect(result.tile?.value).toBe(4);
+    });
 
-      // Board with empty cells
-      const boardWithEmpty = [
-        [2, 4, 8, 16],
-        [32, 64, 128, 256],
-        [512, 1024, 2048, 0],
-        [2, 4, 8, 16],
+    it('should return null when board is full', () => {
+      const fullBoard: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(32, 1, 0),
+          createTile(64, 1, 1),
+          createTile(128, 1, 2),
+          createTile(256, 1, 3),
+        ],
+        [
+          createTile(512, 2, 0),
+          createTile(1024, 2, 1),
+          createTile(2, 2, 2),
+          createTile(4, 2, 3),
+        ],
+        [
+          createTile(8, 3, 0),
+          createTile(16, 3, 1),
+          createTile(32, 3, 2),
+          createTile(64, 3, 3),
+        ],
       ];
-      expect(canMove(boardWithEmpty)).toBe(true);
 
-      // Board with possible merges
-      const boardWithMerge = [
-        [2, 4, 8, 16],
-        [32, 64, 128, 256],
-        [512, 1024, 2048, 4],
-        [2, 4, 8, 8],
-      ];
-      expect(canMove(boardWithMerge)).toBe(true);
+      const result = spawnRandomTile(fullBoard);
 
-      // Board with no moves
-      const noMoveBoard = [
-        [2, 4, 8, 16],
-        [32, 64, 128, 256],
-        [512, 1024, 2048, 4],
-        [2, 32, 8, 2],
+      expect(result.success).toBe(false);
+      expect(result.tile).toBe(null);
+    });
+
+    it('should spawn in random empty position', () => {
+      mockRandom.mockReturnValueOnce(0.0).mockReturnValueOnce(0.5); // select first empty position
+
+      const board: Board = [
+        [createTile(2, 0, 0), null, createTile(4, 0, 2), null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
       ];
-      expect(canMove(noMoveBoard)).toBe(false);
+
+      const result = spawnRandomTile(board);
+
+      expect(result.success).toBe(true);
+      expect(result.tile?.row).toBe(0);
+      expect(result.tile?.col).toBe(1);
     });
   });
 
-  describe('Game State Validation', () => {
+  describe('checkWinCondition', () => {
+    it('should return true when 2048 tile exists', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(32, 1, 0),
+          createTile(2048, 1, 1),
+          createTile(128, 1, 2),
+          null,
+        ],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      expect(checkWinCondition(board)).toBe(true);
+    });
+
+    it('should return true when tile value > 2048 exists', () => {
+      const board: Board = [
+        [createTile(4096, 0, 0), null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      expect(checkWinCondition(board)).toBe(true);
+    });
+
+    it('should return false when no 2048+ tile exists', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(32, 1, 0),
+          createTile(64, 1, 1),
+          createTile(128, 1, 2),
+          createTile(256, 1, 3),
+        ],
+        [createTile(512, 2, 0), createTile(1024, 2, 1), null, null],
+        [null, null, null, null],
+      ];
+
+      expect(checkWinCondition(board)).toBe(false);
+    });
+  });
+
+  describe('checkGameOver', () => {
+    it('should return false when empty cells exist', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(32, 1, 0),
+          createTile(64, 1, 1),
+          null,
+          createTile(256, 1, 3),
+        ],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      expect(checkGameOver(board)).toBe(false);
+    });
+
+    it('should return false when horizontal merges are possible', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(2, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(32, 1, 0),
+          createTile(64, 1, 1),
+          createTile(128, 1, 2),
+          createTile(256, 1, 3),
+        ],
+        [
+          createTile(512, 2, 0),
+          createTile(1024, 2, 1),
+          createTile(4, 2, 2),
+          createTile(8, 2, 3),
+        ],
+        [
+          createTile(16, 3, 0),
+          createTile(32, 3, 1),
+          createTile(64, 3, 2),
+          createTile(128, 3, 3),
+        ],
+      ];
+
+      expect(checkGameOver(board)).toBe(false);
+    });
+
+    it('should return false when vertical merges are possible', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(2, 1, 0),
+          createTile(64, 1, 1),
+          createTile(128, 1, 2),
+          createTile(256, 1, 3),
+        ],
+        [
+          createTile(512, 2, 0),
+          createTile(1024, 2, 1),
+          createTile(4, 2, 2),
+          createTile(8, 2, 3),
+        ],
+        [
+          createTile(16, 3, 0),
+          createTile(32, 3, 1),
+          createTile(64, 3, 2),
+          createTile(128, 3, 3),
+        ],
+      ];
+
+      expect(checkGameOver(board)).toBe(false);
+    });
+
+    it('should return true when no moves are possible', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(32, 1, 0),
+          createTile(64, 1, 1),
+          createTile(128, 1, 2),
+          createTile(256, 1, 3),
+        ],
+        [
+          createTile(512, 2, 0),
+          createTile(1024, 2, 1),
+          createTile(2048, 2, 2),
+          createTile(4, 2, 3),
+        ],
+        [
+          createTile(8, 3, 0),
+          createTile(16, 3, 1),
+          createTile(32, 3, 2),
+          createTile(64, 3, 3),
+        ],
+      ];
+
+      expect(checkGameOver(board)).toBe(true);
+    });
+  });
+
+  describe('validateGameState', () => {
     it('should detect win condition', () => {
-      const hasWon = (board: number[][]): boolean => {
-        return board.some((row) => row.some((cell) => cell >= 2048));
-      };
-
-      const winningBoard = [
-        [2, 4, 8, 16],
-        [32, 64, 128, 256],
-        [512, 1024, 2048, 4],
-        [2, 4, 8, 16],
+      const board: Board = [
+        [createTile(2048, 0, 0), null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
       ];
-      expect(hasWon(winningBoard)).toBe(true);
 
-      const nonWinningBoard = [
-        [2, 4, 8, 16],
-        [32, 64, 128, 256],
-        [512, 1024, 512, 4],
-        [2, 4, 8, 16],
-      ];
-      expect(hasWon(nonWinningBoard)).toBe(false);
+      const result = validateGameState(board);
+      expect(result.isWon).toBe(true);
+      expect(result.isGameOver).toBe(false);
     });
 
-    it('should calculate total score correctly', () => {
-      const calculateScore = (board: number[][]): number => {
-        return board.flat().reduce((sum, cell) => sum + cell, 0);
-      };
-
-      const board = [
-        [2, 4, 0, 0],
-        [0, 8, 0, 0],
-        [0, 0, 16, 0],
-        [0, 0, 0, 32],
+    it('should detect game over condition', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(32, 1, 0),
+          createTile(64, 1, 1),
+          createTile(128, 1, 2),
+          createTile(256, 1, 3),
+        ],
+        [
+          createTile(512, 2, 0),
+          createTile(1024, 2, 1),
+          createTile(2, 2, 2),
+          createTile(4, 2, 3),
+        ],
+        [
+          createTile(8, 3, 0),
+          createTile(16, 3, 1),
+          createTile(32, 3, 2),
+          createTile(64, 3, 3),
+        ],
       ];
 
-      expect(calculateScore(board)).toBe(62);
-
-      const emptyBoard = [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-      ];
-
-      expect(calculateScore(emptyBoard)).toBe(0);
+      const result = validateGameState(board);
+      expect(result.isWon).toBe(false);
+      expect(result.isGameOver).toBe(true);
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle invalid board dimensions', () => {
-      const validateBoard = (board: number[][]): boolean => {
-        if (!Array.isArray(board)) return false;
-        if (board.length === 0) return false;
+  describe('processMove - Integration Tests', () => {
+    let mockRandom: jest.SpyInstance;
 
-        // For a valid board, each row should have the same length as others
-        const firstRowLength = board[0].length;
-        return board.every(
-          (row) => Array.isArray(row) && row.length === firstRowLength
-        );
-      };
-
-      expect(
-        validateBoard([
-          [2, 4],
-          [8, 16],
-        ])
-      ).toBe(true);
-      expect(
-        validateBoard([
-          [2, 4, 8],
-          [16, 32, 64],
-        ])
-      ).toBe(true);
-      expect(validateBoard([[2, 4], [8]])).toBe(false);
-      expect(validateBoard([])).toBe(false);
-      expect(validateBoard(null as any)).toBe(false);
+    beforeEach(() => {
+      mockRandom = jest.spyOn(Math, 'random');
     });
 
-    it('should handle invalid tile values', () => {
-      const isValidTile = (value: any): boolean => {
-        if (typeof value !== 'number') return false;
-        if (value < 0) return false;
-        if (value === 0) return true;
+    afterEach(() => {
+      mockRandom.mockRestore();
+    });
 
-        // Check if it's a power of 2
-        return (value & (value - 1)) === 0;
-      };
+    it('should complete a full move cycle', () => {
+      mockRandom.mockReturnValueOnce(0.0).mockReturnValueOnce(0.5); // spawn position and value
 
-      expect(isValidTile(0)).toBe(true);
-      expect(isValidTile(2)).toBe(true);
-      expect(isValidTile(4)).toBe(true);
-      expect(isValidTile(2048)).toBe(true);
-      expect(isValidTile(3)).toBe(false);
-      expect(isValidTile(-2)).toBe(false);
-      expect(isValidTile('2')).toBe(false);
-      expect(isValidTile(null)).toBe(false);
+      const board: Board = [
+        [createTile(2, 0, 0), createTile(2, 0, 1), null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const gameState = createGameState(board, 100);
+      const result = processMove(gameState, Direction.LEFT);
+
+      expect(result.score).toBe(104); // 100 + 4 from merge
+      expect(result.moveCount).toBe(1);
+      expect(result.board[0][0]?.value).toBe(4); // merged tile
+      expect(result.canUndo).toBe(true);
+      expect(result.previousBoard).toBe(board);
+      expect(result.previousScore).toBe(100);
+    });
+
+    it('should not change state when no movement occurs', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const gameState = createGameState(board, 100);
+      const result = processMove(gameState, Direction.LEFT);
+
+      expect(result.score).toBe(100); // unchanged
+      expect(result.moveCount).toBe(0); // unchanged
+      expect(result.board).toBe(board); // same board reference
+    });
+
+    it('should set game status to WON when 2048 is reached', () => {
+      mockRandom.mockReturnValueOnce(0.0).mockReturnValueOnce(0.5);
+
+      const board: Board = [
+        [createTile(1024, 0, 0), createTile(1024, 0, 1), null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const gameState = createGameState(board);
+      const result = processMove(gameState, Direction.LEFT);
+
+      expect(result.gameStatus).toBe(GameStatus.WON);
+      expect(result.board[0][0]?.value).toBe(2048);
+    });
+
+    it('should set game status to LOST when no moves remain', () => {
+      // Create a board that after the move and spawn will have no valid moves
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(32, 1, 0),
+          createTile(64, 1, 1),
+          createTile(128, 1, 2),
+          createTile(256, 1, 3),
+        ],
+        [
+          createTile(512, 2, 0),
+          createTile(1024, 2, 1),
+          createTile(8, 2, 2),
+          createTile(4, 2, 3),
+        ],
+        [
+          createTile(16, 3, 0),
+          createTile(32, 3, 1),
+          createTile(64, 3, 2),
+          null,
+        ], // one empty space
+      ];
+
+      // Mock spawn to place a tile that results in no possible moves
+      mockRandom.mockReturnValueOnce(0.0).mockReturnValueOnce(0.5); // spawn at [3,3] with value 2
+
+      const gameState = createGameState(board);
+      const result = processMove(gameState, Direction.RIGHT); // Move right to trigger spawn
+
+      expect(result.gameStatus).toBe(GameStatus.LOST);
+    });
+
+    it('should update best score when current score exceeds it', () => {
+      mockRandom.mockReturnValueOnce(0.0).mockReturnValueOnce(0.5);
+
+      const board: Board = [
+        [createTile(1024, 0, 0), createTile(1024, 0, 1), null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const gameState = createGameState(board, 1000);
+      gameState.bestScore = 2000;
+
+      const result = processMove(gameState, Direction.LEFT);
+
+      expect(result.score).toBe(3048); // 1000 + 2048
+      expect(result.bestScore).toBe(3048); // updated
+    });
+  });
+
+  describe('Performance Tests', () => {
+    it('should complete move within 100ms performance requirement', () => {
+      const board: Board = [
+        [
+          createTile(2, 0, 0),
+          createTile(4, 0, 1),
+          createTile(8, 0, 2),
+          createTile(16, 0, 3),
+        ],
+        [
+          createTile(32, 1, 0),
+          createTile(64, 1, 1),
+          createTile(128, 1, 2),
+          createTile(256, 1, 3),
+        ],
+        [
+          createTile(512, 2, 0),
+          createTile(1024, 2, 1),
+          createTile(2, 2, 2),
+          null,
+        ],
+        [createTile(4, 3, 0), null, null, null],
+      ];
+
+      const gameState = createGameState(board);
+
+      const startTime = performance.now();
+      processMove(gameState, Direction.LEFT);
+      const endTime = performance.now();
+
+      expect(endTime - startTime).toBeLessThan(100);
+    });
+  });
+
+  describe('Input Validation Tests', () => {
+    it('should handle invalid board gracefully in processMove', () => {
+      const invalidGameState = createGameState([] as any); // Invalid empty board
+      const result = processMove(invalidGameState, Direction.LEFT);
+
+      expect(result).toBe(invalidGameState); // Should return unchanged state
+    });
+
+    it('should handle malformed board in makeMove', () => {
+      const malformedBoard = [[null, null], [null]] as any; // Wrong dimensions
+      const result = makeMove(malformedBoard, Direction.LEFT);
+
+      expect(result.moved).toBe(false);
+      expect(result.score).toBe(0);
+      expect(result.board).toBe(malformedBoard);
+    });
+
+    it('should handle tiles with invalid values', () => {
+      const boardWithInvalidTile: Board = [
+        [{ ...createTile(0, 0, 0), value: 0 } as any, null, null, null], // Invalid value 0
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ];
+
+      const gameState = createGameState(boardWithInvalidTile);
+      const result = processMove(gameState, Direction.LEFT);
+
+      expect(result).toBe(gameState); // Should return unchanged
     });
   });
 });
