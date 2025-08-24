@@ -11,7 +11,7 @@ The structure of a story number is {epic number}.{story sequence}
 
 1. Determine if there already is a task for this story
    - If so, AND the status of the existing task is NOT "pending", return without following the rest of these directions.
-   - If not, create a task for this story
+   - If not, add a task for this story to the existing plan
 2. Set the properties of the task
    - `implementationGuide` =
      ```
