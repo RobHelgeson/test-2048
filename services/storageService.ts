@@ -1,12 +1,26 @@
 import { GameState } from '@/types';
 import { GameStatistics, GameResult } from '@/hooks/useScore';
+import { ThemeType } from '@/types/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// User preferences interface for theme and settings persistence
+export interface UserPreferences {
+  theme: ThemeType;
+  hapticsEnabled: boolean;
+  tutorialCompleted: boolean;
+  userName?: string;
+  soundEnabled: boolean;
+  animationSpeed: 'slow' | 'normal' | 'fast';
+  lastPlayedDate: number;
+  totalGamesPlayed: number;
+}
 
 // Storage keys for AsyncStorage persistence
 const STORAGE_KEYS = {
   GAME_STATE: '@2048/game_state',
   BEST_SCORE: '@2048/best_score',
   STATISTICS: '@2048/statistics',
+  USER_PREFERENCES: '@2048/user_preferences',
 } as const;
 
 /**
@@ -227,6 +241,122 @@ class StorageService {
   }
 
   /**
+   * Save user preferences (including theme) to persistent storage
+   */
+  async saveUserPreferences(
+    preferences: Partial<UserPreferences>
+  ): Promise<void> {
+    try {
+      // Load existing preferences and merge with new ones
+      const currentPrefs = await this.loadUserPreferences();
+      const updatedPrefs: UserPreferences = {
+        ...currentPrefs,
+        ...preferences,
+        lastPlayedDate: Date.now(), // Always update last played date
+      };
+
+      const serializedPrefs = JSON.stringify(updatedPrefs);
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.USER_PREFERENCES,
+        serializedPrefs
+      );
+    } catch (error) {
+      console.error('Failed to save user preferences:', error);
+      throw error; // Re-throw for theme store error handling
+    }
+  }
+
+  /**
+   * Load user preferences from persistent storage
+   */
+  async loadUserPreferences(): Promise<UserPreferences> {
+    try {
+      const serializedPrefs = await AsyncStorage.getItem(
+        STORAGE_KEYS.USER_PREFERENCES
+      );
+      if (serializedPrefs) {
+        const prefs = JSON.parse(serializedPrefs) as UserPreferences;
+        return this.validateUserPreferences(prefs)
+          ? prefs
+          : this.createDefaultUserPreferences();
+      }
+      return this.createDefaultUserPreferences();
+    } catch (error) {
+      console.error('Failed to load user preferences:', error);
+      return this.createDefaultUserPreferences();
+    }
+  }
+
+  /**
+   * Get specific user preference value
+   */
+  async getUserPreference<K extends keyof UserPreferences>(
+    key: K
+  ): Promise<UserPreferences[K]> {
+    try {
+      const preferences = await this.loadUserPreferences();
+      return preferences[key];
+    } catch (error) {
+      console.error(`Failed to get user preference ${key}:`, error);
+      const defaultPrefs = this.createDefaultUserPreferences();
+      return defaultPrefs[key];
+    }
+  }
+
+  /**
+   * Update specific user preference
+   */
+  async setUserPreference<K extends keyof UserPreferences>(
+    key: K,
+    value: UserPreferences[K]
+  ): Promise<void> {
+    try {
+      await this.saveUserPreferences({
+        [key]: value,
+      } as Partial<UserPreferences>);
+    } catch (error) {
+      console.error(`Failed to set user preference ${key}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Create default user preferences
+   */
+  private createDefaultUserPreferences(): UserPreferences {
+    return {
+      theme: 'classic',
+      hapticsEnabled: true,
+      tutorialCompleted: false,
+      soundEnabled: true,
+      animationSpeed: 'normal',
+      lastPlayedDate: Date.now(),
+      totalGamesPlayed: 0,
+    };
+  }
+
+  /**
+   * Validate user preferences structure
+   */
+  private validateUserPreferences(prefs: unknown): prefs is UserPreferences {
+    if (!prefs || typeof prefs !== 'object') return false;
+
+    const p = prefs as any;
+    return (
+      ['classic', 'cool'].includes(p.theme) &&
+      typeof p.hapticsEnabled === 'boolean' &&
+      typeof p.tutorialCompleted === 'boolean' &&
+      typeof p.soundEnabled === 'boolean' &&
+      ['slow', 'normal', 'fast'].includes(p.animationSpeed) &&
+      typeof p.lastPlayedDate === 'number' &&
+      p.lastPlayedDate > 0 &&
+      typeof p.totalGamesPlayed === 'number' &&
+      p.totalGamesPlayed >= 0 &&
+      (p.userName === undefined || typeof p.userName === 'string')
+    );
+  }
+
+  /**
    * Clear all stored data (for testing or reset purposes)
    */
   async clearAllData(): Promise<void> {
@@ -235,6 +365,7 @@ class StorageService {
         AsyncStorage.removeItem(STORAGE_KEYS.GAME_STATE),
         AsyncStorage.removeItem(STORAGE_KEYS.BEST_SCORE),
         AsyncStorage.removeItem(STORAGE_KEYS.STATISTICS),
+        AsyncStorage.removeItem(STORAGE_KEYS.USER_PREFERENCES),
       ]);
     } catch (error) {
       console.error('Failed to clear all data:', error);
