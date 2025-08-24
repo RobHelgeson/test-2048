@@ -1,5 +1,9 @@
 import GameBoard from '@/components/game/GameBoard';
-import { useThemeColors } from '@/hooks/useTheme';
+import {
+  useThemeColors,
+  useTileColor,
+  useTileTextColor,
+} from '@/hooks/useTheme';
 import { useGameStore } from '@/stores/gameStore';
 import { GameStatus, Tile } from '@/types';
 import { fireEvent, render } from '@testing-library/react-native';
@@ -36,11 +40,29 @@ jest.mock('@/components/themed/ThemedView', () => ({
   },
 }));
 
+// Mock Tile component
+jest.mock('@/components/game/Tile', () => ({
+  Tile: ({ tile, testID, ...props }: any) => {
+    const React = require('react');
+    return React.createElement(
+      'View',
+      { testID, 'data-value': tile?.value },
+      `Tile ${tile?.value || 'empty'}`
+    );
+  },
+}));
+
 const mockUseGameStore = useGameStore as jest.MockedFunction<
   typeof useGameStore
 >;
 const mockUseThemeColors = useThemeColors as jest.MockedFunction<
   typeof useThemeColors
+>;
+const mockUseTileColor = useTileColor as jest.MockedFunction<
+  typeof useTileColor
+>;
+const mockUseTileTextColor = useTileTextColor as jest.MockedFunction<
+  typeof useTileTextColor
 >;
 
 // Mock theme colors - complete ThemeColors object
@@ -119,6 +141,28 @@ describe('GameBoard Component', () => {
 
     // Default mock implementations
     mockUseThemeColors.mockReturnValue(mockThemeColors);
+
+    // Mock tile color functions for Tile component
+    mockUseTileColor.mockReturnValue((value: number) => {
+      const colorMap: Record<number, string> = {
+        2: mockThemeColors.tile2,
+        4: mockThemeColors.tile4,
+        8: mockThemeColors.tile8,
+        16: mockThemeColors.tile16,
+        32: mockThemeColors.tile32,
+        64: mockThemeColors.tile64,
+        128: mockThemeColors.tile128,
+        256: mockThemeColors.tile256,
+        512: mockThemeColors.tile512,
+        1024: mockThemeColors.tile1024,
+        2048: mockThemeColors.tile2048,
+      };
+      return colorMap[value] || mockThemeColors.tileSuper;
+    });
+
+    mockUseTileTextColor.mockReturnValue((value: number) => {
+      return value <= 4 ? mockThemeColors.text : mockThemeColors.textOnPrimary;
+    });
 
     // Default game store mock
     mockUseGameStore.mockImplementation((selector: any) =>

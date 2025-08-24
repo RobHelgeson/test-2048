@@ -1,6 +1,7 @@
 import { ThemedView } from '@/components/themed/ThemedView';
 import { useThemeColors } from '@/hooks/useTheme';
 import { useGameStore } from '@/stores/gameStore';
+import { Tile } from '@/components/game/Tile';
 import React, { useMemo } from 'react';
 import {
   Dimensions,
@@ -179,15 +180,14 @@ export function GameBoard({
               }}
             >
               <View style={styles.tilePlaceholder}>
-                {/* Tile content will be rendered by Tile component in future stories */}
-                {tile && (
-                  <View
-                    style={styles.debugTile}
+                {tile ? (
+                  <Tile
+                    tile={tile}
+                    size={boardDimensions.tileSize}
+                    onPress={() => handleTilePress(rowIndex, colIndex)}
                     testID={`${testID}-tile-${tile.id}`}
-                  >
-                    {/* Placeholder for actual tile rendering */}
-                  </View>
-                )}
+                  />
+                ) : null}
               </View>
             </TouchableOpacity>
           ))
@@ -263,15 +263,6 @@ function createStyles(
       // Subtle border for empty tiles
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: colors.border + '40', // 25% opacity
-    },
-
-    // Debug visualization for existing tiles (will be replaced by Tile component)
-    debugTile: {
-      flex: 1,
-      backgroundColor: colors.tileBackground,
-      borderRadius: 4,
-      borderWidth: 1,
-      borderColor: colors.primary,
     },
   });
 }
