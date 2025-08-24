@@ -1,13 +1,7 @@
+import {ThemedText} from '@/components/themed/ThemedText';
+import {useThemeColors} from '@/hooks/useTheme';
 import React from 'react';
-import {
-  TouchableOpacity,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-  Platform,
-} from 'react-native';
-import { ThemedText } from '@/components/themed/ThemedText';
-import { useThemeColors } from '@/hooks/useTheme';
+import {Platform, StyleSheet, TextStyle, TouchableOpacity, ViewStyle} from 'react-native';
 
 interface ButtonProps {
   /** Button text content */
@@ -17,7 +11,7 @@ interface ButtonProps {
   /** Button variant style */
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   /** Button size */
-  size?: 'small' | 'medium' | 'large';
+  size?: 'compact' | 'small' | 'medium' | 'large';
   /** Whether the button is disabled */
   disabled?: boolean;
   /** Optional custom styling */
@@ -115,12 +109,7 @@ export function Button({
 /**
  * Creates dynamic styles based on theme colors, variant, size, and disabled state
  */
-function createButtonStyles(
-  colors: any,
-  variant: string,
-  size: string,
-  disabled: boolean
-) {
+function createButtonStyles(colors: any, variant: string, size: string, disabled: boolean) {
   // Provide fallback colors if undefined or missing properties
   const safeColors = {
     accent: '#007AFF',
@@ -148,6 +137,17 @@ function createButtonStyles(
 
   // Size-based styles
   const sizeStyles = {
+    compact: {
+      button: {
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        minHeight: 28,
+      } as ViewStyle,
+      text: {
+        fontSize: 12,
+        lineHeight: 16,
+      } as TextStyle,
+    },
     small: {
       button: {
         paddingHorizontal: 12,
@@ -187,9 +187,7 @@ function createButtonStyles(
   const variantStyles = {
     primary: {
       button: {
-        backgroundColor: disabled
-          ? safeColors.surfaceDisabled
-          : safeColors.accent,
+        backgroundColor: disabled ? safeColors.surfaceDisabled : safeColors.accent,
         ...getPlatformShadow(disabled ? 'none' : 'medium'),
       } as ViewStyle,
       text: {
@@ -198,9 +196,7 @@ function createButtonStyles(
     },
     secondary: {
       button: {
-        backgroundColor: disabled
-          ? safeColors.surfaceDisabled
-          : safeColors.surface,
+        backgroundColor: disabled ? safeColors.surfaceDisabled : safeColors.surface,
         ...getPlatformShadow(disabled ? 'none' : 'small'),
       } as ViewStyle,
       text: {
@@ -227,11 +223,8 @@ function createButtonStyles(
     },
   };
 
-  const currentSize =
-    sizeStyles[size as keyof typeof sizeStyles] || sizeStyles.medium;
-  const currentVariant =
-    variantStyles[variant as keyof typeof variantStyles] ||
-    variantStyles.primary;
+  const currentSize = sizeStyles[size as keyof typeof sizeStyles] || sizeStyles.medium;
+  const currentVariant = variantStyles[variant as keyof typeof variantStyles] || variantStyles.primary;
 
   return StyleSheet.create({
     button: {

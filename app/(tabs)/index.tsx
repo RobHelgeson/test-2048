@@ -5,7 +5,7 @@ import {ThemedView} from '@/components/themed/ThemedView';
 import {useGame} from '@/hooks/useGame';
 import {useTheme} from '@/hooks/useTheme';
 import React from 'react';
-import {Dimensions, Platform, StyleSheet, Text} from 'react-native';
+import {Dimensions, Platform, ScrollView, StyleSheet, Text} from 'react-native';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -110,68 +110,75 @@ export default function GameScreen() {
   return (
     <GameErrorBoundary>
       <ThemedSafeAreaView style={styles.container} testID="game-screen">
-        <ThemedView style={[styles.content, dynamicStyles.content]} backgroundColor="background">
-          {/* Show loading state if game is initializing - with visual polish */}
-          {isLoading ? (
-            <ThemedView
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                opacity: 0.8, // Subtle fade effect
-              }}
-            >
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={dynamicStyles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+        >
+          <ThemedView style={[styles.content, dynamicStyles.content]} backgroundColor="background">
+            {/* Show loading state if game is initializing - with visual polish */}
+            {isLoading ? (
               <ThemedView
                 style={{
-                  backgroundColor: colors.background,
-                  borderRadius: 12,
-                  padding: 24,
+                  flex: 1,
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  // Subtle shadow for depth
-                  ...(Platform.OS === 'ios' && {
-                    shadowColor: colors.shadow || '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.1,
-                    shadowRadius: 4,
-                  }),
-                  ...(Platform.OS === 'android' && {
-                    elevation: 2,
-                  }),
+                  opacity: 0.8, // Subtle fade effect
                 }}
               >
-                <Text
+                <ThemedView
                   style={{
-                    color: colors.text,
-                    fontSize: 18,
-                    fontWeight: '600', // Better typography hierarchy
-                    marginBottom: 8,
+                    backgroundColor: colors.background,
+                    borderRadius: 12,
+                    padding: 24,
+                    alignItems: 'center',
+                    // Subtle shadow for depth
+                    ...(Platform.OS === 'ios' && {
+                      shadowColor: colors.shadow || '#000',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 4,
+                    }),
+                    ...(Platform.OS === 'android' && {
+                      elevation: 2,
+                    }),
                   }}
                 >
-                  Loading Game
-                </Text>
-                <Text
-                  style={{
-                    color: colors.textSecondary || colors.text,
-                    fontSize: 14,
-                    opacity: 0.7, // Secondary text treatment
-                  }}
-                >
-                  Please wait...
-                </Text>
+                  <Text
+                    style={{
+                      color: colors.text,
+                      fontSize: 18,
+                      fontWeight: '600', // Better typography hierarchy
+                      marginBottom: 8,
+                    }}
+                  >
+                    Loading Game
+                  </Text>
+                  <Text
+                    style={{
+                      color: colors.textSecondary || colors.text,
+                      fontSize: 14,
+                      opacity: 0.7, // Secondary text treatment
+                    }}
+                  >
+                    Please wait...
+                  </Text>
+                </ThemedView>
               </ThemedView>
-            </ThemedView>
-          ) : (
-            <>
-              {/* Game Header with scores and controls */}
-              <GameHeader style={dynamicStyles.header} onNewGame={handleNewGame} testID="game-header" />
+            ) : (
+              <>
+                {/* Game Header with scores and controls */}
+                <GameHeader style={dynamicStyles.header} onNewGame={handleNewGame} testID="game-header" />
 
-              {/* Main Game Board - central focal point */}
-              <ThemedView style={dynamicStyles.boardContainer} testID="board-container">
-                <GameBoard style={dynamicStyles.board} testID="game-board" />
-              </ThemedView>
-            </>
-          )}
-        </ThemedView>
+                {/* Main Game Board - central focal point */}
+                <ThemedView style={dynamicStyles.boardContainer} testID="board-container">
+                  <GameBoard style={dynamicStyles.board} testID="game-board" />
+                </ThemedView>
+              </>
+            )}
+          </ThemedView>
+        </ScrollView>
       </ThemedSafeAreaView>
     </GameErrorBoundary>
   );
@@ -182,8 +189,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
+  scrollView: {
     flex: 1,
+  },
+  content: {
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
@@ -238,11 +247,22 @@ function createGameScreenStyles(colors: any) {
     }) || 44;
 
   return StyleSheet.create({
+    scrollContent: {
+      flexGrow: 1,
+      minHeight: isNarrow || screenHeight < 600 ? undefined : screenHeight - 100, // Allow scrolling on small screens
+    },
+
     content: {
       paddingHorizontal: containerPadding,
       paddingTop: isPortrait ? baseSpacing * 2 : baseSpacing, // More top padding in portrait
       paddingBottom: baseSpacing,
       gap: isNarrow ? baseSpacing * 1.5 : baseSpacing * 2, // 12pt narrow, 16pt normal
+      // Reduce flex on small screens to allow proper sizing
+      ...(!isTablet &&
+        screenHeight < 600 && {
+          flex: 0,
+          minHeight: screenHeight - 150, // Ensure minimum height on very small screens
+        }),
       // Ensure content doesn't overlap with safe areas in landscape
       ...(Platform.OS === 'ios' &&
         !isPortrait && {
@@ -261,7 +281,7 @@ function createGameScreenStyles(colors: any) {
     },
 
     boardContainer: {
-      flex: 1,
+      flex: screenHeight < 600 ? 0 : 1, // Don't use flex on very small screens
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: boardContainerMargin,
@@ -270,6 +290,12 @@ function createGameScreenStyles(colors: any) {
         maxWidth: 600, // Prevent board from becoming too large on wide screens
         alignSelf: 'center',
       }),
+      // Ensure board fits on small screens
+      ...(!isTablet &&
+        screenHeight < 600 && {
+          marginTop: baseSpacing,
+          marginBottom: baseSpacing,
+        }),
       // Add subtle background for board area on larger screens
       ...(isTablet && {
         backgroundColor: colors.background,

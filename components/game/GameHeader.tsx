@@ -1,18 +1,13 @@
+import {ThemedView} from '@/components/themed/ThemedView';
+import {Button} from '@/components/ui/Button';
+import {StatusIndicator} from '@/components/ui/StatusIndicator';
+import {useThemeColors} from '@/hooks/useTheme';
+import {useGameStore} from '@/stores/gameStore';
 import React from 'react';
-import { StyleSheet, ViewStyle, Dimensions, Platform } from 'react-native';
-import Animated, {
-  useSharedValue,
-  withSpring,
-  withSequence,
-  useAnimatedStyle,
-  interpolate,
-} from 'react-native-reanimated';
-import { ThemedView } from '@/components/themed/ThemedView';
-import { useThemeColors } from '@/hooks/useTheme';
-import { useGameStore } from '@/stores/gameStore';
-import { ScoreDisplay } from './GameHeader/ScoreDisplay';
-import { Button } from '@/components/ui/Button';
-import { StatusIndicator } from '@/components/ui/StatusIndicator';
+import {Dimensions, Platform, StyleSheet, ViewStyle} from 'react-native';
+import Animated, {useAnimatedStyle, useSharedValue, withSequence, withSpring} from 'react-native-reanimated';
+
+import {ScoreDisplay} from './GameHeader/ScoreDisplay';
 
 interface GameHeaderProps {
   /** Optional custom styling for the header container */
@@ -71,10 +66,7 @@ export function GameHeader({ style, onNewGame, testID }: GameHeaderProps) {
   const previousBestScore = React.useRef(bestScore);
 
   // Create responsive layout styles based on screen dimensions
-  const dynamicStyles = React.useMemo(
-    () => createHeaderStyles(colors),
-    [colors]
-  );
+  const dynamicStyles = React.useMemo(() => createHeaderStyles(colors), [colors]);
 
   // Animate score changes
   React.useEffect(() => {
@@ -89,10 +81,7 @@ export function GameHeader({ style, onNewGame, testID }: GameHeaderProps) {
 
   // Animate best score achievements
   React.useEffect(() => {
-    if (
-      bestScore !== previousBestScore.current &&
-      bestScore > previousBestScore.current
-    ) {
+    if (bestScore !== previousBestScore.current && bestScore > previousBestScore.current) {
       bestScoreAnimationScale.value = withSequence(
         withSpring(1.15, { damping: 12, stiffness: 250 }),
         withSpring(1.0, { damping: 12, stiffness: 250 })
@@ -121,8 +110,7 @@ export function GameHeader({ style, onNewGame, testID }: GameHeaderProps) {
     () => ({
       accessibilityRole: 'header' as const,
       accessibilityLabel: 'Game header with score and controls',
-      accessibilityHint:
-        'Contains current score, best score, game status, and new game button',
+      accessibilityHint: 'Contains current score, best score, game status, and new game button',
     }),
     []
   );
@@ -152,9 +140,7 @@ export function GameHeader({ style, onNewGame, testID }: GameHeaderProps) {
         </Animated.View>
 
         {/* Best Score with Animation */}
-        <Animated.View
-          style={[dynamicStyles.scoreWrapper, bestScoreAnimatedStyle]}
-        >
+        <Animated.View style={[dynamicStyles.scoreWrapper, bestScoreAnimatedStyle]}>
           <ScoreDisplay
             label="Best"
             value={bestScore}
@@ -171,17 +157,13 @@ export function GameHeader({ style, onNewGame, testID }: GameHeaderProps) {
         accessibilityLabel="Game controls"
       >
         {/* Game Status Indicator */}
-        <StatusIndicator
-          status={gameStatus}
-          animated={true}
-          testID={testID ? `${testID}-status` : 'game-status'}
-        />
+        <StatusIndicator status={gameStatus} animated={true} testID={testID ? `${testID}-status` : 'game-status'} />
 
         {/* New Game Button */}
         <Button
           title="New Game"
           variant="primary"
-          size="medium"
+          size={dynamicStyles.isSmallScreen ? 'compact' : 'small'}
           onPress={handleNewGame}
           testID={testID ? `${testID}-new-game` : 'new-game-button'}
           accessibilityLabel="Start New Game"
@@ -196,26 +178,27 @@ export function GameHeader({ style, onNewGame, testID }: GameHeaderProps) {
  * Creates dynamic styles based on theme colors and responsive design
  */
 function createHeaderStyles(colors: any) {
-  const { width } = Dimensions.get('window');
+  const { width, height } = Dimensions.get('window');
   const isTablet = width > 768;
   const isNarrow = width < 375;
+  const isSmallScreen = height < 600; // Very small screens like older iPhones
 
   return StyleSheet.create({
     container: {
-      paddingHorizontal: isTablet ? 24 : isNarrow ? 12 : 16,
-      paddingVertical: isTablet ? 16 : 12,
-      // Responsive layout direction
-      flexDirection: isNarrow ? 'column' : 'row',
-      alignItems: isNarrow ? 'center' : 'center',
-      justifyContent: isNarrow ? 'center' : 'space-between',
-      gap: isNarrow ? 12 : 0,
+      paddingHorizontal: isTablet ? 24 : isNarrow ? 8 : 12,
+      paddingVertical: isTablet ? 16 : isSmallScreen ? 6 : 10,
+      // Responsive layout direction - force column on very small screens
+      flexDirection: isNarrow || isSmallScreen ? 'column' : 'row',
+      alignItems: isNarrow || isSmallScreen ? 'center' : 'center',
+      justifyContent: isNarrow || isSmallScreen ? 'center' : 'space-between',
+      gap: isNarrow || isSmallScreen ? 8 : 0,
       // Platform-specific styling
       ...getPlatformHeaderShadow(),
     } as ViewStyle,
 
     scoresContainer: {
       flexDirection: 'row',
-      gap: isTablet ? 16 : 12,
+      gap: isTablet ? 16 : isSmallScreen ? 8 : 12,
       alignItems: 'center',
     } as ViewStyle,
 
@@ -224,10 +207,13 @@ function createHeaderStyles(colors: any) {
     } as ViewStyle,
 
     controlsContainer: {
-      flexDirection: isNarrow ? 'column' : 'row',
+      flexDirection: isNarrow || isSmallScreen ? 'column' : 'row',
       alignItems: 'center',
-      gap: isTablet ? 16 : 12,
+      gap: isTablet ? 16 : isSmallScreen ? 6 : 10,
     } as ViewStyle,
+
+    // Expose flags for component logic
+    isSmallScreen,
   });
 }
 

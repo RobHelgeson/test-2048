@@ -1,16 +1,9 @@
-import { ThemedView } from '@/components/themed/ThemedView';
-import { useThemeColors } from '@/hooks/useTheme';
-import { useGameStore } from '@/stores/gameStore';
-import { Tile } from '@/components/game/Tile';
-import React, { useMemo } from 'react';
-import {
-  Dimensions,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Tile} from '@/components/game/Tile';
+import {ThemedView} from '@/components/themed/ThemedView';
+import {useThemeColors} from '@/hooks/useTheme';
+import {useGameStore} from '@/stores/gameStore';
+import React, {useMemo} from 'react';
+import {Dimensions, Platform, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -63,13 +56,11 @@ function calculateBoardSize(): number {
  * Ensures minimum touch target requirements are met
  */
 function calculateTileSize(boardSize: number): number {
-  const availableSpaceForTiles = boardSize - GRID_GAP * 5; // 5 gaps: before, between each tile, after
+  const availableSpaceForTiles = boardSize - GRID_GAP * 3; // 3 gaps: between 4 tiles (3 internal gaps)
   const baseTileSize = availableSpaceForTiles / 4; // 4x4 grid
 
   // Ensure minimum touch target size for current platform
-  const platformMinSize =
-    TOUCH_TARGETS[Platform.OS as keyof typeof TOUCH_TARGETS] ||
-    TOUCH_TARGETS.web;
+  const platformMinSize = TOUCH_TARGETS[Platform.OS as keyof typeof TOUCH_TARGETS] || TOUCH_TARGETS.web;
 
   return Math.max(baseTileSize, platformMinSize);
 }
@@ -87,12 +78,7 @@ function calculateTileSize(boardSize: number): number {
  * - Accessibility support for screen readers
  * - Performance optimized with memoization
  */
-export function GameBoard({
-  style,
-  disabled = false,
-  onTilePress,
-  testID = 'game-board',
-}: GameBoardProps) {
+export function GameBoard({ style, disabled = false, onTilePress, testID = 'game-board' }: GameBoardProps) {
   // Subscribe to game state
   const storeBoard = useGameStore((state) => state.board);
 
@@ -127,10 +113,7 @@ export function GameBoard({
   }, []); // screenWidth is captured at module load, doesn't need to be a dependency
 
   // Memoized styles for performance
-  const styles = useMemo(
-    () => createStyles(colors, boardDimensions),
-    [colors, boardDimensions]
-  );
+  const styles = useMemo(() => createStyles(colors, boardDimensions), [colors, boardDimensions]);
 
   // Handle tile press events
   const handleTilePress = (row: number, col: number) => {
@@ -200,10 +183,7 @@ export function GameBoard({
 /**
  * Creates dynamic styles based on theme colors and board dimensions
  */
-function createStyles(
-  colors: any,
-  dimensions: { boardSize: number; tileSize: number; containerSize: number }
-) {
+function createStyles(colors: any, dimensions: { boardSize: number; tileSize: number; containerSize: number }) {
   const { boardSize, tileSize, containerSize } = dimensions;
 
   return StyleSheet.create({
@@ -233,25 +213,34 @@ function createStyles(
     gridContainer: {
       width: boardSize,
       height: boardSize,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
-      alignContent: 'space-between',
-      padding: GRID_GAP,
+      position: 'relative',
+      display: Platform.OS === 'web' ? 'grid' : 'flex',
+      // CSS Grid for web
+      ...(Platform.OS === 'web' && {
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateRows: 'repeat(4, 1fr)',
+        gap: GRID_GAP,
+      }),
+      // Flexbox fallback for native platforms
+      ...(Platform.OS !== 'web' && {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',
+        alignContent: 'space-evenly',
+      }),
     },
 
     gridCell: {
       width: tileSize,
       height: tileSize,
-      margin: GRID_GAP / 2,
+      // Remove margin on web (handled by CSS Grid gap)
+      ...(Platform.OS !== 'web' && {
+        margin: GRID_GAP / 4, // Smaller margin for native
+      }),
       borderRadius: 6, // Slightly rounded corners for visual appeal
       // Ensure minimum touch target is met
-      minWidth:
-        TOUCH_TARGETS[Platform.OS as keyof typeof TOUCH_TARGETS] ||
-        TOUCH_TARGETS.web,
-      minHeight:
-        TOUCH_TARGETS[Platform.OS as keyof typeof TOUCH_TARGETS] ||
-        TOUCH_TARGETS.web,
+      minWidth: TOUCH_TARGETS[Platform.OS as keyof typeof TOUCH_TARGETS] || TOUCH_TARGETS.web,
+      minHeight: TOUCH_TARGETS[Platform.OS as keyof typeof TOUCH_TARGETS] || TOUCH_TARGETS.web,
     },
 
     tilePlaceholder: {
@@ -263,6 +252,12 @@ function createStyles(
       // Subtle border for empty tiles
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: colors.border + '40', // 25% opacity
+      // Ensure proper positioning on web
+      ...(Platform.OS === 'web' && {
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+      }),
     },
   });
 }

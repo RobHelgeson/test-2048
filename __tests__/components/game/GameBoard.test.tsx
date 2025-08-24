@@ -1,12 +1,8 @@
 import GameBoard from '@/components/game/GameBoard';
-import {
-  useThemeColors,
-  useTileColor,
-  useTileTextColor,
-} from '@/hooks/useTheme';
-import { useGameStore } from '@/stores/gameStore';
-import { GameStatus, Tile } from '@/types';
-import { fireEvent, render } from '@testing-library/react-native';
+import {useThemeColors, useTileColor, useTileTextColor} from '@/hooks/useTheme';
+import {useGameStore} from '@/stores/gameStore';
+import {GameStatus, Tile} from '@/types';
+import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 
 // Mock dependencies
@@ -44,26 +40,14 @@ jest.mock('@/components/themed/ThemedView', () => ({
 jest.mock('@/components/game/Tile', () => ({
   Tile: ({ tile, testID, ...props }: any) => {
     const React = require('react');
-    return React.createElement(
-      'View',
-      { testID, 'data-value': tile?.value },
-      `Tile ${tile?.value || 'empty'}`
-    );
+    return React.createElement('View', { testID, 'data-value': tile?.value }, `Tile ${tile?.value || 'empty'}`);
   },
 }));
 
-const mockUseGameStore = useGameStore as jest.MockedFunction<
-  typeof useGameStore
->;
-const mockUseThemeColors = useThemeColors as jest.MockedFunction<
-  typeof useThemeColors
->;
-const mockUseTileColor = useTileColor as jest.MockedFunction<
-  typeof useTileColor
->;
-const mockUseTileTextColor = useTileTextColor as jest.MockedFunction<
-  typeof useTileTextColor
->;
+const mockUseGameStore = useGameStore as jest.MockedFunction<typeof useGameStore>;
+const mockUseThemeColors = useThemeColors as jest.MockedFunction<typeof useThemeColors>;
+const mockUseTileColor = useTileColor as jest.MockedFunction<typeof useTileColor>;
+const mockUseTileTextColor = useTileTextColor as jest.MockedFunction<typeof useTileTextColor>;
 
 // Mock theme colors - complete ThemeColors object
 const mockThemeColors = {
@@ -301,7 +285,7 @@ describe('GameBoard Component', () => {
 
       // Grid gap should follow 8pt system (8px = 1x, used as GRID_GAP)
       gridCells.forEach((cell) => {
-        expect(cell.props.style.margin).toBe(4); // GRID_GAP / 2 = 4
+        expect(cell.props.style.margin).toBe(2);
       });
     });
   });
@@ -312,12 +296,8 @@ describe('GameBoard Component', () => {
       const board = getByTestId('game-board');
 
       expect(board.props.accessibilityRole).toBe('button');
-      expect(board.props.accessibilityLabel).toContain(
-        'Game board with 4 by 4 grid'
-      );
-      expect(board.props.accessibilityHint).toContain(
-        'Swipe in any direction to move tiles'
-      );
+      expect(board.props.accessibilityLabel).toContain('Game board with 4 by 4 grid');
+      expect(board.props.accessibilityHint).toContain('Swipe in any direction to move tiles');
     });
 
     it('provides cell-specific accessibility labels for empty cells', () => {
@@ -325,9 +305,7 @@ describe('GameBoard Component', () => {
       const cell = getByTestId('game-board-cell-1-2');
 
       expect(cell.props.accessibilityRole).toBe('button');
-      expect(cell.props.accessibilityLabel).toBe(
-        'Empty space at row 2, column 3'
-      );
+      expect(cell.props.accessibilityLabel).toBe('Empty space at row 2, column 3');
     });
 
     it('provides cell-specific accessibility labels for occupied cells', () => {
@@ -347,9 +325,7 @@ describe('GameBoard Component', () => {
       const { getByTestId } = render(<GameBoard />);
       const cell = getByTestId('game-board-cell-0-0');
 
-      expect(cell.props.accessibilityLabel).toBe(
-        'Tile with value 2 at row 1, column 1'
-      );
+      expect(cell.props.accessibilityLabel).toBe('Tile with value 2 at row 1, column 1');
     });
 
     it('updates accessibility label based on tile count', () => {
@@ -370,9 +346,7 @@ describe('GameBoard Component', () => {
       const board = getByTestId('game-board');
 
       // Should show correct tile count (2 tiles in mockBoardWithTiles)
-      expect(board.props.accessibilityLabel).toContain(
-        '2 tiles currently placed'
-      );
+      expect(board.props.accessibilityLabel).toContain('2 tiles currently placed');
     });
 
     it('disables accessibility for cells during animations', () => {
@@ -386,9 +360,7 @@ describe('GameBoard Component', () => {
   describe('Interaction Handling', () => {
     it('handles tile press events', () => {
       const mockOnTilePress = jest.fn();
-      const { getByTestId } = render(
-        <GameBoard onTilePress={mockOnTilePress} />
-      );
+      const { getByTestId } = render(<GameBoard onTilePress={mockOnTilePress} />);
 
       const cell = getByTestId('game-board-cell-1-2');
       fireEvent.press(cell);
@@ -398,9 +370,7 @@ describe('GameBoard Component', () => {
 
     it('prevents tile press when disabled', () => {
       const mockOnTilePress = jest.fn();
-      const { getByTestId } = render(
-        <GameBoard onTilePress={mockOnTilePress} disabled={true} />
-      );
+      const { getByTestId } = render(<GameBoard onTilePress={mockOnTilePress} disabled={true} />);
 
       const cell = getByTestId('game-board-cell-1-2');
       fireEvent.press(cell);
@@ -426,9 +396,7 @@ describe('GameBoard Component', () => {
         return selector(mockState);
       });
 
-      const { getByTestId } = render(
-        <GameBoard onTilePress={mockOnTilePress} />
-      );
+      const { getByTestId } = render(<GameBoard onTilePress={mockOnTilePress} />);
 
       const cell = getByTestId('game-board-cell-1-2');
       fireEvent.press(cell);
