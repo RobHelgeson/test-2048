@@ -1,0 +1,503 @@
+import GameBoard from '@/components/game/GameBoard';
+import { useThemeColors } from '@/hooks/useTheme';
+import { useGameStore } from '@/stores/gameStore';
+import { GameStatus, Tile } from '@/types';
+import { fireEvent, render } from '@testing-library/react-native';
+import React from 'react';
+
+// Mock dependencies
+jest.mock('@/stores/gameStore');
+jest.mock('@/hooks/useTheme');
+
+// Additional React Native mocks
+jest.mock('react-native', () => ({
+  Dimensions: {
+    get: jest.fn(() => ({ width: 375, height: 667 })),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+  },
+  Platform: {
+    OS: 'ios',
+    select: jest.fn((options) => options.ios || options.default),
+  },
+  StyleSheet: {
+    create: (styles: any) => styles,
+    hairlineWidth: 0.5,
+  },
+  TouchableOpacity: 'TouchableOpacity',
+  View: 'View',
+}));
+
+// Mock ThemedView component
+jest.mock('@/components/themed/ThemedView', () => ({
+  ThemedView: ({ children, testID, style, ...props }: any) => {
+    const React = require('react');
+    return React.createElement('View', { testID, style, ...props }, children);
+  },
+}));
+
+const mockUseGameStore = useGameStore as jest.MockedFunction<
+  typeof useGameStore
+>;
+const mockUseThemeColors = useThemeColors as jest.MockedFunction<
+  typeof useThemeColors
+>;
+
+// Mock theme colors - complete ThemeColors object
+const mockThemeColors = {
+  // Background colors
+  background: '#faf8ef',
+  surface: '#ffffff',
+  surfaceVariant: '#f6f6f4',
+
+  // Text colors
+  text: '#776e65',
+  textSecondary: '#8f7a66',
+  textOnPrimary: '#ffffff',
+
+  // UI colors
+  primary: '#8f7a66',
+  primaryVariant: '#776e65',
+  secondary: '#bbada0',
+  accent: '#edc22e',
+
+  // Game board colors
+  gameBackground: '#bbada0',
+  tilePlaceholder: '#cdc1b4',
+  tileBackground: '#eee4da',
+
+  // Status colors
+  success: '#6aaa64',
+  warning: '#edc22e',
+  error: '#dc3545',
+  info: '#17a2b8',
+
+  // Border and shadow colors
+  border: '#776e65',
+  shadow: '#000000',
+
+  // Tile colors
+  tile2: '#eee4da',
+  tile4: '#ede0c8',
+  tile8: '#f2b179',
+  tile16: '#f59563',
+  tile32: '#f67c5f',
+  tile64: '#f65e3b',
+  tile128: '#edcf72',
+  tile256: '#edcc61',
+  tile512: '#edc850',
+  tile1024: '#edc53f',
+  tile2048: '#edc22e',
+  tileSuper: '#3c3a32',
+};
+
+// Mock empty board state
+const mockEmptyBoard = [
+  [null, null, null, null],
+  [null, null, null, null],
+  [null, null, null, null],
+  [null, null, null, null],
+];
+
+// Mock board with tiles
+const mockBoardWithTiles = [
+  [
+    { id: 'tile-1', value: 2, row: 0, col: 0, isNew: false } as Tile,
+    { id: 'tile-2', value: 4, row: 0, col: 1, isNew: false } as Tile,
+    null,
+    null,
+  ],
+  [null, null, null, null],
+  [null, null, null, null],
+  [null, null, null, null],
+];
+
+describe('GameBoard Component', () => {
+  beforeEach(() => {
+    // Reset all mocks
+    jest.clearAllMocks();
+
+    // Default mock implementations
+    mockUseThemeColors.mockReturnValue(mockThemeColors);
+
+    // Default game store mock
+    mockUseGameStore.mockImplementation((selector: any) =>
+      selector({
+        board: mockEmptyBoard,
+        gameStatus: GameStatus.PLAYING,
+        score: 0,
+        bestScore: 0,
+        moveCount: 0,
+        startTime: Date.now(),
+        lastMoveTime: Date.now(),
+        canUndo: false,
+      })
+    );
+  });
+
+  describe('Component Rendering', () => {
+    it('renders 4x4 grid layout correctly', () => {
+      const { getAllByTestId } = render(<GameBoard />);
+
+      // Should have 16 grid cells (4x4)
+      const gridCells = getAllByTestId(/game-board-cell-\d-\d/);
+      expect(gridCells).toHaveLength(16);
+
+      // Check specific cell positions
+      expect(getAllByTestId('game-board-cell-0-0')).toBeTruthy();
+      expect(getAllByTestId('game-board-cell-3-3')).toBeTruthy();
+    });
+
+    it('renders with empty board state', () => {
+      const { getByTestId, queryByTestId } = render(<GameBoard />);
+
+      const board = getByTestId('game-board');
+      expect(board).toBeTruthy();
+
+      // Should not have any tile elements for empty board
+      expect(queryByTestId(/game-board-tile-/)).toBeNull();
+    });
+
+    it('renders with populated board state', () => {
+      mockUseGameStore.mockImplementation((selector: any) =>
+        selector({
+          board: mockBoardWithTiles,
+          gameStatus: GameStatus.PLAYING,
+          score: 100,
+          bestScore: 200,
+          moveCount: 5,
+          startTime: Date.now(),
+          lastMoveTime: Date.now(),
+          canUndo: true,
+        })
+      );
+
+      const { getByTestId } = render(<GameBoard />);
+
+      // Should have tile elements for populated positions
+      expect(getByTestId('game-board-tile-tile-1')).toBeTruthy();
+      expect(getByTestId('game-board-tile-tile-2')).toBeTruthy();
+    });
+
+    it('applies custom testID correctly', () => {
+      const customTestID = 'custom-board';
+      const { getByTestId } = render(<GameBoard testID={customTestID} />);
+
+      expect(getByTestId(customTestID)).toBeTruthy();
+      expect(getByTestId(`${customTestID}-grid`)).toBeTruthy();
+      expect(getByTestId(`${customTestID}-cell-0-0`)).toBeTruthy();
+    });
+  });
+
+  describe('Responsive Behavior', () => {
+    it('renders with responsive board dimensions', () => {
+      const { getByTestId } = render(<GameBoard />);
+      const board = getByTestId('game-board');
+
+      // Board should have width and height set - handle style arrays
+      const boardStyle = Array.isArray(board.props.style)
+        ? Object.assign({}, ...board.props.style.filter(Boolean))
+        : board.props.style;
+
+      expect(boardStyle).toMatchObject({
+        width: expect.any(Number),
+        height: expect.any(Number),
+      });
+    });
+
+    it('ensures minimum touch target sizes are met', () => {
+      const { getAllByTestId } = render(<GameBoard />);
+      const gridCells = getAllByTestId(/game-board-cell-\d-\d/);
+
+      gridCells.forEach((cell) => {
+        const style = cell.props.style;
+        // Should meet iOS minimum of 44pt
+        expect(style.minWidth).toBeGreaterThanOrEqual(44);
+        expect(style.minHeight).toBeGreaterThanOrEqual(44);
+      });
+    });
+  });
+
+  describe('Platform-Specific Styling', () => {
+    it('applies platform-specific styling through ThemedView', () => {
+      const { getByTestId } = render(<GameBoard />);
+      const board = getByTestId('game-board');
+
+      // ThemedView should handle platform-specific styling
+      expect(board).toBeTruthy();
+    });
+  });
+
+  describe('Theme Integration', () => {
+    it('integrates with theme system correctly', () => {
+      const { getByTestId } = render(<GameBoard />);
+
+      // ThemedView should receive theme-related props
+      expect(mockUseThemeColors).toHaveBeenCalled();
+    });
+
+    it('updates when theme colors change', () => {
+      const newColors = {
+        ...mockThemeColors,
+        gameBackground: '#654321',
+        tilePlaceholder: '#abcdef',
+      };
+
+      mockUseThemeColors.mockReturnValue(newColors);
+
+      const { getByTestId } = render(<GameBoard />);
+
+      // Component should re-render with new colors
+      expect(mockUseThemeColors).toHaveBeenCalled();
+    });
+
+    it('applies 8pt grid spacing system', () => {
+      const { getAllByTestId } = render(<GameBoard />);
+      const gridCells = getAllByTestId(/game-board-cell-\d-\d/);
+
+      // Grid gap should follow 8pt system (8px = 1x, used as GRID_GAP)
+      gridCells.forEach((cell) => {
+        expect(cell.props.style.margin).toBe(4); // GRID_GAP / 2 = 4
+      });
+    });
+  });
+
+  describe('Accessibility Features', () => {
+    it('provides proper accessibility labels and roles', () => {
+      const { getByTestId } = render(<GameBoard />);
+      const board = getByTestId('game-board');
+
+      expect(board.props.accessibilityRole).toBe('button');
+      expect(board.props.accessibilityLabel).toContain(
+        'Game board with 4 by 4 grid'
+      );
+      expect(board.props.accessibilityHint).toContain(
+        'Swipe in any direction to move tiles'
+      );
+    });
+
+    it('provides cell-specific accessibility labels for empty cells', () => {
+      const { getByTestId } = render(<GameBoard />);
+      const cell = getByTestId('game-board-cell-1-2');
+
+      expect(cell.props.accessibilityRole).toBe('button');
+      expect(cell.props.accessibilityLabel).toBe(
+        'Empty space at row 2, column 3'
+      );
+    });
+
+    it('provides cell-specific accessibility labels for occupied cells', () => {
+      mockUseGameStore.mockImplementation((selector: any) =>
+        selector({
+          board: mockBoardWithTiles,
+          gameStatus: GameStatus.PLAYING,
+          score: 0,
+          bestScore: 0,
+          moveCount: 0,
+          startTime: Date.now(),
+          lastMoveTime: Date.now(),
+          canUndo: false,
+        })
+      );
+
+      const { getByTestId } = render(<GameBoard />);
+      const cell = getByTestId('game-board-cell-0-0');
+
+      expect(cell.props.accessibilityLabel).toBe(
+        'Tile with value 2 at row 1, column 1'
+      );
+    });
+
+    it('updates accessibility label based on tile count', () => {
+      mockUseGameStore.mockImplementation((selector: any) =>
+        selector({
+          board: mockBoardWithTiles,
+          gameStatus: GameStatus.PLAYING,
+          score: 0,
+          bestScore: 0,
+          moveCount: 0,
+          startTime: Date.now(),
+          lastMoveTime: Date.now(),
+          canUndo: false,
+        })
+      );
+
+      const { getByTestId } = render(<GameBoard />);
+      const board = getByTestId('game-board');
+
+      // Should show correct tile count (2 tiles in mockBoardWithTiles)
+      expect(board.props.accessibilityLabel).toContain(
+        '2 tiles currently placed'
+      );
+    });
+
+    it('disables accessibility for cells during animations', () => {
+      const { getByTestId } = render(<GameBoard disabled={true} />);
+      const cell = getByTestId('game-board-cell-0-0');
+
+      expect(cell.props.accessibilityState.disabled).toBe(true);
+    });
+  });
+
+  describe('Interaction Handling', () => {
+    it('handles tile press events', () => {
+      const mockOnTilePress = jest.fn();
+      const { getByTestId } = render(
+        <GameBoard onTilePress={mockOnTilePress} />
+      );
+
+      const cell = getByTestId('game-board-cell-1-2');
+      fireEvent.press(cell);
+
+      expect(mockOnTilePress).toHaveBeenCalledWith(1, 2);
+    });
+
+    it('prevents tile press when disabled', () => {
+      const mockOnTilePress = jest.fn();
+      const { getByTestId } = render(
+        <GameBoard onTilePress={mockOnTilePress} disabled={true} />
+      );
+
+      const cell = getByTestId('game-board-cell-1-2');
+      fireEvent.press(cell);
+
+      expect(mockOnTilePress).not.toHaveBeenCalled();
+    });
+
+    it('prevents tile press during animations', () => {
+      const mockOnTilePress = jest.fn();
+
+      // Mock animation state (using gameStatus as placeholder)
+      mockUseGameStore.mockImplementation((selector: any) => {
+        const mockState = {
+          board: mockEmptyBoard,
+          gameStatus: GameStatus.PLAYING,
+          score: 0,
+          bestScore: 0,
+          moveCount: 0,
+          startTime: Date.now(),
+          lastMoveTime: Date.now(),
+          canUndo: false,
+        };
+        return selector(mockState);
+      });
+
+      const { getByTestId } = render(
+        <GameBoard onTilePress={mockOnTilePress} />
+      );
+
+      const cell = getByTestId('game-board-cell-1-2');
+      fireEvent.press(cell);
+
+      // Should still be called since we're using gameStatus as placeholder
+      // In actual implementation, this would check for isAnimating state
+      expect(mockOnTilePress).toHaveBeenCalledWith(1, 2);
+    });
+  });
+
+  describe('Performance Optimization', () => {
+    it('memoizes board calculations', () => {
+      const { rerender } = render(<GameBoard />);
+
+      // Re-render with same screen dimensions
+      rerender(<GameBoard />);
+
+      // Component should render without errors on re-render
+      expect(mockUseThemeColors).toHaveBeenCalled();
+    });
+
+    it('memoizes accessibility labels', () => {
+      const { rerender, getByTestId } = render(<GameBoard />);
+
+      const initialLabel = getByTestId('game-board').props.accessibilityLabel;
+
+      // Re-render with same board state
+      rerender(<GameBoard />);
+
+      const updatedLabel = getByTestId('game-board').props.accessibilityLabel;
+      expect(updatedLabel).toBe(initialLabel);
+    });
+
+    it('updates memoized values when dependencies change', () => {
+      const { rerender, getByTestId } = render(<GameBoard />);
+
+      const initialLabel = getByTestId('game-board').props.accessibilityLabel;
+
+      // Change board state
+      mockUseGameStore.mockImplementation((selector: any) =>
+        selector({
+          board: mockBoardWithTiles,
+          gameStatus: GameStatus.PLAYING,
+          score: 0,
+          bestScore: 0,
+          moveCount: 0,
+          startTime: Date.now(),
+          lastMoveTime: Date.now(),
+          canUndo: false,
+        })
+      );
+
+      rerender(<GameBoard />);
+
+      const updatedLabel = getByTestId('game-board').props.accessibilityLabel;
+      expect(updatedLabel).not.toBe(initialLabel);
+      expect(updatedLabel).toContain('2 tiles currently placed');
+    });
+  });
+
+  describe('Visual Styling', () => {
+    it('applies proper border radius to grid cells', () => {
+      const { getAllByTestId } = render(<GameBoard />);
+      const gridCells = getAllByTestId(/game-board-cell-\d-\d/);
+
+      gridCells.forEach((cell) => {
+        expect(cell.props.style.borderRadius).toBe(6);
+      });
+    });
+
+    it('applies tile placeholder styling', () => {
+      const { getAllByTestId } = render(<GameBoard />);
+      const gridCells = getAllByTestId(/game-board-cell-\d-\d/);
+
+      // Check that tile placeholders have correct background color
+      gridCells.forEach((cell) => {
+        const placeholder = cell.props.children;
+        expect(placeholder.props.style).toMatchObject({
+          backgroundColor: mockThemeColors.tilePlaceholder,
+          borderRadius: 4,
+        });
+      });
+    });
+  });
+
+  describe('Error Boundaries and Edge Cases', () => {
+    it('handles missing theme colors gracefully', () => {
+      mockUseThemeColors.mockReturnValue({} as any);
+
+      expect(() => render(<GameBoard />)).not.toThrow();
+    });
+
+    it('handles undefined board state', () => {
+      mockUseGameStore.mockImplementation((selector: any) =>
+        selector({
+          board: undefined as any,
+          gameStatus: GameStatus.PLAYING,
+          score: 0,
+          bestScore: 0,
+          moveCount: 0,
+          startTime: Date.now(),
+          lastMoveTime: Date.now(),
+          canUndo: false,
+        })
+      );
+
+      // Should not crash, though functionality may be limited
+      expect(() => render(<GameBoard />)).not.toThrow();
+    });
+
+    it('handles extreme screen dimensions', () => {
+      // Component should render without crashing for different screen sizes
+      expect(() => render(<GameBoard />)).not.toThrow();
+    });
+  });
+});

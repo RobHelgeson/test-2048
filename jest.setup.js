@@ -37,32 +37,51 @@ jest.mock('expo-router', () => ({
 }));
 
 // Mock React Native components and modules
-jest.mock('react-native', () => ({
-  Platform: {
-    OS: 'ios',
-    select: jest.fn((config) => config.ios),
-  },
-  Dimensions: {
-    get: jest.fn(() => ({
-      width: 375,
-      height: 812,
-      scale: 2,
-      fontScale: 1,
-    })),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-  },
-  View: 'View',
-  Text: 'Text',
-  Pressable: 'Pressable',
-  ScrollView: 'ScrollView',
-  StyleSheet: {
-    create: (styles) => styles,
-    absoluteFill: {},
-    flatten: (style) => style,
-    compose: (style1, style2) => [style1, style2],
-  },
-}));
+jest.mock('react-native', () => {
+  const mockReact = require('react');
+  return {
+    Platform: {
+      OS: 'ios',
+      select: jest.fn((config) => config.ios),
+    },
+    Dimensions: {
+      get: jest.fn(() => ({
+        width: 375,
+        height: 812,
+        scale: 2,
+        fontScale: 1,
+      })),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    },
+    View: mockReact.forwardRef((props, ref) =>
+      mockReact.createElement('View', { ...props, ref })
+    ),
+    Text: mockReact.forwardRef((props, ref) =>
+      mockReact.createElement('Text', { ...props, ref })
+    ),
+    Pressable: mockReact.forwardRef((props, ref) =>
+      mockReact.createElement('Pressable', { ...props, ref })
+    ),
+    ScrollView: mockReact.forwardRef((props, ref) =>
+      mockReact.createElement('ScrollView', { ...props, ref })
+    ),
+    TouchableOpacity: mockReact.forwardRef((props, ref) => {
+      return mockReact.createElement('TouchableOpacity', {
+        ...props,
+        ref,
+        testID: props.testID,
+      });
+    }),
+    StyleSheet: {
+      create: (styles) => styles,
+      absoluteFill: {},
+      flatten: (style) => style,
+      compose: (style1, style2) => [style1, style2],
+      hairlineWidth: 1,
+    },
+  };
+});
 
 // Global test setup
 beforeEach(() => {
