@@ -20,8 +20,9 @@ The structure of a story number is {epic number}.{story sequence}
         - If there is, continue to the next step.
      2. If the status of the story is "Draft", update it to "Ready for Development"
      3. If the status of the story is "Ready for Development", use a sub‑agent to load the bmad-dev-develop-story agent, pass 'story {story number}' as arguments.
-     4. If the status of the story is "Ready for Review", use a sub‑agent to load the bmad-qa-review-story agent, pass 'story {story number}' as arguments.
-     5. If the QA subagent was happy with the results update the status of the story to Done
+     4. Read the status of the story (it may have been updated).
+     5. If the status of the story is "Ready for Review", use a sub‑agent to load the bmad-qa-review-story agent, pass 'story {story number}' as arguments.
+     6. If the QA subagent was happy with the results, update the status of the story to Done
      ```
    - `relatedFiles` = []
    - `verificationCriteria` =
