@@ -16,6 +16,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:ci": "jest --coverage --watchAll=false --passWithNoTests",
+    "test:e2e": "echo \"E2E tests not yet configured. Use 'npm run test' for unit tests.\"",
     "build:ios:dev": "eas build --platform ios --profile development",
     "build:android:dev": "eas build --platform android --profile development",
     "build:web": "npx expo export --platform web",
@@ -54,6 +56,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@babel/preset-typescript": "^7.27.1",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.2.0",
     "@types/jest": "^29.5.0",
@@ -63,6 +66,7 @@
     "jest": "^29.7.0",
     "jest-expo": "~52.0.0",
     "prettier": "^3.0.0",
+    "react-test-renderer": "^19.0.0",
     "typescript": "~5.8.3"
   },
   "private": true
