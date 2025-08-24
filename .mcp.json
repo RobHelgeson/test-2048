@@ -15,7 +15,7 @@
       "env": {
         "ENABLE_GUI": "true",
         "WEB_PORT": "4400",
-        "DATA_DIR": "/Users/rvh/Documents/Code/test-2048/.shrimp/data"
+        "DATA_DIR": "/Users/dasaf/personal-dev/test-2048/.shrimp/data"
       }
     }
   }
