@@ -413,7 +413,7 @@ export function spawnRandomTile(board: Board): SpawnResult {
 
   // Create new tile with unique ID
   const newTile: Tile = {
-    id: `tile-${position.row}-${position.col}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: `tile-${position.row}-${position.col}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     value,
     row: position.row,
     col: position.col,
@@ -500,6 +500,58 @@ export function checkGameOver(board: Board): boolean {
 
   // No empty cells and no possible merges
   return true;
+}
+
+/**
+ * Calculate score from merged tiles
+ * Points are awarded equal to the sum of merged tile values
+ *
+ * @param mergedTiles - Array of tile IDs that were merged
+ * @param tiles - Array of all tiles to find values from
+ * @returns Total score points from merges
+ *
+ * @example
+ * ```typescript
+ * const tiles = [{ id: 'tile-1', value: 2 }, { id: 'tile-2', value: 2 }];
+ * const mergedIds = ['tile-1', 'tile-2'];
+ * const score = calculateScore(mergedIds, tiles); // Returns 4 (2+2)
+ * ```
+ */
+export function calculateScore(
+  mergedTileIds: string[],
+  allTiles: Tile[]
+): number {
+  if (!mergedTileIds.length || !allTiles.length) {
+    return 0;
+  }
+
+  let totalScore = 0;
+  const tileMap = new Map(allTiles.map((tile) => [tile.id, tile]));
+
+  for (const tileId of mergedTileIds) {
+    const tile = tileMap.get(tileId);
+    if (tile) {
+      totalScore += tile.value;
+    }
+  }
+
+  return totalScore;
+}
+
+/**
+ * Calculate score from tile values directly
+ * Simplified version that takes tile values instead of IDs
+ *
+ * @param tileValues - Array of tile values that were merged
+ * @returns Total score points from merges
+ *
+ * @example
+ * ```typescript
+ * const score = calculateScoreFromValues([2, 2, 4, 4]); // Returns 12
+ * ```
+ */
+export function calculateScoreFromValues(tileValues: number[]): number {
+  return tileValues.reduce((sum, value) => sum + value, 0);
 }
 
 /**
