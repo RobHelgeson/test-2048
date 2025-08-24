@@ -17,6 +17,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     infoPlist: {
       UIRequiredDeviceCapabilities: ['armv7'],
       UIRequiresFullScreen: true,
+      ITSAppUsesNonExemptEncryption: false,
     },
   },
   android: {
@@ -56,9 +57,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     checkAutomatically: 'ON_ERROR_RECOVERY',
     enabled: true,
   },
-  runtimeVersion: {
-    policy: 'appVersion',
-  },
+  runtimeVersion: '1.0.0',
   extra: {
     eas: {
       projectId: '0bc6705f-8659-4ffe-b9b3-f3c2627cbad8',
