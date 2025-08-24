@@ -1,0 +1,214 @@
+{
+  "tasks": [
+    {
+      "id": "15da532f-6362-4bb2-8dc0-ca1682d3bcbf",
+      "name": "Story 5.1: Tutorial and Onboarding Experience",
+      "description": "Execute the complete BMAD (Business, Management, Architecture, Development) lifecycle for Story 5.1: Tutorial and Onboarding Experience by running three sequential sub-agents: bmad-sm-draft-story for story management, bmad-dev-develop-story for development implementation, and bmad-qa-review-story for quality assurance review. This coordinates the systematic development of a comprehensive tutorial and onboarding experience for new players of the 2048 game, including interactive tutorial overlays, step-by-step gameplay instruction, onboarding flow integration, tutorial state management, user progress tracking, skip tutorial option, accessibility compliance for tutorial elements, and complete tutorial testing across all supported platforms.",
+      "notes": "This task coordinates the complete BMAD workflow for Story 5.1 implementation. The tutorial system must integrate with existing Epic 4 gesture recognition, follow established React Native Reanimated 3 animation patterns, use Expo Router for navigation, maintain consistency with ThemedText/ThemedView components, implement AsyncStorage persistence patterns, and ensure WCAG AA accessibility compliance.",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2025-08-24T05:01:24.350Z",
+      "updatedAt": "2025-08-24T05:01:24.350Z",
+      "relatedFiles": [
+        {
+          "path": "docs/prd/epic-5-game-flow-user-experience.md",
+          "type": "REFERENCE",
+          "description": "Epic 5 and Story 5.1 requirements specification",
+          "lineStart": 5,
+          "lineEnd": 18
+        },
+        {
+          "path": "app/(tabs)/_layout.tsx",
+          "type": "REFERENCE",
+          "description": "Existing Expo Router tab navigation patterns",
+          "lineStart": 1,
+          "lineEnd": 45
+        },
+        {
+          "path": "components/ThemedText.tsx",
+          "type": "REFERENCE",
+          "description": "Established component template patterns",
+          "lineStart": 1,
+          "lineEnd": 61
+        },
+        {
+          "path": "components/HelloWave.tsx",
+          "type": "REFERENCE",
+          "description": "React Native Reanimated 3 animation patterns",
+          "lineStart": 1,
+          "lineEnd": 41
+        },
+        {
+          "path": "constants/Colors.ts",
+          "type": "REFERENCE",
+          "description": "Theme and color system patterns",
+          "lineStart": 1,
+          "lineEnd": 27
+        }
+      ],
+      "implementationGuide": "1. Use a sub-agent to load the bmad-sm-draft-story agent, pass 'story 5.1' as arguments.\n2. Use a sub-agent to load the bmad-dev-develop-story agent, pass 'story 5.1' as arguments.\n3. Use a sub-agent to load the bmad-qa-review-story agent, pass 'story 5.1' as arguments.",
+      "verificationCriteria": "The Status of `docs/stories/5.1-story.md` is Complete.",
+      "analysisResult": "Story 5.1 requires implementing a comprehensive tutorial and onboarding experience for the 2048 game using established React Native/Expo patterns. The implementation must follow existing component templates, theming system, animation patterns with React Native Reanimated 3, and Expo Router navigation. The tutorial system should be self-contained while integrating seamlessly with existing architecture including AsyncStorage persistence, accessibility compliance, and platform-specific presentations."
+    },
+    {
+      "id": "da813be5-bf89-41e8-9746-b92ea32c1c6d",
+      "name": "Story 5.2: Game Over and Victory Screens",
+      "description": "Execute the complete BMAD (Business, Management, Architecture, Development) lifecycle for Story 5.2: Game Over and Victory Screens by running three sequential sub-agents: bmad-sm-draft-story for story management, bmad-dev-develop-story for development implementation, and bmad-qa-review-story for quality assurance review. This coordinates the systematic development of clear feedback when games end with game over overlay displaying final score and performance feedback, victory screen with celebration animation when reaching 2048 tile, continue playing option after victory, new game and restart options, score comparison with previous best score and progress indicators, smooth transitions between game states with proper animation, and game end screen testing with various score scenarios and outcomes.",
+      "notes": "This task coordinates the complete BMAD workflow for Story 5.2 implementation. The game end screens must integrate with Epic 2 game logic for win/lose detection, Epic 3 scoring system for final score calculation, follow established Expo Router modal patterns, use React Native Reanimated 3 for celebration animations, implement AsyncStorage for best score persistence, and ensure smooth state transitions with accessibility compliance.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "15da532f-6362-4bb2-8dc0-ca1682d3bcbf"
+        }
+      ],
+      "createdAt": "2025-08-24T05:02:38.035Z",
+      "updatedAt": "2025-08-24T05:02:38.035Z",
+      "relatedFiles": [
+        {
+          "path": "docs/prd/epic-5-game-flow-user-experience.md",
+          "type": "REFERENCE",
+          "description": "Epic 5 and Story 5.2 requirements specification",
+          "lineStart": 20,
+          "lineEnd": 33
+        },
+        {
+          "path": "components/HelloWave.tsx",
+          "type": "REFERENCE",
+          "description": "React Native Reanimated 3 animation patterns for celebration effects",
+          "lineStart": 1,
+          "lineEnd": 41
+        },
+        {
+          "path": "app/(tabs)/_layout.tsx",
+          "type": "REFERENCE",
+          "description": "Expo Router modal presentation patterns",
+          "lineStart": 1,
+          "lineEnd": 45
+        }
+      ],
+      "implementationGuide": "1. Use a sub-agent to load the bmad-sm-draft-story agent, pass 'story 5.2' as arguments.\\n2. Use a sub-agent to load the bmad-dev-develop-story agent, pass 'story 5.2' as arguments.\\n3. Use a sub-agent to load the bmad-qa-review-story agent, pass 'story 5.2' as arguments.",
+      "verificationCriteria": "The Status of `docs/stories/5.2-story.md` is Complete.",
+      "analysisResult": "Story 5.2 requires implementing comprehensive game over and victory screens using established React Native/Expo patterns. The implementation must follow existing modal presentation via Expo Router, component templates, React Native Reanimated 3 animation patterns, AsyncStorage persistence, and accessibility compliance. Integration with Epic 2 game logic and Epic 3 scoring system required."
+    },
+    {
+      "id": "b4571090-3c3a-4154-a6e8-153892789042",
+      "name": "Story 5.3: Settings Panel and Preferences",
+      "description": "Execute the complete BMAD (Business, Management, Architecture, Development) lifecycle for Story 5.3: Settings Panel and Preferences by running three sequential sub-agents: bmad-sm-draft-story for story management, bmad-dev-develop-story for development implementation, and bmad-qa-review-story for quality assurance review. This coordinates the systematic development of a comprehensive settings screen accessible through navigation with theme selector, theme switching between Classic and Cool with live preview, haptic feedback toggle for mobile devices with immediate testing capability, about section with game information and development credits, settings persistence using AsyncStorage with proper error handling, platform-appropriate settings presentation, and settings functionality testing across all platforms and preferences.",
+      "notes": "This task coordinates the complete BMAD workflow for Story 5.3 implementation. The settings panel must follow established Expo Router navigation patterns, extend existing theme system from Colors.ts, implement haptic feedback integration, use AsyncStorage persistence patterns, and ensure platform-appropriate presentation with accessibility compliance.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "da813be5-bf89-41e8-9746-b92ea32c1c6d"
+        }
+      ],
+      "createdAt": "2025-08-24T05:02:52.561Z",
+      "updatedAt": "2025-08-24T05:02:52.561Z",
+      "relatedFiles": [
+        {
+          "path": "docs/prd/epic-5-game-flow-user-experience.md",
+          "type": "REFERENCE",
+          "description": "Epic 5 and Story 5.3 requirements specification",
+          "lineStart": 35,
+          "lineEnd": 48
+        },
+        {
+          "path": "constants/Colors.ts",
+          "type": "REFERENCE",
+          "description": "Existing theme system to extend for settings",
+          "lineStart": 1,
+          "lineEnd": 27
+        },
+        {
+          "path": "hooks/useColorScheme.ts",
+          "type": "REFERENCE",
+          "description": "Theme switching patterns",
+          "lineStart": 1,
+          "lineEnd": 2
+        }
+      ],
+      "implementationGuide": "1. Use a sub-agent to load the bmad-sm-draft-story agent, pass 'story 5.3' as arguments.\\n2. Use a sub-agent to load the bmad-dev-develop-story agent, pass 'story 5.3' as arguments.\\n3. Use a sub-agent to load the bmad-qa-review-story agent, pass 'story 5.3' as arguments.",
+      "verificationCriteria": "The Status of `docs/stories/5.3-story.md` is Complete.",
+      "analysisResult": "Story 5.3 requires implementing comprehensive settings panel using established React Native/Expo patterns including theme selector, haptic feedback toggle, about section, and settings persistence via AsyncStorage following existing architectural patterns."
+    },
+    {
+      "id": "dded0c99-d764-4bdd-83ed-94d906c2c49d",
+      "name": "Story 5.4: Navigation and Screen Management",
+      "description": "Execute the complete BMAD (Business, Management, Architecture, Development) lifecycle for Story 5.4: Navigation and Screen Management by running three sequential sub-agents: bmad-sm-draft-story for story management, bmad-dev-develop-story for development implementation, and bmad-qa-review-story for quality assurance review. This coordinates the systematic development of smooth navigation between game, tutorial, and settings screens with Expo Router navigation configured for all app screens, navigation transitions following platform conventions, back navigation handling with proper state management, deep linking support for direct access to different app sections, navigation accessibility with proper focus management and screen reader support, platform-specific navigation patterns, and navigation testing ensuring smooth flow between all app sections.",
+      "notes": "This task coordinates the complete BMAD workflow for Story 5.4 implementation. The navigation system must build upon established Expo Router patterns, integrate with existing tab navigation structure, handle modal presentations properly, ensure proper state management during transitions, and maintain accessibility compliance with focus management.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "b4571090-3c3a-4154-a6e8-153892789042"
+        }
+      ],
+      "createdAt": "2025-08-24T05:03:03.268Z",
+      "updatedAt": "2025-08-24T05:03:03.268Z",
+      "relatedFiles": [
+        {
+          "path": "docs/prd/epic-5-game-flow-user-experience.md",
+          "type": "REFERENCE",
+          "description": "Epic 5 and Story 5.4 requirements specification",
+          "lineStart": 50,
+          "lineEnd": 63
+        },
+        {
+          "path": "app/_layout.tsx",
+          "type": "REFERENCE",
+          "description": "Root layout with navigation providers",
+          "lineStart": 1,
+          "lineEnd": 29
+        },
+        {
+          "path": "app/(tabs)/_layout.tsx",
+          "type": "REFERENCE",
+          "description": "Existing tab navigation structure",
+          "lineStart": 1,
+          "lineEnd": 45
+        }
+      ],
+      "implementationGuide": "1. Use a sub-agent to load the bmad-sm-draft-story agent, pass 'story 5.4' as arguments.\\n2. Use a sub-agent to load the bmad-dev-develop-story agent, pass 'story 5.4' as arguments.\\n3. Use a sub-agent to load the bmad-qa-review-story agent, pass 'story 5.4' as arguments.",
+      "verificationCriteria": "The Status of `docs/stories/5.4-story.md` is Complete.",
+      "analysisResult": "Story 5.4 requires implementing comprehensive navigation and screen management using established Expo Router patterns including navigation transitions, back navigation handling, deep linking support, accessibility with focus management, and platform-specific navigation patterns."
+    },
+    {
+      "id": "5d0ba3b4-8858-45fa-becc-c6e2565672c3",
+      "name": "Story 5.5: Complete Application Polish and Testing",
+      "description": "Execute the complete BMAD (Business, Management, Architecture, Development) lifecycle for Story 5.5: Complete Application Polish and Testing by running three sequential sub-agents: bmad-sm-draft-story for story management, bmad-dev-develop-story for development implementation, and bmad-qa-review-story for quality assurance review. This coordinates the systematic development of a polished, professional application experience with final integration testing across all platforms and features, performance optimization ensuring smooth experience on minimum supported devices, accessibility audit confirming WCAG AA compliance across all screens, user acceptance testing with real players to validate usability, error handling and edge case management throughout the application, final deployment verification with production builds and OTA update testing, and application ready for app store submission with all requirements met.",
+      "notes": "This task coordinates the complete BMAD workflow for Story 5.5 implementation. The final polish must include comprehensive testing across all Epic implementations, performance optimization following established patterns, accessibility compliance validation, comprehensive error handling, and production deployment readiness with all app store requirements met.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "dded0c99-d764-4bdd-83ed-94d906c2c49d"
+        }
+      ],
+      "createdAt": "2025-08-24T05:03:17.217Z",
+      "updatedAt": "2025-08-24T05:03:17.217Z",
+      "relatedFiles": [
+        {
+          "path": "docs/prd/epic-5-game-flow-user-experience.md",
+          "type": "REFERENCE",
+          "description": "Epic 5 and Story 5.5 requirements specification",
+          "lineStart": 65,
+          "lineEnd": 78
+        },
+        {
+          "path": "docs/architecture/testing-strategy.md",
+          "type": "REFERENCE",
+          "description": "Established testing patterns and strategies",
+          "lineStart": 1,
+          "lineEnd": 50
+        },
+        {
+          "path": "docs/architecture/deployment-architecture.md",
+          "type": "REFERENCE",
+          "description": "Deployment and production readiness requirements",
+          "lineStart": 1,
+          "lineEnd": 50
+        }
+      ],
+      "implementationGuide": "1. Use a sub-agent to load the bmad-sm-draft-story agent, pass 'story 5.5' as arguments.\\n2. Use a sub-agent to load the bmad-dev-develop-story agent, pass 'story 5.5' as arguments.\\n3. Use a sub-agent to load the bmad-qa-review-story agent, pass 'story 5.5' as arguments.",
+      "verificationCriteria": "The Status of `docs/stories/5.5-story.md` is Complete.",
+      "analysisResult": "Story 5.5 requires implementing complete application polish and testing including final integration testing, performance optimization, accessibility audit, user acceptance testing, error handling, and deployment verification ensuring production readiness."
+    }
+  ]
+}
