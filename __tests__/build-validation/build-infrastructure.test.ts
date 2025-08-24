@@ -58,8 +58,8 @@ describe('Build Infrastructure Tests', () => {
       // Updates for OTA functionality
       expect(packageJson.dependencies['expo-updates']).toBeDefined();
 
-      // Core Expo SDK
-      expect(packageJson.dependencies['expo']).toMatch(/~53\.0\.20/);
+      // Core Expo SDK  
+      expect(packageJson.dependencies['expo']).toMatch(/\^53\.0\.22/);
     });
   });
 

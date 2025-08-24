@@ -1,7 +1,6 @@
 import HelloWorldScreen from '@/app/(tabs)/hello-world';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import React from 'react';
-import { Platform, Text, View } from 'react-native';
+import { Platform } from 'react-native';
 
 // Mock expo-router
 jest.mock('expo-router', () => ({
@@ -12,25 +11,31 @@ jest.mock('expo-router', () => ({
 }));
 
 // Mock ThemedView and ThemedText to render as native components
-jest.mock('@/components/ThemedView', () => ({
-  ThemedView: ({ children, style, ...props }: any) => {
-    return (
-      <View style={style} {...props}>
-        {children}
-      </View>
-    );
-  },
-}));
+jest.mock('@/components/ThemedView', () => {
+  const { View } = require('react-native');
+  return {
+    ThemedView: ({ children, style, ...props }: any) => {
+      return (
+        <View style={style} {...props}>
+          {children}
+        </View>
+      );
+    },
+  };
+});
 
-jest.mock('@/components/ThemedText', () => ({
-  ThemedText: ({ children, style, ...props }: any) => {
-    return (
-      <Text style={style} {...props}>
-        {children}
-      </Text>
-    );
-  },
-}));
+jest.mock('@/components/ThemedText', () => {
+  const { Text } = require('react-native');
+  return {
+    ThemedText: ({ children, style, ...props }: any) => {
+      return (
+        <Text style={style} {...props}>
+          {children}
+        </Text>
+      );
+    },
+  };
+});
 
 // Mock useColorScheme hook
 jest.mock('@/hooks/useColorScheme', () => ({
