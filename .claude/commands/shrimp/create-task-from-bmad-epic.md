@@ -9,14 +9,15 @@ Shrimp Task Manager is tool you have access to use. Sometimes it will be referre
 The user has supplied the epic number $ARGUMENTS.
 
 1. Read the corresponding epic file `docs/prd/epic-{epic number}-{description}.md`
-2. Use Shrimp to add a task called `Starting Epic {epic number} {description}` to the existing plan. The implementationGuide for this task is:
-   ```
-   1. Read the corresponding epic file `docs/prd/epic-{epic number}-{description}.md` to learn about each story
-
-   2. Validate that each story in the epic file is represented by a task in the Shrimp task list
-      - If there are stories with missing tasks, add a new task by following `@.claude/commands/shrimp/create-task-from-bmad-story.md` with the story number as the arguments.
-   3. Validate that each story task depends on this epic task
-   ```
+2. Use Shrimp to add a task called `Starting Epic {epic number} {description}` to the existing plan.
+   - The implementationGuide for this task is:
+     ```
+     1. Read the corresponding epic file `docs/prd/epic-{epic number}-{description}.md` to learn about each story
+     2. Validate that each story in the epic file is represented by a task in the Shrimp task list
+        - If there are stories with missing tasks, add a new task by following `@.claude/commands/shrimp/create-task-from-bmad-story.md` with the story number as the arguments.
+     3. Validate that each story task depends on this epic task
+     ```
+   - If this epic is not epic number one, use Shrimp to add the prior epic's `Completing Epic {epic number} {description}` taskId as a dependency of this task. This will link the completion of the prior epic to the start of this one.
 3. Use Shrimp to add a task called `Completing Epic {epic number} {description}` to the existing plan. The implementationGuide for this task is:
    ```
    1. Read the corresponding epic file `docs/prd/epic-{epic number}-{description}.md` to learn about each story

@@ -28,5 +28,5 @@ The structure of a story number is {epic number}.{story sequence}
      The Status of `docs/stories/{story number}-story.md` is Complete.
      ```
 3. If this is not the first story of the epic (story sequence = 1), use shrimp to make this story's task depend on the prior story in this epic.
-4. Use Shrimp to make this story's task depend on the `Starting Epic {epic number} {description}` task for this story's epic
-5. Use Shrimp to add this task's taskId as a dependency on the `Completing Epic {epic number} {description}` task for this story's epic
+4. Use Shrimp to make this story's task depend on the taskId of the `Starting Epic {epic number} {description}` task for this story's epic number
+5. Use Shrimp to add this task's taskId as a dependency on the `Completing Epic {epic number} {description}` task for this story's epic number
