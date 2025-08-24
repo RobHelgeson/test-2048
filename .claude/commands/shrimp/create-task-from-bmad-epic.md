@@ -21,7 +21,5 @@ The user has supplied the epic number $ARGUMENTS.
    1. Read the corresponding epic file `docs/prd/epic-{epic number}-{description}.md`
    2. Validate that each story in the epic file is represented by a task in the Shrimp task list
       - If there are stories with missing tasks, add a new task by following `@.claude/commands/shrimp/create-task-from-bmad-story.md` with the story number as the arguments.
-      - Make the story task depend on the `Starting Epic {epic number} {description}` task for this epic
-      - Make this `Completing Epic {epic number} {description}` task depend on the story
    ```
 4. Make the `Completing Epic {epic number} {description}` task of this epic depend on the `Starting Epic {epic number} {description}` task of this epic
