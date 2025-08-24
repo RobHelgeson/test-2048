@@ -10,32 +10,7 @@ jest.mock('expo-router', () => ({
   },
 }));
 
-// Mock ThemedView and ThemedText to render as native components
-jest.mock('@/components/ThemedView', () => {
-  const { View } = require('react-native');
-  return {
-    ThemedView: ({ children, style, ...props }: any) => {
-      return (
-        <View style={style} {...props}>
-          {children}
-        </View>
-      );
-    },
-  };
-});
-
-jest.mock('@/components/ThemedText', () => {
-  const { Text } = require('react-native');
-  return {
-    ThemedText: ({ children, style, ...props }: any) => {
-      return (
-        <Text style={style} {...props}>
-          {children}
-        </Text>
-      );
-    },
-  };
-});
+// No need to mock themed components - they're mocked globally in jest.setup.js
 
 // Mock useColorScheme hook
 jest.mock('@/hooks/useColorScheme', () => ({

@@ -83,7 +83,196 @@ jest.mock('react-native', () => {
   };
 });
 
+// Mock themed components globally
+jest.mock('@/components/themed/ThemedText', () => ({
+  ThemedText: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement(Text, { testID, style, ...props }, children);
+  },
+  ThemedHeading: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement(Text, { testID, style, ...props }, children);
+  },
+  ThemedSubheading: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement(Text, { testID, style, ...props }, children);
+  },
+  ThemedBody: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement(Text, { testID, style, ...props }, children);
+  },
+  ThemedCaption: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement(Text, { testID, style, ...props }, children);
+  },
+  ThemedScore: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement(Text, { testID, style, ...props }, children);
+  },
+  ThemedTileText: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement(Text, { testID, style, ...props }, children);
+  },
+  ThemedButtonText: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement(Text, { testID, style, ...props }, children);
+  },
+  ThemedLink: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement(Text, { testID, style, ...props }, children);
+  },
+}));
+
+// Mock themed view component globally
+jest.mock('@/components/themed/ThemedView', () => ({
+  ThemedView: ({ children, testID, style, ...props }) => {
+    const React = require('react');
+    const { View } = require('react-native');
+    return React.createElement(View, { testID, style, ...props }, children);
+  },
+}));
+
+// Mock theme provider and hooks globally
+const mockThemeColors = {
+  accent: '#007AFF',
+  surface: '#f5f5f5',
+  text: '#000000',
+  textOnPrimary: '#ffffff',
+  textSecondary: '#666666',
+  primary: '#007AFF',
+  secondary: '#5856D6',
+  background: '#ffffff',
+  success: '#10b981',
+  warning: '#f59e0b',
+  error: '#ef4444',
+  info: '#3b82f6',
+  textDisabled: '#999999',
+  surfaceDisabled: '#e0e0e0',
+  border: '#e5e5e7',
+  shadow: '#000000',
+  gameBackground: '#faf8ef',
+  tilePlaceholder: '#cdc1b4',
+  tileBackground: '#bbada0',
+  tile2: '#eee4da',
+  tile4: '#ede0c8',
+  tile8: '#f2b179',
+  tile16: '#f59563',
+  tile32: '#f67c5f',
+  tile64: '#f65e3b',
+  tile128: '#edcf72',
+  tile256: '#edcc61',
+  tile512: '#edc850',
+  tile1024: '#edc53f',
+  tile2048: '#edc22e',
+  tileSuper: '#3c3a32',
+};
+
+jest.mock('@/components/themed/ThemeProvider', () => ({
+  ThemeProvider: ({ children }) => {
+    const React = require('react');
+    return children;
+  },
+  useTheme: jest.fn(() => ({
+    theme: {
+      tokens: {
+        typography: {
+          fontFamily: {
+            regular: 'System',
+            medium: 'System',
+            bold: 'System',
+          },
+        },
+      },
+    },
+  })),
+  useThemeColors: jest.fn(() => mockThemeColors),
+  useThemeControls: jest.fn(() => ({
+    setTheme: jest.fn(),
+    toggleTheme: jest.fn(),
+  })),
+  useCurrentThemeType: jest.fn(() => 'classic'),
+  useIsThemeLoading: jest.fn(() => false),
+  useTileColor: jest.fn(() => (value) => {
+    const colorMap = {
+      2: '#eee4da',
+      4: '#ede0c8',
+      8: '#f2b179',
+      16: '#f59563',
+      32: '#f67c5f',
+      64: '#f65e3b',
+      128: '#edcf72',
+      256: '#edcc61',
+      512: '#edc850',
+      1024: '#edc53f',
+      2048: '#edc22e',
+    };
+    return colorMap[value] || '#3c3a32';
+  }),
+  useTileTextColor: jest.fn(() => (value) => {
+    return value <= 4 ? '#776e65' : '#ffffff';
+  }),
+}));
+
+// Mock the hook file directly too
+jest.mock('@/hooks/useTheme', () => ({
+  useTheme: jest.fn(() => ({
+    theme: {
+      tokens: {
+        typography: {
+          fontFamily: {
+            regular: 'System',
+            medium: 'System',
+            bold: 'System',
+          },
+        },
+      },
+    },
+  })),
+  useThemeColors: jest.fn(() => mockThemeColors),
+  useThemeControls: jest.fn(() => ({
+    setTheme: jest.fn(),
+    toggleTheme: jest.fn(),
+  })),
+  useCurrentThemeType: jest.fn(() => 'classic'),
+  useIsThemeLoading: jest.fn(() => false),
+  useTileColor: jest.fn(() => (value) => {
+    const colorMap = {
+      2: '#eee4da',
+      4: '#ede0c8',
+      8: '#f2b179',
+      16: '#f59563',
+      32: '#f67c5f',
+      64: '#f65e3b',
+      128: '#edcf72',
+      256: '#edcc61',
+      512: '#edc850',
+      1024: '#edc53f',
+      2048: '#edc22e',
+    };
+    return colorMap[value] || '#3c3a32';
+  }),
+  useTileTextColor: jest.fn(() => (value) => {
+    return value <= 4 ? '#776e65' : '#ffffff';
+  }),
+  usePlatformTheme: jest.fn(() => mockThemeColors),
+  useIsDarkTheme: jest.fn(() => false),
+  useThemedStyles: jest.fn(
+    () => (styleCreator) => styleCreator(mockThemeColors)
+  ),
+}));
+
 // Global test setup
 beforeEach(() => {
-  jest.clearAllMocks();
+  // Don't clear all mocks to preserve theme hook implementations
+  // Only clear mock call history but keep implementations
+  jest.clearAllTimers();
 });

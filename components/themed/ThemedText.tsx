@@ -153,7 +153,7 @@ function getFontSize(size: string): number {
   return fontSizeMap[size] || 16;
 }
 
-function getFontWeight(weight: string): TextProps['style']['fontWeight'] {
+function getFontWeight(weight: string): any {
   const fontWeightMap: Record<string, any> = {
     normal: '400',
     medium: '500',

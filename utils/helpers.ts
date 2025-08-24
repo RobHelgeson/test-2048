@@ -1,7 +1,10 @@
 // General utility functions
 
 export const formatScore = (score: number): string => {
-  return score.toLocaleString();
+  if (score < 1000) return score.toLocaleString();
+  if (score < 1000000)
+    return `${(score / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  return `${(score / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
 };
 
 export const generateId = (): string => {

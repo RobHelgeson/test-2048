@@ -8,78 +8,9 @@ import { Tile as TileData } from '@/types/game';
 import { render, fireEvent } from '@testing-library/react-native';
 import React from 'react';
 
-// Mock dependencies
-jest.mock('@/hooks/useTheme');
+// No need to mock themed components - they're mocked globally in jest.setup.js
 
-// Mock React Native components
-jest.mock('react-native', () => ({
-  StyleSheet: {
-    create: (styles: any) => styles,
-  },
-  View: ({ children, testID, style, ...props }: any) => {
-    const React = require('react');
-    return React.createElement('View', { testID, style, ...props }, children);
-  },
-  Platform: {
-    OS: 'ios',
-    select: jest.fn((options) => options.ios || options.default),
-  },
-}));
-
-// Mock ThemedText component with proper text support for testing
-jest.mock('@/components/themed/ThemedText', () => ({
-  ThemedText: ({
-    children,
-    testID,
-    style,
-    accessibilityElementsHidden,
-    ...props
-  }: any) => {
-    const React = require('react');
-    return React.createElement(
-      'Text',
-      {
-        testID,
-        style,
-        accessibilityElementsHidden,
-        ...props,
-      },
-      children
-    );
-  },
-}));
-
-// Type the mocked hooks
-const mockUseThemeColors = useThemeColors as jest.MockedFunction<
-  typeof useThemeColors
->;
-const mockUseTileColor = useTileColor as jest.MockedFunction<
-  typeof useTileColor
->;
-const mockUseTileTextColor = useTileTextColor as jest.MockedFunction<
-  typeof useTileTextColor
->;
-
-// Mock theme colors
-const mockThemeColors = {
-  background: '#faf8ef',
-  text: '#776e65',
-  textOnPrimary: '#ffffff',
-  accent: '#edc22e',
-  shadow: '#000000',
-  tile2: '#eee4da',
-  tile4: '#ede0c8',
-  tile8: '#f2b179',
-  tile16: '#f59563',
-  tile32: '#f67c5f',
-  tile64: '#f65e3b',
-  tile128: '#edcf72',
-  tile256: '#edcc61',
-  tile512: '#edc850',
-  tile1024: '#edc53f',
-  tile2048: '#edc22e',
-  tileSuper: '#3c3a32',
-} as any;
+// Hooks are already mocked globally, just use them directly
 
 // Mock tile data factory
 const createMockTile = (value: number, row = 0, col = 0): TileData => ({
@@ -93,32 +24,7 @@ const createMockTile = (value: number, row = 0, col = 0): TileData => ({
 describe('Tile Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-
-    // Setup default mock implementations
-    mockUseThemeColors.mockReturnValue(mockThemeColors);
-
-    // Mock tile color function
-    mockUseTileColor.mockReturnValue((value: number) => {
-      const colorMap: Record<number, string> = {
-        2: mockThemeColors.tile2,
-        4: mockThemeColors.tile4,
-        8: mockThemeColors.tile8,
-        16: mockThemeColors.tile16,
-        32: mockThemeColors.tile32,
-        64: mockThemeColors.tile64,
-        128: mockThemeColors.tile128,
-        256: mockThemeColors.tile256,
-        512: mockThemeColors.tile512,
-        1024: mockThemeColors.tile1024,
-        2048: mockThemeColors.tile2048,
-      };
-      return colorMap[value] || mockThemeColors.tileSuper;
-    });
-
-    // Mock tile text color function
-    mockUseTileTextColor.mockReturnValue((value: number) => {
-      return value <= 4 ? mockThemeColors.text : mockThemeColors.textOnPrimary;
-    });
+    // Theme hooks are already mocked globally
   });
 
   describe('Component Rendering', () => {
@@ -136,7 +42,9 @@ describe('Tile Component', () => {
       const { getByTestId } = render(<Tile tile={tile} size={80} />);
 
       // Check that the text element contains the tile value
-      const textElement = getByTestId(`tile-text-${tile.id}`);
+      const textElement = getByTestId(`tile-text-${tile.id}`, {
+        includeHiddenElements: true,
+      });
       expect(textElement.props.children).toBe(4);
     });
 
@@ -147,7 +55,9 @@ describe('Tile Component', () => {
       );
 
       expect(getByTestId('custom-tile')).toBeTruthy();
-      expect(getByTestId('custom-tile-text')).toBeTruthy();
+      expect(
+        getByTestId('custom-tile-text', { includeHiddenElements: true })
+      ).toBeTruthy();
     });
 
     it('uses default testID based on tile ID when not provided', () => {
@@ -155,7 +65,9 @@ describe('Tile Component', () => {
       const { getByTestId } = render(<Tile tile={tile} size={80} />);
 
       expect(getByTestId(`tile-${tile.id}`)).toBeTruthy();
-      expect(getByTestId(`tile-text-${tile.id}`)).toBeTruthy();
+      expect(
+        getByTestId(`tile-text-${tile.id}`, { includeHiddenElements: true })
+      ).toBeTruthy();
     });
   });
 
@@ -164,20 +76,21 @@ describe('Tile Component', () => {
       const tile = createMockTile(32);
       render(<Tile tile={tile} size={80} />);
 
-      expect(mockUseThemeColors).toHaveBeenCalled();
-      expect(mockUseTileColor).toHaveBeenCalled();
-      expect(mockUseTileTextColor).toHaveBeenCalled();
+      expect(useThemeColors).toHaveBeenCalled();
+      expect(useTileColor).toHaveBeenCalled();
+      expect(useTileTextColor).toHaveBeenCalled();
     });
 
     it('passes tile value to color hooks', () => {
       const tile = createMockTile(64);
       render(<Tile tile={tile} size={80} />);
 
-      const getTileColor = mockUseTileColor.mock.results[0].value;
-      const getTileTextColor = mockUseTileTextColor.mock.results[0].value;
+      const getTileColor = (useTileColor as jest.Mock).mock.results[0].value;
+      const getTileTextColor = (useTileTextColor as jest.Mock).mock.results[0]
+        .value;
 
-      expect(getTileColor(64)).toBe(mockThemeColors.tile64);
-      expect(getTileTextColor(64)).toBe(mockThemeColors.textOnPrimary);
+      expect(getTileColor(64)).toBe('#f65e3b'); // Expected color for tile64
+      expect(getTileTextColor(64)).toBe('#ffffff');
     });
   });
 
@@ -190,7 +103,9 @@ describe('Tile Component', () => {
 
       // Component should render successfully for victory tile
       expect(getByTestId('victory-test')).toBeTruthy();
-      const textElement = getByTestId('victory-test-text');
+      const textElement = getByTestId('victory-test-text', {
+        includeHiddenElements: true,
+      });
       expect(textElement.props.children).toBe(2048);
     });
 
@@ -201,7 +116,9 @@ describe('Tile Component', () => {
       );
 
       expect(getByTestId('regular-test')).toBeTruthy();
-      const textElement = getByTestId('regular-test-text');
+      const textElement = getByTestId('regular-test-text', {
+        includeHiddenElements: true,
+      });
       expect(textElement.props.children).toBe(1024);
     });
   });
@@ -261,7 +178,9 @@ describe('Tile Component', () => {
         <Tile tile={tile} size={80} testID="text-hidden" />
       );
 
-      const text = getByTestId('text-hidden-text');
+      const text = getByTestId('text-hidden-text', {
+        includeHiddenElements: true,
+      });
       expect(text.props.accessibilityElementsHidden).toBe(true);
     });
   });
@@ -309,7 +228,9 @@ describe('Tile Component', () => {
         );
 
         // Should render the value as text in the element
-        const textElement = getByTestId(`value-${value}-text`);
+        const textElement = getByTestId(`value-${value}-text`, {
+          includeHiddenElements: true,
+        });
         expect(textElement.props.children).toBe(value);
         // Should have container with testID
         expect(getByTestId(`value-${value}`)).toBeTruthy();
@@ -320,7 +241,9 @@ describe('Tile Component', () => {
       const tile = createMockTile(16384);
       const { getByTestId } = render(<Tile tile={tile} size={80} />);
 
-      const textElement = getByTestId(`tile-text-${tile.id}`);
+      const textElement = getByTestId(`tile-text-${tile.id}`, {
+        includeHiddenElements: true,
+      });
       expect(textElement.props.children).toBe(16384);
     });
   });
@@ -337,7 +260,9 @@ describe('Tile Component', () => {
       expect(container).toBeTruthy();
 
       // Should have text element
-      const text = getByTestId('structure-test-text');
+      const text = getByTestId('structure-test-text', {
+        includeHiddenElements: true,
+      });
       expect(text).toBeTruthy();
     });
 
