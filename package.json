@@ -15,7 +15,11 @@
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "build:ios:dev": "eas build --platform ios --profile development",
+    "build:android:dev": "eas build --platform android --profile development",
+    "build:web": "npx expo export --platform web",
+    "build:all:dev": "eas build --platform all --profile development"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -25,6 +29,7 @@
     "expo": "~53.0.20",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.7",
+    "expo-dev-client": "~5.2.4",
     "expo-font": "~13.3.2",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.4.0",
@@ -34,6 +39,7 @@
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.10",
+    "expo-updates": "^0.28.17",
     "expo-web-browser": "~14.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
