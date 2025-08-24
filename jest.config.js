@@ -1,6 +1,9 @@
 module.exports = {
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFilesAfterEnv: [
+    '<rootDir>/jest.setup.js',
+    '<rootDir>/__tests__/integration/setup.js',
+  ],
   testMatch: ['**/__tests__/**/*.test.(ts|tsx|js)'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
@@ -28,5 +31,12 @@ module.exports = {
   },
   transformIgnorePatterns: [
     'node_modules/(?!(react-native|@react-native|expo|@expo)/)',
+  ],
+  // Extended timeout for integration tests
+  testTimeout: 10000,
+  // Integration test specific patterns
+  testPathIgnorePatterns: [
+    '<rootDir>/__tests__/integration/utils/',
+    '<rootDir>/__tests__/integration/fixtures/',
   ],
 };
