@@ -8,20 +8,20 @@ Shrimp Task Manager is tool you have access to use. Sometimes it will be referre
 
 The user has supplied the epic number $ARGUMENTS.
 
-1. Read the corresponding epic file `docs/prd/epic-{number}-{description}.md`
-2. Use Shrimp to create a task called `Starting Epic {number} {description}`. The implementationGuide for this task is:
+1. Read the corresponding epic file `docs/prd/epic-{epic number}-{description}.md`
+2. Use Shrimp to create a task called `Starting Epic {epic number} {description}`. The implementationGuide for this task is:
    ```
-   1. Read the corresponding epic file `docs/prd/epic-{number}-{description}.md`
+   1. Read the corresponding epic file `docs/prd/epic-{epic number}-{description}.md`
    2. Validate that each story in the epic file is represented by a task in the Shrimp task list
       - If there are stories with missing tasks, add a new task by following `@.claude/commands/shrimp/create-task-from-bmad-story.md` with the story number as the arguments.
    3. Validate that each story task depends on this epic task
    ```
-3. Use Shrimp to create a task called `Completing Epic {number} {description}`. The implementationGuide for this task is:
+3. Use Shrimp to create a task called `Completing Epic {epic number} {description}`. The implementationGuide for this task is:
    ```
-   1. Read the corresponding epic file `docs/prd/epic-{number}-{description}.md`
+   1. Read the corresponding epic file `docs/prd/epic-{epic number}-{description}.md`
    2. Validate that each story in the epic file is represented by a task in the Shrimp task list
       - If there are stories with missing tasks, add a new task by following `@.claude/commands/shrimp/create-task-from-bmad-story.md` with the story number as the arguments.
-      - Make the story task depend on the `Starting Epic {number} {description}` task for this epic
-      - Make this `Completing Epic {number} {description}` task depend on the story
+      - Make the story task depend on the `Starting Epic {epic number} {description}` task for this epic
+      - Make this `Completing Epic {epic number} {description}` task depend on the story
    ```
-4. Make the `Completing Epic {number} {description}` task of this epic depend on the `Starting Epic {number} {description}` task of this epic
+4. Make the `Completing Epic {epic number} {description}` task of this epic depend on the `Starting Epic {epic number} {description}` task of this epic
