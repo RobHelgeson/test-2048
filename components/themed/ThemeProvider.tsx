@@ -1,54 +1,41 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import { getCurrentTheme, getThemeColors, useThemeActions, useThemeStore } from '@/stores/themeStore';
 import { ThemeContextValue, ThemeType } from '@/types/theme';
-import {
-  useThemeStore,
-  useCurrentTheme,
-  useThemeColors as useStoreThemeColors,
-  useThemeLoading,
-  useThemeActions,
-} from '@/stores/themeStore';
+import React, { createContext, useContext, useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 interface ThemeProviderProps {
   children: React.ReactNode;
-  initialTheme?: ThemeType;
 }
 
-export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
-  const currentTheme = useCurrentTheme();
-  const colors = useStoreThemeColors();
-  const isLoading = useThemeLoading();
-  const { setTheme, toggleTheme, initializeTheme } = useThemeActions();
-
-  // Get current theme object from store
-  const theme = useThemeStore((state) => state.getCurrentTheme());
-
-  // Initialize theme on mount
-  useEffect(() => {
-    // If initial theme is provided, set it
-    if (initialTheme && initialTheme !== currentTheme) {
-      setTheme(initialTheme).catch(console.error);
-    } else {
-      // Otherwise initialize from storage
-      initializeTheme().catch(console.error);
-    }
-  }, [initialTheme]);
-
-  const contextValue: ThemeContextValue = {
-    currentTheme,
-    theme,
-    colors,
-    setTheme,
-    toggleTheme,
-    isLoading,
-  };
-
-  return (
-    <ThemeContext.Provider value={contextValue}>
-      {children}
-    </ThemeContext.Provider>
+export function ThemeProvider({ children }: ThemeProviderProps) {
+  // Get all theme data in a single subscription with shallow equality
+  const themeData = useThemeStore(
+    useShallow((state) => ({
+      currentTheme: state.currentTheme,
+      theme: getCurrentTheme(state),
+      colors: getThemeColors(state),
+      isLoading: state.isLoading,
+    }))
   );
+
+  // Get stable action functions
+  const actions = useThemeActions();
+
+  const contextValue: ThemeContextValue = useMemo(
+    () => ({
+      currentTheme: themeData.currentTheme,
+      theme: themeData.theme,
+      colors: themeData.colors,
+      setTheme: actions.setTheme,
+      toggleTheme: actions.toggleTheme,
+      isLoading: themeData.isLoading,
+    }),
+    [themeData, actions]
+  );
+
+  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 }
 
 // Hook to use theme context

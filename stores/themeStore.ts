@@ -1,10 +1,10 @@
 import { ClassicTheme } from '@/constants/themes/ClassicTheme';
 import { CoolTheme } from '@/constants/themes/CoolTheme';
-import { storageService } from '@/services/storageService';
 import { Theme, ThemeColors, ThemeType } from '@/types/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 
 interface ThemeState {
   currentTheme: ThemeType;
@@ -13,11 +13,8 @@ interface ThemeState {
 }
 
 interface ThemeActions {
-  setTheme: (theme: ThemeType) => Promise<void>;
-  toggleTheme: () => Promise<void>;
-  initializeTheme: () => Promise<void>;
-  getCurrentTheme: () => Theme;
-  getThemeColors: () => ThemeColors;
+  setTheme: (theme: ThemeType) => void;
+  toggleTheme: () => void;
   resetError: () => void;
 }
 
@@ -36,76 +33,19 @@ export const useThemeStore = create<ThemeStore>()(
       isLoading: false,
       error: null,
 
-      // Actions
-      setTheme: async (theme: ThemeType) => {
-        set({ isLoading: true, error: null });
-
-        try {
-          // Validate theme exists
-          if (!THEMES[theme]) {
-            throw new Error(`Invalid theme: ${theme}`);
-          }
-
-          // Save theme to persistent storage
-          await storageService.saveUserPreferences({ theme });
-
-          // Update store state
-          set({
-            currentTheme: theme,
-            isLoading: false,
-          });
-        } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : 'Failed to set theme';
-          set({
-            isLoading: false,
-            error: errorMessage,
-          });
-          throw error;
+      // Actions - simplified, synchronous operations only
+      setTheme: (theme: ThemeType) => {
+        if (!THEMES[theme]) {
+          set({ error: `Invalid theme: ${theme}` });
+          return;
         }
+        set({ currentTheme: theme, isLoading: false, error: null });
       },
 
-      toggleTheme: async () => {
+      toggleTheme: () => {
         const currentTheme = get().currentTheme;
-        const nextTheme: ThemeType =
-          currentTheme === 'classic' ? 'cool' : 'classic';
-        await get().setTheme(nextTheme);
-      },
-
-      initializeTheme: async () => {
-        set({ isLoading: true, error: null });
-
-        try {
-          // Load saved theme from persistent storage
-          const preferences = await storageService.loadUserPreferences();
-          const savedTheme = preferences?.theme || 'classic';
-
-          // Validate saved theme
-          const theme: ThemeType = THEMES[savedTheme] ? savedTheme : 'classic';
-
-          set({
-            currentTheme: theme,
-            isLoading: false,
-          });
-        } catch (error) {
-          console.error('Failed to initialize theme:', error);
-          // Fallback to classic theme on error
-          set({
-            currentTheme: 'classic',
-            isLoading: false,
-            error: 'Failed to load saved theme, using default',
-          });
-        }
-      },
-
-      getCurrentTheme: () => {
-        const currentTheme = get().currentTheme;
-        return THEMES[currentTheme];
-      },
-
-      getThemeColors: () => {
-        const currentTheme = get().currentTheme;
-        return THEMES[currentTheme].tokens.colors;
+        const nextTheme: ThemeType = currentTheme === 'classic' ? 'cool' : 'classic';
+        set({ currentTheme: nextTheme });
       },
 
       resetError: () => {
@@ -118,29 +58,35 @@ export const useThemeStore = create<ThemeStore>()(
       partialize: (state) => ({
         currentTheme: state.currentTheme,
       }),
-      onRehydrateStorage: () => (state) => {
-        if (state) {
-          // Initialize theme on app startup after hydration
-          state.initializeTheme().catch(console.error);
-        }
-      },
+      // Let persist middleware handle hydration automatically - no manual intervention
     }
   )
 );
 
+// External selector functions (not in store to avoid recreating)
+export const getCurrentTheme = (state: ThemeStore): Theme => {
+  return THEMES[state.currentTheme];
+};
+
+export const getThemeColors = (state: ThemeStore): ThemeColors => {
+  return THEMES[state.currentTheme].tokens.colors;
+};
+
 // Selector hooks for performance optimization
-export const useCurrentTheme = () =>
-  useThemeStore((state) => state.currentTheme);
-export const useThemeColors = () =>
-  useThemeStore((state) => state.getThemeColors());
+export const useCurrentTheme = () => useThemeStore((state) => state.currentTheme);
+
+export const useThemeColors = () => useThemeStore((state) => getThemeColors(state));
+
 export const useThemeLoading = () => useThemeStore((state) => state.isLoading);
+
 export const useThemeError = () => useThemeStore((state) => state.error);
 
-// Theme actions
+// Theme actions - using useShallow for stable references
 export const useThemeActions = () =>
-  useThemeStore((state) => ({
-    setTheme: state.setTheme,
-    toggleTheme: state.toggleTheme,
-    initializeTheme: state.initializeTheme,
-    resetError: state.resetError,
-  }));
+  useThemeStore(
+    useShallow((state) => ({
+      setTheme: state.setTheme,
+      toggleTheme: state.toggleTheme,
+      resetError: state.resetError,
+    }))
+  );

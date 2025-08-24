@@ -1,7 +1,6 @@
-import { StyleSheet } from 'react-native';
-
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import {ThemedText} from '@/components/ThemedText';
+import {ThemedView} from '@/components/ThemedView';
+import {StyleSheet} from 'react-native';
 
 export default function SettingsScreen() {
   return (
@@ -12,21 +11,15 @@ export default function SettingsScreen() {
         </ThemedText>
         <ThemedView style={styles.section}>
           <ThemedText type="subtitle">Game Settings</ThemedText>
-          <ThemedText style={styles.description}>
-            Game configuration options will be available here.
-          </ThemedText>
+          <ThemedText style={styles.description}>Game configuration options will be available here.</ThemedText>
         </ThemedView>
         <ThemedView style={styles.section}>
           <ThemedText type="subtitle">Display Settings</ThemedText>
-          <ThemedText style={styles.description}>
-            Theme and display preferences will be configurable here.
-          </ThemedText>
+          <ThemedText style={styles.description}>Theme and display preferences will be configurable here.</ThemedText>
         </ThemedView>
         <ThemedView style={styles.section}>
           <ThemedText type="subtitle">Audio Settings</ThemedText>
-          <ThemedText style={styles.description}>
-            Sound and haptic feedback options will be available here.
-          </ThemedText>
+          <ThemedText style={styles.description}>Sound and haptic feedback options will be available here.</ThemedText>
         </ThemedView>
       </ThemedView>
     </ThemedView>

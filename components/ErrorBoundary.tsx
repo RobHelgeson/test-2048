@@ -39,13 +39,11 @@ export class ErrorBoundary extends Component<Props, State> {
             Oops! Something went wrong
           </ThemedText>
           <ThemedText style={styles.message}>
-            The app encountered an unexpected error. You can try again or restart the app.
+            The app encountered an unexpected error. You can try again or
+            restart the app.
           </ThemedText>
           <ThemedView style={styles.buttonContainer}>
-            <ThemedText 
-              style={styles.retryButton} 
-              onPress={this.handleRetry}
-            >
+            <ThemedText style={styles.retryButton} onPress={this.handleRetry}>
               Try Again
             </ThemedText>
           </ThemedView>
