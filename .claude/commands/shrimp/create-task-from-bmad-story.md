@@ -21,11 +21,12 @@ The structure of a story number is {epic number}.{story sequence}
      2. If the status of the story is "Draft", update it to "Ready for Development"
      3. If the status of the story is "Ready for Development", use a sub‑agent to load the bmad-dev-develop-story agent, pass 'story {story number}' as arguments.
      4. If the status of the story is "Ready for Review", use a sub‑agent to load the bmad-qa-review-story agent, pass 'story {story number}' as arguments.
+     5. If the QA subagent was happy with the results update the status of the story to Done
      ```
    - `relatedFiles` = []
    - `verificationCriteria` =
      ```
-     The Status of `docs/stories/{story number}-story.md` is Complete.
+     The Status of `docs/stories/{story number}-story.md` is Done.
      ```
 3. If this is not the first story of the epic (story sequence = 1), use shrimp to make this story's task depend on the prior story in this epic.
 4. Use Shrimp to make this story's task depend on the taskId of the `Starting Epic {epic number} {description}` task for this story's epic number
