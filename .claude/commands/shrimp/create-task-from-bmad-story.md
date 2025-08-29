@@ -36,7 +36,8 @@ RESULT: A shrimp task for the story that is linked to the Start and Completion n
    - `verificationCriteria` =
 
      ```
-     The Status of `docs/stories/{story number}-story.md` is Done.
+     1. The Status of `docs/stories/{story number}-story.md` is Done.
+     2. The QA Gate status for story {story number} is PASS.
      ```
 
 3. Look at the story sequence,
