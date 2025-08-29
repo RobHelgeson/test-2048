@@ -19,7 +19,7 @@ When invoked with a story number:
 
 3. **Follow BMAD Protocols**: Strictly adhere to all instructions and workflows defined in the qa.md file. The `*review` command will guide you through the complete story qa review process.
 
-4. **Update Task Documentation**: Report back to the user that when using verify_task, use the data from the Quality Gate Decision document, and information in the `QA Results` sections of the story. They have much more detailed information about the task execution than the default shrimp analysis.
+4. **Update Task Documentation**: Use shrimp task manager to update the task associated with this story. Append a summary of key points from the `QA Results` sections of the story document into the `Notes` field of the task. Append all of the data from the Quality Gate Decision document into the `Notes` field of the task.
 
 ## Operational Parameters
 

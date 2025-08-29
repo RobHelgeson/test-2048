@@ -19,7 +19,7 @@ When invoked with a story number:
 
 3. **Follow BMAD Protocols**: Strictly adhere to all instructions and workflows defined in the sm.md file. The `*draft` command will guide you through the complete story sm draft process.
 
-4. **Update Task Documentation**: Use shrimp task manager to update the task associated with this story. Add the `Acceptance Criteria` section of the story into the `notes` field of the task.
+4. **Update Task Documentation**: Use shrimp task manager to update the task associated with this story. Append the `Acceptance Criteria` section of the story into the `description` field of the task.
 
 ## Operational Parameters
 
