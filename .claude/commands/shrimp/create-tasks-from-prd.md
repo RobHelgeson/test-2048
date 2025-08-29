@@ -22,4 +22,4 @@ RESULT: One overarching Shrimp Task list json with all Epics and Stories loaded
 2. For each epic, follow the directions in `@.claude/commands/shrimp/create-task-from-bmad-epic.md` to **ADD** the epic to the current plan
 3. Discover the stories for each epic and create Shrimp tasks for each.
    1. Find the epic details for the current epic file in `docs/prd/epic-{number}-{description}.md`
-   2. For each Story found in that file, follow the directions in `@.claude/commands/shrimp/create-task-from-bmad-story.md` to **ADD** the epic to the current plan
+   2. For each Story found in that file, follow the directions in `@.claude/commands/shrimp/create-task-from-bmad-story.md` to **ADD** the story to the current plan
