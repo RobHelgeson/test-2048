@@ -1,13 +1,13 @@
-import {ThemedView} from '@/components/themed/ThemedView';
-import {Button} from '@/components/ui/Button';
-import {StatusIndicator} from '@/components/ui/StatusIndicator';
-import {useThemeColors} from '@/hooks/useTheme';
-import {useGameStore} from '@/stores/gameStore';
+import { ThemedView } from '@/components/themed/ThemedView';
+import { Button } from '@/components/ui/Button';
+import { StatusIndicator } from '@/components/ui/StatusIndicator';
+import { useThemeColors } from '@/hooks/useTheme';
+import { useGameStore } from '@/stores/gameStore';
 import React from 'react';
-import {Dimensions, Platform, StyleSheet, ViewStyle} from 'react-native';
-import Animated, {useAnimatedStyle, useSharedValue, withSequence, withSpring} from 'react-native-reanimated';
+import { Dimensions, Platform, StyleSheet, ViewStyle } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring } from 'react-native-reanimated';
 
-import {ScoreDisplay} from './GameHeader/ScoreDisplay';
+import { ScoreDisplay } from './GameHeader/ScoreDisplay';
 
 interface GameHeaderProps {
   /** Optional custom styling for the header container */
@@ -183,22 +183,22 @@ function createHeaderStyles(colors: any) {
   const isNarrow = width < 375;
   const isSmallScreen = height < 600; // Very small screens like older iPhones
 
-  return StyleSheet.create({
+  const styles = StyleSheet.create({
     container: {
-      paddingHorizontal: isTablet ? 24 : isNarrow ? 8 : 12,
-      paddingVertical: isTablet ? 16 : isSmallScreen ? 6 : 10,
-      // Responsive layout direction - force column on very small screens
-      flexDirection: isNarrow || isSmallScreen ? 'column' : 'row',
-      alignItems: isNarrow || isSmallScreen ? 'center' : 'center',
-      justifyContent: isNarrow || isSmallScreen ? 'center' : 'space-between',
-      gap: isNarrow || isSmallScreen ? 8 : 0,
+      paddingHorizontal: isTablet ? 20 : isNarrow ? 6 : 8,
+      paddingVertical: isTablet ? 12 : isSmallScreen ? 4 : 6,
+      // More compact layout - prefer row layout unless very constrained
+      flexDirection: isNarrow && isSmallScreen ? 'column' : 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: isNarrow && isSmallScreen ? 6 : 0,
       // Platform-specific styling
       ...getPlatformHeaderShadow(),
     } as ViewStyle,
 
     scoresContainer: {
       flexDirection: 'row',
-      gap: isTablet ? 16 : isSmallScreen ? 8 : 12,
+      gap: isTablet ? 12 : 6,
       alignItems: 'center',
     } as ViewStyle,
 
@@ -207,14 +207,17 @@ function createHeaderStyles(colors: any) {
     } as ViewStyle,
 
     controlsContainer: {
-      flexDirection: isNarrow || isSmallScreen ? 'column' : 'row',
+      flexDirection: 'row',
       alignItems: 'center',
-      gap: isTablet ? 16 : isSmallScreen ? 6 : 10,
+      gap: isTablet ? 12 : 6,
     } as ViewStyle,
-
-    // Expose flags for component logic
-    isSmallScreen,
   });
+
+  // Return styles with flag as separate property
+  return {
+    ...styles,
+    isSmallScreen,
+  };
 }
 
 /**

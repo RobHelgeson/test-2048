@@ -29,27 +29,21 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Game',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="gamecontroller.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="gamecontroller.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="gear" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="gear" color={color} />,
         }}
       />
       <Tabs.Screen
         name="hello-world"
         options={{
           title: 'Hello World',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="globe" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="globe" color={color} />,
         }}
       />
     </Tabs>

@@ -18,5 +18,11 @@
         "DATA_DIR": "/Users/rvh/Documents/Code/test-2048/.shrimp/data"
       }
     }
+  },
+  "Other": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
   }
 }

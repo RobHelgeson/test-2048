@@ -55,9 +55,7 @@ export default function HelloWorldScreen() {
           ]}
           onPress={handleIncrement}
         >
-          <ThemedText style={styles.buttonText}>
-            Tap Count: {counter}
-          </ThemedText>
+          <ThemedText style={styles.buttonText}>Tap Count: {counter}</ThemedText>
         </Pressable>
       </ThemedView>
 
@@ -68,17 +66,11 @@ export default function HelloWorldScreen() {
 
         <ThemedText style={styles.info}>✅ App Successfully Loaded</ThemedText>
 
-        <ThemedText style={styles.info}>
-          ✅ Platform Detection Working
-        </ThemedText>
+        <ThemedText style={styles.info}>✅ Platform Detection Working</ThemedText>
 
-        <ThemedText style={styles.info}>
-          ✅ Interactive Elements Functional
-        </ThemedText>
+        <ThemedText style={styles.info}>✅ Interactive Elements Functional</ThemedText>
 
-        <ThemedText style={styles.info}>
-          🚀 OTA Update Test: {new Date().toLocaleString()}
-        </ThemedText>
+        <ThemedText style={styles.info}>🚀 OTA Update Test: {new Date().toLocaleString()}</ThemedText>
       </ThemedView>
 
       <Link href="/" style={styles.backLink}>

@@ -1,11 +1,11 @@
-import {GameBoard} from '@/components/game/GameBoard';
-import {GameHeader} from '@/components/game/GameHeader';
-import {ThemedSafeAreaView} from '@/components/themed/ThemedSafeAreaView';
-import {ThemedView} from '@/components/themed/ThemedView';
-import {useGame} from '@/hooks/useGame';
-import {useTheme} from '@/hooks/useTheme';
+import { GameBoard } from '@/components/game/GameBoard';
+import { GameHeader } from '@/components/game/GameHeader';
+import { ThemedSafeAreaView } from '@/components/themed/ThemedSafeAreaView';
+import { ThemedView } from '@/components/themed/ThemedView';
+import { useGame } from '@/hooks/useGame';
+import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
-import {Dimensions, Platform, ScrollView, StyleSheet, Text} from 'react-native';
+import { Dimensions, Platform, ScrollView, StyleSheet, Text } from 'react-native';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -285,6 +285,16 @@ function createGameScreenStyles(colors: any) {
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: boardContainerMargin,
+      // Support for React Native Web grid flattening issue
+      ...Platform.select({
+        web: {
+          // When cells escape the GameBoard container, this container needs grid layout
+          display: 'grid',
+          gridTemplateColumns: 'auto',
+          gridTemplateRows: 'auto',
+          placeItems: 'center',
+        },
+      }),
       // Responsive layout adaptations for different screen sizes
       ...(isWide && {
         maxWidth: 600, // Prevent board from becoming too large on wide screens
