@@ -1,8 +1,11 @@
 import { Tile } from '@/components/game/Tile';
 import { useThemeColors } from '@/hooks/useTheme';
 import { useGameStore } from '@/stores/gameStore';
-import React, { useEffect, useState } from 'react';
+import { useGestures } from '@/hooks/useGestures';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, useWindowDimensions, View, ViewStyle } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
+import { Direction } from '@/types';
 
 // Simple constants
 const MAX_BOARD_SIZE = 640;
@@ -54,6 +57,7 @@ export function GameBoard({ style, disabled = false, onTilePress, testID = 'game
     [null, null, null, null],
     [null, null, null, null],
   ];
+  const makeMove = useGameStore((state) => state.makeMove);
 
   const isAnimating = false;
   const colors = useThemeColors();
@@ -75,45 +79,62 @@ export function GameBoard({ style, disabled = false, onTilePress, testID = 'game
     onTilePress?.(row, col);
   };
 
+  // Gesture handling callback
+  const handleSwipe = useCallback(
+    (direction: Direction) => {
+      if (disabled || isAnimating) return;
+      makeMove(direction);
+    },
+    [disabled, isAnimating, makeMove]
+  );
+
+  // Create gesture detector
+  const gesture = useGestures({
+    onSwipe: handleSwipe,
+    disabled: disabled || isAnimating,
+  });
+
   const tileCount = board.flat().filter((tile) => tile !== null).length;
   const accessibilityLabel = `Game board with 4 by 4 grid, ${tileCount} tiles currently placed`;
 
   return (
-    <View
-      style={[styles.gridContainer, style]}
-      testID={testID}
-      accessible
-      accessibilityLabel={accessibilityLabel}
-      accessibilityHint="Swipe in any direction to move tiles and merge numbers"
-    >
-      {board.map((row, rowIndex) =>
-        row.map((tile, colIndex) => (
-          <TouchableOpacity
-            key={`cell-${rowIndex}-${colIndex}`}
-            style={styles.gridCell}
-            onPress={() => handleTilePress(rowIndex, colIndex)}
-            disabled={disabled || isAnimating}
-            testID={`${testID}-cell-${rowIndex}-${colIndex}`}
-            accessible
-            accessibilityRole="button"
-            accessibilityLabel={
-              tile
-                ? `Tile with value ${tile.value} at row ${rowIndex + 1}, column ${colIndex + 1}`
-                : `Empty space at row ${rowIndex + 1}, column ${colIndex + 1}`
-            }
-          >
-            {tile && (
-              <Tile
-                tile={tile}
-                size={tileSize}
-                onPress={() => handleTilePress(rowIndex, colIndex)}
-                testID={`${testID}-tile-${tile.id}`}
-              />
-            )}
-          </TouchableOpacity>
-        ))
-      )}
-    </View>
+    <GestureDetector gesture={gesture}>
+      <View
+        style={[styles.gridContainer, style]}
+        testID={testID}
+        accessible
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint="Swipe in any direction to move tiles and merge numbers"
+      >
+        {board.map((row, rowIndex) =>
+          row.map((tile, colIndex) => (
+            <TouchableOpacity
+              key={`cell-${rowIndex}-${colIndex}`}
+              style={styles.gridCell}
+              onPress={() => handleTilePress(rowIndex, colIndex)}
+              disabled={disabled || isAnimating}
+              testID={`${testID}-cell-${rowIndex}-${colIndex}`}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel={
+                tile
+                  ? `Tile with value ${tile.value} at row ${rowIndex + 1}, column ${colIndex + 1}`
+                  : `Empty space at row ${rowIndex + 1}, column ${colIndex + 1}`
+              }
+            >
+              {tile && (
+                <Tile
+                  tile={tile}
+                  size={tileSize}
+                  onPress={() => handleTilePress(rowIndex, colIndex)}
+                  testID={`${testID}-tile-${tile.id}`}
+                />
+              )}
+            </TouchableOpacity>
+          ))
+        )}
+      </View>
+    </GestureDetector>
   );
 }
 

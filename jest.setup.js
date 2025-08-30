@@ -54,18 +54,10 @@ jest.mock('react-native', () => {
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
     },
-    View: mockReact.forwardRef((props, ref) =>
-      mockReact.createElement('View', { ...props, ref })
-    ),
-    Text: mockReact.forwardRef((props, ref) =>
-      mockReact.createElement('Text', { ...props, ref })
-    ),
-    Pressable: mockReact.forwardRef((props, ref) =>
-      mockReact.createElement('Pressable', { ...props, ref })
-    ),
-    ScrollView: mockReact.forwardRef((props, ref) =>
-      mockReact.createElement('ScrollView', { ...props, ref })
-    ),
+    View: mockReact.forwardRef((props, ref) => mockReact.createElement('View', { ...props, ref })),
+    Text: mockReact.forwardRef((props, ref) => mockReact.createElement('Text', { ...props, ref })),
+    Pressable: mockReact.forwardRef((props, ref) => mockReact.createElement('Pressable', { ...props, ref })),
+    ScrollView: mockReact.forwardRef((props, ref) => mockReact.createElement('ScrollView', { ...props, ref })),
     TouchableOpacity: mockReact.forwardRef((props, ref) => {
       return mockReact.createElement('TouchableOpacity', {
         ...props,
@@ -80,6 +72,7 @@ jest.mock('react-native', () => {
       compose: (style1, style2) => [style1, style2],
       hairlineWidth: 1,
     },
+    useWindowDimensions: jest.fn(() => ({ width: 400, height: 800 })),
   };
 });
 
@@ -265,9 +258,7 @@ jest.mock('@/hooks/useTheme', () => ({
   }),
   usePlatformTheme: jest.fn(() => mockThemeColors),
   useIsDarkTheme: jest.fn(() => false),
-  useThemedStyles: jest.fn(
-    () => (styleCreator) => styleCreator(mockThemeColors)
-  ),
+  useThemedStyles: jest.fn(() => (styleCreator) => styleCreator(mockThemeColors)),
 }));
 
 // Global test setup

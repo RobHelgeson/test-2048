@@ -8,6 +8,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function RootLayout() {
@@ -26,17 +27,19 @@ export default function RootLayout() {
   const statusBarStyle = colorScheme === 'dark' ? 'light' : 'dark';
 
   return (
-    <ErrorBoundary>
-      <ThemeProvider>
-        <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-            <Stack.Screen name="modal" options={{ presentation: 'modal', headerShown: false }} />
-          </Stack>
-          <StatusBar style={statusBarStyle} translucent={Platform.OS === 'android'} />
-        </NavigationThemeProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ErrorBoundary>
+        <ThemeProvider>
+          <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+              <Stack.Screen name="modal" options={{ presentation: 'modal', headerShown: false }} />
+            </Stack>
+            <StatusBar style={statusBarStyle} translucent={Platform.OS === 'android'} />
+          </NavigationThemeProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    </GestureHandlerRootView>
   );
 }
