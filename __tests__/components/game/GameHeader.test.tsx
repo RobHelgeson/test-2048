@@ -19,9 +19,7 @@ jest.mock('react-native-reanimated', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const AnimatedView = React.forwardRef((props, ref) =>
-    React.createElement(View, { ...props, ref })
-  );
+  const AnimatedView = React.forwardRef((props, ref) => React.createElement(View, { ...props, ref }));
 
   return {
     default: {
@@ -53,11 +51,7 @@ jest.mock('@/components/game/GameHeader/ScoreDisplay', () => ({
     const React = require('react');
     const { Text } = require('react-native');
     const safeValue = value || 0;
-    return React.createElement(
-      Text,
-      { testID },
-      `${label}: ${safeValue.toLocaleString()}`
-    );
+    return React.createElement(Text, { testID }, `${label}: ${safeValue.toLocaleString()}`);
   },
 }));
 
@@ -79,11 +73,7 @@ jest.mock('@/components/ui/Button', () => ({
   Button: ({ title, onPress, testID }: any) => {
     const React = require('react');
     const { TouchableOpacity, Text } = require('react-native');
-    return React.createElement(
-      TouchableOpacity,
-      { onPress, testID },
-      React.createElement(Text, {}, title)
-    );
+    return React.createElement(TouchableOpacity, { onPress, testID }, React.createElement(Text, {}, title));
   },
 }));
 
@@ -105,9 +95,9 @@ describe('GameHeader Component', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (
-      useGameStore as jest.MockedFunction<typeof useGameStore>
-    ).mockImplementation((selector) => selector(mockGameState));
+    (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) =>
+      selector(mockGameState)
+    );
     (useThemeColors as jest.Mock).mockReturnValue(mockThemeColors);
   });
 
@@ -146,9 +136,9 @@ describe('GameHeader Component', () => {
   describe('Score Display Tests', () => {
     it('handles zero scores correctly', () => {
       const zeroScoreState = { ...mockGameState, score: 0, bestScore: 0 };
-      (
-        useGameStore as jest.MockedFunction<typeof useGameStore>
-      ).mockImplementation((selector) => selector(zeroScoreState));
+      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) =>
+        selector(zeroScoreState)
+      );
 
       const { getByText } = render(<GameHeader />);
 
@@ -162,9 +152,9 @@ describe('GameHeader Component', () => {
         score: 1500000,
         bestScore: 2500000,
       };
-      (
-        useGameStore as jest.MockedFunction<typeof useGameStore>
-      ).mockImplementation((selector) => selector(largeScoreState));
+      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) =>
+        selector(largeScoreState)
+      );
 
       const { getByText } = render(<GameHeader />);
 
@@ -177,9 +167,9 @@ describe('GameHeader Component', () => {
 
       // Update score
       const updatedState = { ...mockGameState, score: 2048 };
-      (
-        useGameStore as jest.MockedFunction<typeof useGameStore>
-      ).mockImplementation((selector) => selector(updatedState));
+      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) =>
+        selector(updatedState)
+      );
 
       rerender(<GameHeader />);
 
@@ -198,9 +188,7 @@ describe('GameHeader Component', () => {
 
     it('displays "You Won!" status when game is won', () => {
       const wonState = { ...mockGameState, gameStatus: GameStatus.WON };
-      (
-        useGameStore as jest.MockedFunction<typeof useGameStore>
-      ).mockImplementation((selector) => selector(wonState));
+      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) => selector(wonState));
 
       const { getByText } = render(<GameHeader />);
 
@@ -209,9 +197,7 @@ describe('GameHeader Component', () => {
 
     it('displays "Game Over" status when game is lost', () => {
       const lostState = { ...mockGameState, gameStatus: GameStatus.LOST };
-      (
-        useGameStore as jest.MockedFunction<typeof useGameStore>
-      ).mockImplementation((selector) => selector(lostState));
+      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) => selector(lostState));
 
       const { getByText } = render(<GameHeader />);
 
@@ -315,9 +301,7 @@ describe('GameHeader Component', () => {
       const header = getByTestId('game-header');
 
       expect(header.props.accessibilityRole).toBe('header');
-      expect(header.props.accessibilityLabel).toBe(
-        'Game header with score and controls'
-      );
+      expect(header.props.accessibilityLabel).toBe('Game header with score and controls');
     });
 
     it('has accessible score sections', () => {
@@ -348,9 +332,7 @@ describe('GameHeader Component', () => {
 
       // Update score to trigger animation
       const newState = { ...mockGameState, score: 2048 };
-      (
-        useGameStore as jest.MockedFunction<typeof useGameStore>
-      ).mockImplementation((selector) => selector(newState));
+      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) => selector(newState));
 
       expect(() => {
         rerender(<GameHeader />);
@@ -362,9 +344,7 @@ describe('GameHeader Component', () => {
 
       // Update best score to trigger animation
       const newState = { ...mockGameState, bestScore: 8192 };
-      (
-        useGameStore as jest.MockedFunction<typeof useGameStore>
-      ).mockImplementation((selector) => selector(newState));
+      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) => selector(newState));
 
       expect(() => {
         rerender(<GameHeader />);
@@ -382,9 +362,7 @@ describe('GameHeader Component', () => {
     });
 
     it('handles missing game state gracefully', () => {
-      (
-        useGameStore as jest.MockedFunction<typeof useGameStore>
-      ).mockImplementation(() => undefined as any);
+      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation(() => undefined as any);
 
       expect(() => {
         render(<GameHeader />);

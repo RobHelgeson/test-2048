@@ -2,13 +2,9 @@ import { useThemeColors } from '@/hooks/useTheme';
 import { ThemedStyleProp } from '@/types/theme';
 import { getPlatformSafeAreaStyle } from '@/utils/themeUtils';
 import React from 'react';
-import {
-  SafeAreaView,
-  SafeAreaViewProps,
-} from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaViewProps } from 'react-native-safe-area-context';
 
-export interface ThemedSafeAreaViewProps
-  extends Omit<SafeAreaViewProps, 'style'> {
+export interface ThemedSafeAreaViewProps extends Omit<SafeAreaViewProps, 'style'> {
   /**
    * Custom style prop that can be a function receiving theme colors
    * or a regular StyleSheet object
@@ -19,12 +15,7 @@ export interface ThemedSafeAreaViewProps
    * Background color variant to apply
    * Uses theme color tokens for consistent styling
    */
-  backgroundColor?:
-    | 'background'
-    | 'surface'
-    | 'surfaceVariant'
-    | 'primary'
-    | 'secondary';
+  backgroundColor?: 'background' | 'surface' | 'surfaceVariant' | 'primary' | 'secondary';
 
   /**
    * Whether to apply platform-specific safe area adjustments
@@ -74,11 +65,7 @@ export function ThemedSafeAreaView({
  */
 export function ThemedScreen({ children, ...props }: ThemedSafeAreaViewProps) {
   return (
-    <ThemedSafeAreaView
-      backgroundColor="background"
-      style={{ flex: 1 }}
-      {...props}
-    >
+    <ThemedSafeAreaView backgroundColor="background" style={{ flex: 1 }} {...props}>
       {children}
     </ThemedSafeAreaView>
   );
@@ -89,11 +76,7 @@ export function ThemedScreen({ children, ...props }: ThemedSafeAreaViewProps) {
  */
 export function ThemedModal({ children, ...props }: ThemedSafeAreaViewProps) {
   return (
-    <ThemedSafeAreaView
-      backgroundColor="surface"
-      style={{ flex: 1 }}
-      {...props}
-    >
+    <ThemedSafeAreaView backgroundColor="surface" style={{ flex: 1 }} {...props}>
       {children}
     </ThemedSafeAreaView>
   );

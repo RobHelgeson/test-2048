@@ -12,10 +12,7 @@ const MockNavigationComponent = () => {
   return (
     <View>
       <Text testID="current-path">{pathname}</Text>
-      <Pressable
-        testID="navigate-settings"
-        onPress={() => router.push('/settings')}
-      >
+      <Pressable testID="navigate-settings" onPress={() => router.push('/settings')}>
         <Text>Go to Settings</Text>
       </Pressable>
       <Pressable testID="navigate-back" onPress={() => router.back()}>

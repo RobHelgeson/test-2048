@@ -1,19 +1,13 @@
-import { useReducer, useCallback, useEffect, useState } from 'react';
-import { GameState, Direction, GameStatus, Tile } from '@/types/game';
 import { processMove } from '@/services/gameEngine';
 import { storageService } from '@/services/storageService';
+import { Direction, GameState, GameStatus, Tile } from '@/types/game';
+import { useCallback, useEffect, useReducer, useState } from 'react';
 
 /**
  * Game action types for useReducer
  */
 export interface GameAction {
-  type:
-    | 'START_NEW_GAME'
-    | 'MAKE_MOVE'
-    | 'RESET_GAME'
-    | 'CONTINUE_AFTER_WIN'
-    | 'SET_ANIMATING'
-    | 'LOAD_GAME';
+  type: 'START_NEW_GAME' | 'MAKE_MOVE' | 'RESET_GAME' | 'CONTINUE_AFTER_WIN' | 'SET_ANIMATING' | 'LOAD_GAME';
   payload?: {
     direction?: Direction;
     isAnimating?: boolean;
@@ -196,11 +190,7 @@ function validateMove(gameState: GameState, _direction: Direction): boolean {
  */
 export function useGame(): UseGameReturn {
   // Main game state managed by useReducer
-  const [gameState, dispatch] = useReducer(
-    gameReducer,
-    null,
-    createInitialGameState
-  );
+  const [gameState, dispatch] = useReducer(gameReducer, null, createInitialGameState);
 
   // Local state for loading operations
   const [isLoading, setIsLoading] = useState(false);

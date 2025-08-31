@@ -95,12 +95,8 @@ describe('useScore hook', () => {
     });
 
     it('should handle storage loading errors gracefully', async () => {
-      mockStorageService.loadBestScore.mockRejectedValue(
-        new Error('Storage error')
-      );
-      mockStorageService.loadStatistics.mockRejectedValue(
-        new Error('Storage error')
-      );
+      mockStorageService.loadBestScore.mockRejectedValue(new Error('Storage error'));
+      mockStorageService.loadStatistics.mockRejectedValue(new Error('Storage error'));
 
       const { result } = renderHook(() => useScore());
 
@@ -364,9 +360,7 @@ describe('useScore hook', () => {
         await result.current.actions.updateStatistics(gameResult);
       });
 
-      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(
-        gameResult
-      );
+      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(gameResult);
     });
 
     it('should calculate win rate correctly', async () => {
@@ -406,9 +400,7 @@ describe('useScore hook', () => {
       });
 
       // Win rate should be 3/5 = 0.6 (60%)
-      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(
-        winningGame
-      );
+      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(winningGame);
     });
 
     it('should update streak count for consecutive wins', async () => {
@@ -440,9 +432,7 @@ describe('useScore hook', () => {
         await result.current.actions.updateStatistics(winningGame);
       });
 
-      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(
-        winningGame
-      );
+      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(winningGame);
     });
 
     it('should reset streak count on game loss', async () => {
@@ -474,9 +464,7 @@ describe('useScore hook', () => {
         await result.current.actions.updateStatistics(losingGame);
       });
 
-      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(
-        losingGame
-      );
+      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(losingGame);
     });
 
     it('should calculate average score correctly', async () => {
@@ -549,9 +537,7 @@ describe('useScore hook', () => {
     });
 
     it('should handle persistence errors gracefully', async () => {
-      mockStorageService.saveBestScore.mockRejectedValue(
-        new Error('Save failed')
-      );
+      mockStorageService.saveBestScore.mockRejectedValue(new Error('Save failed'));
 
       const { result } = renderHook(() => useScore());
 
@@ -566,9 +552,7 @@ describe('useScore hook', () => {
 
   describe('Error Handling', () => {
     it('should handle statistics update errors gracefully', async () => {
-      mockStorageService.updateStatistics.mockRejectedValue(
-        new Error('Update failed')
-      );
+      mockStorageService.updateStatistics.mockRejectedValue(new Error('Update failed'));
 
       const { result } = renderHook(() => useScore());
 
@@ -585,18 +569,12 @@ describe('useScore hook', () => {
         await result.current.actions.updateStatistics(gameResult);
       });
 
-      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(
-        gameResult
-      );
+      expect(mockStorageService.updateStatistics).toHaveBeenCalledWith(gameResult);
     });
 
     it('should handle loading errors during initialization', async () => {
-      mockStorageService.loadBestScore.mockRejectedValue(
-        new Error('Load failed')
-      );
-      mockStorageService.loadStatistics.mockRejectedValue(
-        new Error('Load failed')
-      );
+      mockStorageService.loadBestScore.mockRejectedValue(new Error('Load failed'));
+      mockStorageService.loadStatistics.mockRejectedValue(new Error('Load failed'));
 
       const { result } = renderHook(() => useScore());
 

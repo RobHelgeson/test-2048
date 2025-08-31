@@ -3,12 +3,12 @@ describe('Deep Linking Configuration', () => {
     it('should validate app scheme format', () => {
       const validSchemes = [
         'test2048://',
-        'test2048://settings', 
+        'test2048://settings',
         'test2048://modal/tutorial',
-        'test2048://modal/game-over'
+        'test2048://modal/game-over',
       ];
 
-      validSchemes.forEach(scheme => {
+      validSchemes.forEach((scheme) => {
         expect(scheme.startsWith('test2048://')).toBe(true);
       });
     });
@@ -23,14 +23,9 @@ describe('Deep Linking Configuration', () => {
 
   describe('Route Format Validation', () => {
     it('should validate route paths', () => {
-      const validRoutes = [
-        '/',
-        '/settings',
-        '/modal/tutorial',
-        '/modal/game-over'
-      ];
+      const validRoutes = ['/', '/settings', '/modal/tutorial', '/modal/game-over'];
 
-      validRoutes.forEach(route => {
+      validRoutes.forEach((route) => {
         expect(route.startsWith('/')).toBe(true);
         expect(route.length).toBeGreaterThan(0);
       });
@@ -40,12 +35,12 @@ describe('Deep Linking Configuration', () => {
   describe('URL Schemes', () => {
     const validSchemes = [
       'test2048://',
-      'test2048://settings', 
+      'test2048://settings',
       'test2048://modal/tutorial',
-      'test2048://modal/game-over'
+      'test2048://modal/game-over',
     ];
 
-    validSchemes.forEach(scheme => {
+    validSchemes.forEach((scheme) => {
       it(`should handle valid scheme: ${scheme}`, () => {
         expect(scheme.startsWith('test2048://')).toBe(true);
       });

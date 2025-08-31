@@ -34,9 +34,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('displays correct content in text elements', () => {
-      const { UNSAFE_getAllByType } = render(
-        <ScoreDisplay label="Best" value={50000} />
-      );
+      const { UNSAFE_getAllByType } = render(<ScoreDisplay label="Best" value={50000} />);
 
       // Find the text elements and check their content
       const textElements = UNSAFE_getAllByType('Text');
@@ -47,9 +45,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('converts label to uppercase', () => {
-      const { UNSAFE_getAllByType } = render(
-        <ScoreDisplay label="score" value={100} />
-      );
+      const { UNSAFE_getAllByType } = render(<ScoreDisplay label="score" value={100} />);
 
       const textElements = UNSAFE_getAllByType('Text');
       const texts = textElements.map((el) => el.props.children);
@@ -59,17 +55,13 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('uses default testID when not provided', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Current" value={256} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Current" value={256} />);
 
       expect(getByTestId('score-display-current')).toBeTruthy();
     });
 
     it('renders with custom testID', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Custom" value={321} testID="my-custom-id" />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Custom" value={321} testID="my-custom-id" />);
 
       expect(getByTestId('my-custom-id')).toBeTruthy();
     });
@@ -77,9 +69,7 @@ describe('ScoreDisplay Component', () => {
 
   describe('Score Formatting', () => {
     it('formats small numbers correctly', () => {
-      const { UNSAFE_getAllByType } = render(
-        <ScoreDisplay label="Test" value={42} />
-      );
+      const { UNSAFE_getAllByType } = render(<ScoreDisplay label="Test" value={42} />);
 
       const textElements = UNSAFE_getAllByType('Text');
       const texts = textElements.map((el) => el.props.children);
@@ -87,9 +77,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('formats thousands correctly', () => {
-      const { UNSAFE_getAllByType } = render(
-        <ScoreDisplay label="Test" value={2500} />
-      );
+      const { UNSAFE_getAllByType } = render(<ScoreDisplay label="Test" value={2500} />);
 
       const textElements = UNSAFE_getAllByType('Text');
       const texts = textElements.map((el) => el.props.children);
@@ -97,9 +85,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('formats millions correctly', () => {
-      const { UNSAFE_getAllByType } = render(
-        <ScoreDisplay label="Test" value={1500000} />
-      );
+      const { UNSAFE_getAllByType } = render(<ScoreDisplay label="Test" value={1500000} />);
 
       const textElements = UNSAFE_getAllByType('Text');
       const texts = textElements.map((el) => el.props.children);
@@ -107,9 +93,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('handles zero score', () => {
-      const { UNSAFE_getAllByType } = render(
-        <ScoreDisplay label="Test" value={0} />
-      );
+      const { UNSAFE_getAllByType } = render(<ScoreDisplay label="Test" value={0} />);
 
       const textElements = UNSAFE_getAllByType('Text');
       const texts = textElements.map((el) => el.props.children);
@@ -125,9 +109,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('applies theme colors in styles', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Themed" value={456} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Themed" value={456} />);
 
       // Verify the component renders with the global theme mock
       expect(getByTestId('score-display-themed')).toBeTruthy();
@@ -136,26 +118,20 @@ describe('ScoreDisplay Component', () => {
 
   describe('Highlighted State', () => {
     it('applies highlighted styling when highlighted prop is true', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Best" value={2048} highlighted={true} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Best" value={2048} highlighted={true} />);
 
       // Component should render successfully with highlighted state
       expect(getByTestId('score-display-best')).toBeTruthy();
     });
 
     it('renders normally when highlighted prop is false', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Regular" value={512} highlighted={false} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Regular" value={512} highlighted={false} />);
 
       expect(getByTestId('score-display-regular')).toBeTruthy();
     });
 
     it('defaults to non-highlighted when highlighted prop is not provided', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Default" value={128} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Default" value={128} />);
 
       expect(getByTestId('score-display-default')).toBeTruthy();
     });
@@ -163,9 +139,7 @@ describe('ScoreDisplay Component', () => {
 
   describe('Accessibility Features', () => {
     it('provides proper accessibility labels', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} testID="accessible-score" />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1024} testID="accessible-score" />);
 
       const container = getByTestId('accessible-score');
       expect(container.props.accessibilityLabel).toBe('Score: 1.0K');
@@ -173,27 +147,21 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('sets correct accessibility role', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Best" value={4096} testID="role-test" />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Best" value={4096} testID="role-test" />);
 
       const container = getByTestId('role-test');
       expect(container.props.accessibilityRole).toBe('text');
     });
 
     it('provides accessibility value', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="High" value={8192} testID="value-test" />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="High" value={8192} testID="value-test" />);
 
       const container = getByTestId('value-test');
       expect(container.props.accessibilityValue).toEqual({ text: '8.2K' });
     });
 
     it('marks container as accessible', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Access" value={512} testID="access-test" />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Access" value={512} testID="access-test" />);
 
       const container = getByTestId('access-test');
       expect(container.props.accessible).toBe(true);
@@ -205,23 +173,14 @@ describe('ScoreDisplay Component', () => {
       const customStyle = { opacity: 0.5 };
 
       expect(() =>
-        render(
-          <ScoreDisplay
-            label="Custom"
-            value={789}
-            style={customStyle}
-            testID="custom-style"
-          />
-        )
+        render(<ScoreDisplay label="Custom" value={789} style={customStyle} testID="custom-style" />)
       ).not.toThrow();
     });
   });
 
   describe('Edge Cases', () => {
     it('handles very large numbers', () => {
-      const { UNSAFE_getAllByType } = render(
-        <ScoreDisplay label="Huge" value={999999999} />
-      );
+      const { UNSAFE_getAllByType } = render(<ScoreDisplay label="Huge" value={999999999} />);
 
       const textElements = UNSAFE_getAllByType('Text');
       const texts = textElements.map((el) => el.props.children);
@@ -229,18 +188,14 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('handles negative numbers gracefully', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Negative" value={-100} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Negative" value={-100} />);
 
       // Should handle gracefully without crashing
       expect(getByTestId('score-display-negative')).toBeTruthy();
     });
 
     it('handles empty label gracefully', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="" value={123} testID="empty-label" />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="" value={123} testID="empty-label" />);
 
       expect(getByTestId('empty-label')).toBeTruthy();
     });

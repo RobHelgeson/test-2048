@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { ThemeType } from '@/types/theme';
-import { useTheme, useThemeControls } from '@/hooks/useTheme';
 import { ClassicTheme } from '@/constants/themes/ClassicTheme';
 import { CoolTheme } from '@/constants/themes/CoolTheme';
+import { useTheme, useThemeControls } from '@/hooks/useTheme';
+import { ThemeType } from '@/types/theme';
+import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface ThemePreviewProps {
   themeType: ThemeType;
@@ -16,12 +16,7 @@ interface ThemePreviewProps {
  * Theme preview component showing a miniature representation of the theme
  * Displays theme colors and sample tiles for quick selection
  */
-export function ThemePreview({
-  themeType,
-  onSelect,
-  isSelected = false,
-  compact = false,
-}: ThemePreviewProps) {
+export function ThemePreview({ themeType, onSelect, isSelected = false, compact = false }: ThemePreviewProps) {
   const { currentTheme } = useTheme();
   const theme = themeType === 'classic' ? ClassicTheme : CoolTheme;
   const colors = theme.tokens.colors;
@@ -51,34 +46,15 @@ export function ThemePreview({
       {/* Theme name and description */}
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>{theme.name}</Text>
-        {!compact && (
-          <Text style={[styles.description, { color: colors.textSecondary }]}>
-            {theme.description}
-          </Text>
-        )}
+        {!compact && <Text style={[styles.description, { color: colors.textSecondary }]}>{theme.description}</Text>}
       </View>
 
       {/* Color palette preview */}
       <View style={styles.colorPalette}>
-        <View
-          style={[
-            styles.colorSwatch,
-            { backgroundColor: colors.background },
-            { borderColor: colors.border },
-          ]}
-        />
-        <View
-          style={[styles.colorSwatch, { backgroundColor: colors.primary }]}
-        />
-        <View
-          style={[styles.colorSwatch, { backgroundColor: colors.accent }]}
-        />
-        <View
-          style={[
-            styles.colorSwatch,
-            { backgroundColor: colors.gameBackground },
-          ]}
-        />
+        <View style={[styles.colorSwatch, { backgroundColor: colors.background }, { borderColor: colors.border }]} />
+        <View style={[styles.colorSwatch, { backgroundColor: colors.primary }]} />
+        <View style={[styles.colorSwatch, { backgroundColor: colors.accent }]} />
+        <View style={[styles.colorSwatch, { backgroundColor: colors.gameBackground }]} />
       </View>
 
       {/* Sample tiles preview */}
@@ -110,12 +86,8 @@ export function ThemePreview({
 
       {/* Current theme indicator */}
       {currentTheme === themeType && (
-        <View
-          style={[styles.currentIndicator, { backgroundColor: colors.success }]}
-        >
-          <Text style={[styles.currentText, { color: colors.textOnPrimary }]}>
-            Current
-          </Text>
+        <View style={[styles.currentIndicator, { backgroundColor: colors.success }]}>
+          <Text style={[styles.currentText, { color: colors.textOnPrimary }]}>Current</Text>
         </View>
       )}
     </Pressable>
@@ -132,12 +104,7 @@ interface ThemeComparisonProps {
   compact?: boolean;
 }
 
-export function ThemeComparison({
-  themes,
-  onThemeSelect,
-  selectedTheme,
-  compact = false,
-}: ThemeComparisonProps) {
+export function ThemeComparison({ themes, onThemeSelect, selectedTheme, compact = false }: ThemeComparisonProps) {
   return (
     <View style={compact ? styles.comparisonCompact : styles.comparison}>
       {themes.map((themeType) => (
@@ -187,9 +154,7 @@ export function LiveThemePreview({ themeType }: LiveThemePreviewProps) {
       1024: colors.tile1024,
       2048: colors.tile2048,
     };
-    return value === 0
-      ? colors.tilePlaceholder
-      : colorMap[value] || colors.tileSuper;
+    return value === 0 ? colors.tilePlaceholder : colorMap[value] || colors.tileSuper;
   };
 
   const getTileTextColor = (value: number) => {
@@ -200,51 +165,27 @@ export function LiveThemePreview({ themeType }: LiveThemePreviewProps) {
     <View style={[styles.livePreview, { backgroundColor: colors.background }]}>
       {/* Header */}
       <View style={[styles.liveHeader, { backgroundColor: colors.surface }]}>
-        <Text style={[styles.liveTitle, { color: colors.text }]}>
-          {theme.name} Theme Preview
-        </Text>
-        <Text style={[styles.liveScore, { color: colors.primary }]}>
-          Score: 12,345
-        </Text>
+        <Text style={[styles.liveTitle, { color: colors.text }]}>{theme.name} Theme Preview</Text>
+        <Text style={[styles.liveScore, { color: colors.primary }]}>Score: 12,345</Text>
       </View>
 
       {/* Game board */}
-      <View
-        style={[styles.liveBoard, { backgroundColor: colors.gameBackground }]}
-      >
+      <View style={[styles.liveBoard, { backgroundColor: colors.gameBackground }]}>
         {demoBoard.map((row, rowIndex) =>
           row.map((value, colIndex) => (
             <View
               key={`${rowIndex}-${colIndex}`}
-              style={[
-                styles.liveTile,
-                { backgroundColor: getTileColor(value) },
-                { borderColor: colors.border },
-              ]}
+              style={[styles.liveTile, { backgroundColor: getTileColor(value) }, { borderColor: colors.border }]}
             >
-              {value > 0 && (
-                <Text
-                  style={[
-                    styles.liveTileText,
-                    { color: getTileTextColor(value) },
-                  ]}
-                >
-                  {value}
-                </Text>
-              )}
+              {value > 0 && <Text style={[styles.liveTileText, { color: getTileTextColor(value) }]}>{value}</Text>}
             </View>
           ))
         )}
       </View>
 
       {/* Action button */}
-      <Pressable
-        onPress={() => setTheme(themeType)}
-        style={[styles.applyButton, { backgroundColor: colors.primary }]}
-      >
-        <Text style={[styles.applyButtonText, { color: colors.textOnPrimary }]}>
-          Apply {theme.name} Theme
-        </Text>
+      <Pressable onPress={() => setTheme(themeType)} style={[styles.applyButton, { backgroundColor: colors.primary }]}>
+        <Text style={[styles.applyButtonText, { color: colors.textOnPrimary }]}>Apply {theme.name} Theme</Text>
       </Pressable>
     </View>
   );

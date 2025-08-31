@@ -1,9 +1,5 @@
 import { Tile } from '@/components/game/Tile';
-import {
-  useThemeColors,
-  useTileColor,
-  useTileTextColor,
-} from '@/hooks/useTheme';
+import { useThemeColors, useTileColor, useTileTextColor } from '@/hooks/useTheme';
 import { Tile as TileData } from '@/types/game';
 import { render, fireEvent } from '@testing-library/react-native';
 import React from 'react';
@@ -30,9 +26,7 @@ describe('Tile Component', () => {
   describe('Component Rendering', () => {
     it('renders tile component successfully', () => {
       const tile = createMockTile(2);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="test-tile" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="test-tile" />);
 
       expect(getByTestId('test-tile')).toBeTruthy();
     });
@@ -50,14 +44,10 @@ describe('Tile Component', () => {
 
     it('applies custom testID when provided', () => {
       const tile = createMockTile(8);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="custom-tile" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="custom-tile" />);
 
       expect(getByTestId('custom-tile')).toBeTruthy();
-      expect(
-        getByTestId('custom-tile-text', { includeHiddenElements: true })
-      ).toBeTruthy();
+      expect(getByTestId('custom-tile-text', { includeHiddenElements: true })).toBeTruthy();
     });
 
     it('uses default testID based on tile ID when not provided', () => {
@@ -65,9 +55,7 @@ describe('Tile Component', () => {
       const { getByTestId } = render(<Tile tile={tile} size={80} />);
 
       expect(getByTestId(`tile-${tile.id}`)).toBeTruthy();
-      expect(
-        getByTestId(`tile-text-${tile.id}`, { includeHiddenElements: true })
-      ).toBeTruthy();
+      expect(getByTestId(`tile-text-${tile.id}`, { includeHiddenElements: true })).toBeTruthy();
     });
   });
 
@@ -86,8 +74,7 @@ describe('Tile Component', () => {
       render(<Tile tile={tile} size={80} />);
 
       const getTileColor = (useTileColor as jest.Mock).mock.results[0].value;
-      const getTileTextColor = (useTileTextColor as jest.Mock).mock.results[0]
-        .value;
+      const getTileTextColor = (useTileTextColor as jest.Mock).mock.results[0].value;
 
       expect(getTileColor(64)).toBe('#f65e3b'); // Expected color for tile64
       expect(getTileTextColor(64)).toBe('#ffffff');
@@ -97,9 +84,7 @@ describe('Tile Component', () => {
   describe('Victory Tile Detection', () => {
     it('detects 2048 as victory tile', () => {
       const victoryTile = createMockTile(2048);
-      const { getByTestId } = render(
-        <Tile tile={victoryTile} size={80} testID="victory-test" />
-      );
+      const { getByTestId } = render(<Tile tile={victoryTile} size={80} testID="victory-test" />);
 
       // Component should render successfully for victory tile
       expect(getByTestId('victory-test')).toBeTruthy();
@@ -111,9 +96,7 @@ describe('Tile Component', () => {
 
     it('handles non-victory tiles normally', () => {
       const regularTile = createMockTile(1024);
-      const { getByTestId } = render(
-        <Tile tile={regularTile} size={80} testID="regular-test" />
-      );
+      const { getByTestId } = render(<Tile tile={regularTile} size={80} testID="regular-test" />);
 
       expect(getByTestId('regular-test')).toBeTruthy();
       const textElement = getByTestId('regular-test-text', {
@@ -126,24 +109,16 @@ describe('Tile Component', () => {
   describe('Accessibility Features', () => {
     it('provides proper accessibility labels', () => {
       const tile = createMockTile(128, 1, 2);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="accessible-tile" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="accessible-tile" />);
 
       const tileContainer = getByTestId('accessible-tile');
-      expect(tileContainer.props.accessibilityLabel).toBe(
-        'Tile with value 128'
-      );
-      expect(tileContainer.props.accessibilityHint).toBe(
-        'Located at row 2, column 3'
-      );
+      expect(tileContainer.props.accessibilityLabel).toBe('Tile with value 128');
+      expect(tileContainer.props.accessibilityHint).toBe('Located at row 2, column 3');
     });
 
     it('sets correct accessibility role', () => {
       const tile = createMockTile(256);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="role-test" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="role-test" />);
 
       const tileContainer = getByTestId('role-test');
       expect(tileContainer.props.accessibilityRole).toBe('button');
@@ -151,9 +126,7 @@ describe('Tile Component', () => {
 
     it('provides accessibility state', () => {
       const tile = createMockTile(512);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="state-test" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="state-test" />);
 
       const tileContainer = getByTestId('state-test');
       expect(tileContainer.props.accessibilityState).toEqual({
@@ -164,9 +137,7 @@ describe('Tile Component', () => {
 
     it('marks container as accessible', () => {
       const tile = createMockTile(1024);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="accessible-test" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="accessible-test" />);
 
       const tileContainer = getByTestId('accessible-test');
       expect(tileContainer.props.accessible).toBe(true);
@@ -174,9 +145,7 @@ describe('Tile Component', () => {
 
     it('hides text from accessibility tree to avoid duplication', () => {
       const tile = createMockTile(2048);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="text-hidden" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="text-hidden" />);
 
       const text = getByTestId('text-hidden-text', {
         includeHiddenElements: true,
@@ -189,14 +158,7 @@ describe('Tile Component', () => {
     it('calls onPress when tile is touched', () => {
       const mockOnPress = jest.fn();
       const tile = createMockTile(4096);
-      const { getByTestId } = render(
-        <Tile
-          tile={tile}
-          size={80}
-          onPress={mockOnPress}
-          testID="interactive-tile"
-        />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} onPress={mockOnPress} testID="interactive-tile" />);
 
       const tileContainer = getByTestId('interactive-tile');
       fireEvent(tileContainer, 'touchEnd');
@@ -206,9 +168,7 @@ describe('Tile Component', () => {
 
     it('does not crash when onPress is not provided', () => {
       const tile = createMockTile(8192);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="no-handler" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="no-handler" />);
 
       const tileContainer = getByTestId('no-handler');
       expect(() => fireEvent(tileContainer, 'touchEnd')).not.toThrow();
@@ -217,15 +177,11 @@ describe('Tile Component', () => {
 
   describe('Typography Scaling', () => {
     it('handles different tile values correctly', () => {
-      const values = [
-        2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192,
-      ];
+      const values = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192];
 
       values.forEach((value) => {
         const tile = createMockTile(value);
-        const { getByTestId } = render(
-          <Tile tile={tile} size={80} testID={`value-${value}`} />
-        );
+        const { getByTestId } = render(<Tile tile={tile} size={80} testID={`value-${value}`} />);
 
         // Should render the value as text in the element
         const textElement = getByTestId(`value-${value}-text`, {
@@ -251,9 +207,7 @@ describe('Tile Component', () => {
   describe('Component Structure', () => {
     it('has proper component structure with container and text', () => {
       const tile = createMockTile(8);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="structure-test" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="structure-test" />);
 
       // Should have container
       const container = getByTestId('structure-test');
@@ -268,9 +222,7 @@ describe('Tile Component', () => {
 
     it('passes tile data to component correctly', () => {
       const tile = createMockTile(16, 2, 3);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={80} testID="data-test" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={80} testID="data-test" />);
 
       const container = getByTestId('data-test');
       expect(container.props.accessibilityLabel).toContain('16');
@@ -281,18 +233,14 @@ describe('Tile Component', () => {
   describe('Edge Cases', () => {
     it('handles minimum valid tile size', () => {
       const tile = createMockTile(2);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={32} testID="min-size" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={32} testID="min-size" />);
 
       expect(getByTestId('min-size')).toBeTruthy();
     });
 
     it('handles large tile size', () => {
       const tile = createMockTile(4);
-      const { getByTestId } = render(
-        <Tile tile={tile} size={200} testID="large-size" />
-      );
+      const { getByTestId } = render(<Tile tile={tile} size={200} testID="large-size" />);
 
       expect(getByTestId('large-size')).toBeTruthy();
     });
@@ -301,16 +249,7 @@ describe('Tile Component', () => {
       const tile = createMockTile(8);
       const customStyle = { opacity: 0.5 };
 
-      expect(() =>
-        render(
-          <Tile
-            tile={tile}
-            size={80}
-            style={customStyle}
-            testID="custom-style"
-          />
-        )
-      ).not.toThrow();
+      expect(() => render(<Tile tile={tile} size={80} style={customStyle} testID="custom-style" />)).not.toThrow();
     });
   });
 });

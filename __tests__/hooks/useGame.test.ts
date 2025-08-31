@@ -103,9 +103,7 @@ describe('useGame Hook', () => {
     });
 
     it('should handle persistence errors gracefully during initialization', async () => {
-      mockStorageService.loadGameState.mockRejectedValue(
-        new Error('Storage error')
-      );
+      mockStorageService.loadGameState.mockRejectedValue(new Error('Storage error'));
 
       const { result } = renderHook(() => useGame());
 
@@ -196,10 +194,7 @@ describe('useGame Hook', () => {
           result.current.actions.makeMove(Direction.LEFT);
         });
 
-        expect(mockGameEngine.processMove).toHaveBeenCalledWith(
-          expect.any(Object),
-          Direction.LEFT
-        );
+        expect(mockGameEngine.processMove).toHaveBeenCalledWith(expect.any(Object), Direction.LEFT);
       });
 
       it('should test all four directions', async () => {
@@ -209,22 +204,14 @@ describe('useGame Hook', () => {
           await new Promise((resolve) => setTimeout(resolve, 0));
         });
 
-        const directions = [
-          Direction.UP,
-          Direction.DOWN,
-          Direction.LEFT,
-          Direction.RIGHT,
-        ];
+        const directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT];
 
         for (const direction of directions) {
           await act(async () => {
             result.current.actions.makeMove(direction);
           });
 
-          expect(mockGameEngine.processMove).toHaveBeenCalledWith(
-            expect.any(Object),
-            direction
-          );
+          expect(mockGameEngine.processMove).toHaveBeenCalledWith(expect.any(Object), direction);
         }
 
         expect(mockGameEngine.processMove).toHaveBeenCalledTimes(4);
@@ -436,9 +423,7 @@ describe('useGame Hook', () => {
     });
 
     it('should handle save errors gracefully', async () => {
-      mockStorageService.saveGameState.mockRejectedValue(
-        new Error('Save error')
-      );
+      mockStorageService.saveGameState.mockRejectedValue(new Error('Save error'));
 
       const mockMoveResult = {
         board: Array(4)
@@ -603,10 +588,7 @@ describe('useGame Hook', () => {
         result.current.actions.makeMove(Direction.UP);
       });
 
-      expect(mockGameEngine.processMove).toHaveBeenCalledWith(
-        initialState,
-        Direction.UP
-      );
+      expect(mockGameEngine.processMove).toHaveBeenCalledWith(initialState, Direction.UP);
     });
 
     it('should handle game engine results correctly', async () => {
@@ -653,13 +635,9 @@ describe('useGame Hook', () => {
       rerender({});
 
       // Actions should be the same reference due to useCallback
-      expect(result.current.actions.startNewGame).toBe(
-        initialActions.startNewGame
-      );
+      expect(result.current.actions.startNewGame).toBe(initialActions.startNewGame);
       expect(result.current.actions.resetGame).toBe(initialActions.resetGame);
-      expect(result.current.actions.continueAfterWin).toBe(
-        initialActions.continueAfterWin
-      );
+      expect(result.current.actions.continueAfterWin).toBe(initialActions.continueAfterWin);
     });
 
     it('should handle multiple rapid moves without issues', async () => {

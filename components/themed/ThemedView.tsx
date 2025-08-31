@@ -14,13 +14,7 @@ export interface ThemedViewProps extends Omit<ViewProps, 'style'> {
    * Background color variant to apply
    * Uses theme color tokens for consistent styling
    */
-  backgroundColor?:
-    | 'background'
-    | 'surface'
-    | 'surfaceVariant'
-    | 'primary'
-    | 'secondary'
-    | 'gameBackground';
+  backgroundColor?: 'background' | 'surface' | 'surfaceVariant' | 'primary' | 'secondary' | 'gameBackground';
 
   /**
    * Border color variant to apply
@@ -188,14 +182,7 @@ function getShadowStyle(shadow: string) {
  */
 export function ThemedCard({ children, ...props }: ThemedViewProps) {
   return (
-    <ThemedView
-      backgroundColor="surface"
-      borderRadius="md"
-      shadow="base"
-      padding="md"
-      borderColor="border"
-      {...props}
-    >
+    <ThemedView backgroundColor="surface" borderRadius="md" shadow="base" padding="md" borderColor="border" {...props}>
       {children}
     </ThemedView>
   );
@@ -206,12 +193,7 @@ export function ThemedCard({ children, ...props }: ThemedViewProps) {
  */
 export function ThemedSurface({ children, ...props }: ThemedViewProps) {
   return (
-    <ThemedView
-      backgroundColor="surface"
-      borderRadius="lg"
-      shadow="sm"
-      {...props}
-    >
+    <ThemedView backgroundColor="surface" borderRadius="lg" shadow="sm" {...props}>
       {children}
     </ThemedView>
   );
@@ -222,13 +204,7 @@ export function ThemedSurface({ children, ...props }: ThemedViewProps) {
  */
 export function ThemedGameBackground({ children, ...props }: ThemedViewProps) {
   return (
-    <ThemedView
-      backgroundColor="gameBackground"
-      borderRadius="lg"
-      shadow="base"
-      padding="md"
-      {...props}
-    >
+    <ThemedView backgroundColor="gameBackground" borderRadius="lg" shadow="base" padding="md" {...props}>
       {children}
     </ThemedView>
   );

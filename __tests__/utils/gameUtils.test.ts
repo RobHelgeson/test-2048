@@ -48,9 +48,7 @@ describe('Game Utilities', () => {
     });
 
     it('should find empty cells correctly', () => {
-      const findEmptyCells = (
-        board: number[][]
-      ): { row: number; col: number }[] => {
+      const findEmptyCells = (board: number[][]): { row: number; col: number }[] => {
         const emptyCells: { row: number; col: number }[] = [];
         board.forEach((row, rowIndex) => {
           row.forEach((cell, colIndex) => {

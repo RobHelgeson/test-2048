@@ -1,9 +1,9 @@
-import React from 'react';
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { ThemedView } from '@/components/themed/ThemedView';
 import { ThemedText } from '@/components/themed/ThemedText';
+import { ThemedView } from '@/components/themed/ThemedView';
 import { useThemeColors } from '@/hooks/useTheme';
 import { formatScore } from '@/utils/helpers';
+import React from 'react';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 interface ScoreDisplayProps {
   /** Label text for the score (e.g., "Score", "Best") */
@@ -33,20 +33,11 @@ interface ScoreDisplayProps {
  * - Comprehensive accessibility support
  * - Responsive typography and spacing
  */
-export function ScoreDisplay({
-  label,
-  value,
-  highlighted = false,
-  style,
-  testID,
-}: ScoreDisplayProps) {
+export function ScoreDisplay({ label, value, highlighted = false, style, testID }: ScoreDisplayProps) {
   const colors = useThemeColors();
 
   // Create dynamic styles based on theme and highlighted state
-  const dynamicStyles = React.useMemo(
-    () => createScoreDisplayStyles(colors, highlighted),
-    [colors, highlighted]
-  );
+  const dynamicStyles = React.useMemo(() => createScoreDisplayStyles(colors, highlighted), [colors, highlighted]);
 
   // Format the score value for display
   const formattedScore = formatScore(value);
@@ -76,9 +67,7 @@ export function ScoreDisplay({
       {/* Score Label */}
       <ThemedText
         style={dynamicStyles.label}
-        testID={
-          testID ? `${testID}-label` : `score-label-${label.toLowerCase()}`
-        }
+        testID={testID ? `${testID}-label` : `score-label-${label.toLowerCase()}`}
         accessibilityElementsHidden // Hide from accessibility since parent provides full context
       >
         {label.toUpperCase()}
@@ -87,9 +76,7 @@ export function ScoreDisplay({
       {/* Score Value */}
       <ThemedText
         style={dynamicStyles.value}
-        testID={
-          testID ? `${testID}-value` : `score-value-${label.toLowerCase()}`
-        }
+        testID={testID ? `${testID}-value` : `score-value-${label.toLowerCase()}`}
         accessibilityElementsHidden // Hide from accessibility since parent provides full context
       >
         {formattedScore}

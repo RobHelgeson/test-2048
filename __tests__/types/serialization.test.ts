@@ -3,14 +3,7 @@
  * Validates JSON serialization/deserialization and SQLite compatibility.
  */
 
-import {
-  GameState,
-  Tile,
-  Direction,
-  GameStatus,
-  Board,
-  Position,
-} from '@/types';
+import { GameState, Tile, Direction, GameStatus, Board, Position } from '@/types';
 
 describe('Game Type Serialization', () => {
   describe('GameState Serialization', () => {
@@ -46,12 +39,7 @@ describe('Game Type Serialization', () => {
       lastMoveTime: 1692900060000,
       canUndo: true,
       previousBoard: [
-        [
-          { id: 'tile-1', value: 2, row: 0, col: 0, isNew: false },
-          null,
-          null,
-          null,
-        ],
+        [{ id: 'tile-1', value: 2, row: 0, col: 0, isNew: false }, null, null, null],
         [null, null, null, null],
         [
           null,
@@ -97,10 +85,7 @@ describe('Game Type Serialization', () => {
       expect(deserialized.board[0][0]?.value).toBe(2);
       expect(deserialized.board[0][2]?.id).toBe('tile-2');
       expect(deserialized.board[0][2]?.isNew).toBe(true);
-      expect(deserialized.board[2][1]?.mergedFrom).toEqual([
-        'tile-4',
-        'tile-5',
-      ]);
+      expect(deserialized.board[2][1]?.mergedFrom).toEqual(['tile-4', 'tile-5']);
     });
 
     it('should handle null values in board', () => {
@@ -196,12 +181,7 @@ describe('Game Type Serialization', () => {
 
   describe('Enum Serialization', () => {
     it('should serialize Direction enum values correctly', () => {
-      const directions = [
-        Direction.UP,
-        Direction.DOWN,
-        Direction.LEFT,
-        Direction.RIGHT,
-      ];
+      const directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT];
       const serialized = JSON.stringify(directions);
       const deserialized: Direction[] = JSON.parse(serialized);
 
@@ -264,9 +244,7 @@ describe('Game Type Serialization', () => {
 
       expect(deserialized).toHaveLength(4);
       expect(deserialized.every((row) => row.length === 4)).toBe(true);
-      expect(
-        deserialized.every((row) => row.every((cell) => cell === null))
-      ).toBe(true);
+      expect(deserialized.every((row) => row.every((cell) => cell === null))).toBe(true);
     });
 
     it('should serialize board with tiles correctly', () => {
@@ -357,10 +335,7 @@ describe('Game Type Serialization', () => {
       // Verify data integrity after multiple cycles
       expect(deserialized3.board[0][0]?.id).toBe('tile-1');
       expect(deserialized3.board[0][0]?.value).toBe(2048);
-      expect(deserialized3.board[0][0]?.mergedFrom).toEqual([
-        'tile-a',
-        'tile-b',
-      ]);
+      expect(deserialized3.board[0][0]?.mergedFrom).toEqual(['tile-a', 'tile-b']);
       expect(deserialized3.board[0][2]?.previousPosition).toEqual({
         row: 1,
         col: 2,
@@ -375,12 +350,7 @@ describe('Game Type Serialization', () => {
     it('should create valid SQL-compatible JSON strings', () => {
       const gameState: GameState = {
         board: [
-          [
-            { id: 'tile-1', value: 2, row: 0, col: 0, isNew: false },
-            null,
-            null,
-            null,
-          ],
+          [{ id: 'tile-1', value: 2, row: 0, col: 0, isNew: false }, null, null, null],
           [null, null, null, null],
           [null, null, null, null],
           [null, null, null, null],

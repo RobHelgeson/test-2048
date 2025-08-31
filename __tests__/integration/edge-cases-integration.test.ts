@@ -11,11 +11,7 @@ import {
   generateGameOverBoard,
   generateMergeableBoard,
 } from './utils/testDataGenerators';
-import {
-  processMove,
-  spawnRandomTile,
-  checkGameOver,
-} from '@/services/gameEngine';
+import { processMove, spawnRandomTile, checkGameOver } from '@/services/gameEngine';
 
 describe('Edge Cases Integration Tests', () => {
   beforeEach(async () => {
@@ -31,17 +27,11 @@ describe('Edge Cases Integration Tests', () => {
       };
 
       // Attempt moves on empty board
-      const directions = [
-        Direction.LEFT,
-        Direction.RIGHT,
-        Direction.UP,
-        Direction.DOWN,
-      ];
+      const directions = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN];
 
       for (const direction of directions) {
-        const { result, duration } = await global.measureAsync(
-          `Empty board move ${direction}`,
-          async () => processMove(gameState, direction)
+        const { result, duration } = await global.measureAsync(`Empty board move ${direction}`, async () =>
+          processMove(gameState, direction)
         );
 
         // Should complete quickly even with empty board
@@ -69,12 +59,7 @@ describe('Edge Cases Integration Tests', () => {
 
       // Attempt all possible moves
       const moveResults = [];
-      const directions = [
-        Direction.LEFT,
-        Direction.RIGHT,
-        Direction.UP,
-        Direction.DOWN,
-      ];
+      const directions = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN];
 
       for (const direction of directions) {
         const result = processMove(gameState, direction);
@@ -142,17 +127,11 @@ describe('Edge Cases Integration Tests', () => {
         };
 
         // Test all movement directions from corner
-        const directions = [
-          Direction.LEFT,
-          Direction.RIGHT,
-          Direction.UP,
-          Direction.DOWN,
-        ];
+        const directions = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN];
 
         for (const direction of directions) {
-          const { result, duration } = await global.measureAsync(
-            `Corner ${index} move ${direction}`,
-            async () => processMove(gameState, direction)
+          const { result, duration } = await global.measureAsync(`Corner ${index} move ${direction}`, async () =>
+            processMove(gameState, direction)
           );
 
           expect(duration).toBeLessThan(5);
@@ -164,9 +143,7 @@ describe('Edge Cases Integration Tests', () => {
           }
 
           // Should spawn a new tile after movement (if movement occurred)
-          const finalTileCount = result.board
-            .flat()
-            .filter((tile) => tile !== null).length;
+          const finalTileCount = result.board.flat().filter((tile) => tile !== null).length;
           if (result.board !== gameState.board) {
             expect(finalTileCount).toBeGreaterThanOrEqual(2);
           } else {
@@ -211,9 +188,7 @@ describe('Edge Cases Integration Tests', () => {
       expect(result.score).toBeGreaterThan(gameState.score);
 
       // Verify merges occurred correctly (2+2=4)
-      const mergedTiles = result.board
-        .flat()
-        .filter((tile) => tile !== null && tile.value === 4);
+      const mergedTiles = result.board.flat().filter((tile) => tile !== null && tile.value === 4);
       expect(mergedTiles.length).toBeGreaterThan(0);
     });
   });
@@ -223,9 +198,7 @@ describe('Edge Cases Integration Tests', () => {
       const nearlyFullBoard = generateNearlyFullBoard(3, 3); // One space at [3,3]
 
       // Verify board has exactly one empty space
-      const emptySpaces = nearlyFullBoard
-        .flat()
-        .filter((tile) => tile === null).length;
+      const emptySpaces = nearlyFullBoard.flat().filter((tile) => tile === null).length;
       expect(emptySpaces).toBe(1);
 
       // Test tile spawning
@@ -242,15 +215,12 @@ describe('Edge Cases Integration Tests', () => {
       const fullBoard = generateFullBoard();
 
       // Verify board is completely full
-      const emptySpaces = fullBoard
-        .flat()
-        .filter((tile) => tile === null).length;
+      const emptySpaces = fullBoard.flat().filter((tile) => tile === null).length;
       expect(emptySpaces).toBe(0);
 
       // Test tile spawning on full board
-      const { result, duration } = await global.measureAsync(
-        'Full board spawn attempt',
-        async () => spawnRandomTile(fullBoard)
+      const { result, duration } = await global.measureAsync('Full board spawn attempt', async () =>
+        spawnRandomTile(fullBoard)
       );
 
       expect(duration).toBeLessThan(2); // Should fail quickly
@@ -336,9 +306,8 @@ describe('Edge Cases Integration Tests', () => {
       };
 
       // Left move should not change anything
-      const { result, duration } = await global.measureAsync(
-        'Static board left move',
-        async () => processMove(gameState, Direction.LEFT)
+      const { result, duration } = await global.measureAsync('Static board left move', async () =>
+        processMove(gameState, Direction.LEFT)
       );
 
       expect(duration).toBeLessThan(5); // Should complete quickly
@@ -365,9 +334,8 @@ describe('Edge Cases Integration Tests', () => {
         board: chainBoard,
       };
 
-      const { result, duration } = await global.measureAsync(
-        'Complex merge chain',
-        async () => processMove(gameState, Direction.LEFT)
+      const { result, duration } = await global.measureAsync('Complex merge chain', async () =>
+        processMove(gameState, Direction.LEFT)
       );
 
       expect(duration).toBeLessThan(10); // Should handle complexity efficiently
@@ -408,9 +376,7 @@ describe('Edge Cases Integration Tests', () => {
       expect(result.score).toBe(gameState.score + expectedScore);
 
       // Verify high-value tiles were created
-      const highValueTiles = result.board
-        .flat()
-        .filter((tile) => tile !== null && tile.value >= 512);
+      const highValueTiles = result.board.flat().filter((tile) => tile !== null && tile.value >= 512);
       expect(highValueTiles.length).toBeGreaterThan(0);
     });
 
@@ -442,9 +408,8 @@ describe('Edge Cases Integration Tests', () => {
         board: simultaneousMergeBoard,
       };
 
-      const { result, duration } = await global.measureAsync(
-        'Simultaneous merges',
-        async () => processMove(gameState, Direction.LEFT)
+      const { result, duration } = await global.measureAsync('Simultaneous merges', async () =>
+        processMove(gameState, Direction.LEFT)
       );
 
       expect(duration).toBeLessThan(15); // Should handle multiple merges efficiently
@@ -545,20 +510,19 @@ describe('Edge Cases Integration Tests', () => {
       const stateHistory = [{ ...gameState }];
 
       // Execute rapid moves
-      const { result: finalState, duration: totalDuration } =
-        await global.measureAsync(
-          `Rapid ${moveSequence.length} moves`,
-          async () => {
-            let currentState = gameState;
+      const { result: finalState, duration: totalDuration } = await global.measureAsync(
+        `Rapid ${moveSequence.length} moves`,
+        async () => {
+          let currentState = gameState;
 
-            for (const direction of moveSequence) {
-              currentState = processMove(currentState, direction);
-              stateHistory.push({ ...currentState });
-            }
-
-            return currentState;
+          for (const direction of moveSequence) {
+            currentState = processMove(currentState, direction);
+            stateHistory.push({ ...currentState });
           }
-        );
+
+          return currentState;
+        }
+      );
 
       expect(totalDuration).toBeLessThan(100); // Should complete rapidly
 
@@ -572,9 +536,7 @@ describe('Edge Cases Integration Tests', () => {
 
         if (index > 0) {
           const prevState = stateHistory[index - 1];
-          expect(state.lastMoveTime).toBeGreaterThanOrEqual(
-            prevState.lastMoveTime
-          );
+          expect(state.lastMoveTime).toBeGreaterThanOrEqual(prevState.lastMoveTime);
         }
       });
     });
@@ -623,16 +585,14 @@ describe('Edge Cases Integration Tests', () => {
 
         // Measure performance under stress
         for (let i = 0; i < iterations; i++) {
-          const { duration } = await global.measureAsync(
-            `Stress test ${index}-${i}`,
-            async () => processMove(scenario, Direction.LEFT)
+          const { duration } = await global.measureAsync(`Stress test ${index}-${i}`, async () =>
+            processMove(scenario, Direction.LEFT)
           );
           durations.push(duration);
         }
 
         // Performance should remain consistent
-        const avgDuration =
-          durations.reduce((sum, d) => sum + d, 0) / durations.length;
+        const avgDuration = durations.reduce((sum, d) => sum + d, 0) / durations.length;
         const maxDuration = Math.max(...durations);
 
         expect(avgDuration).toBeLessThan(10); // Average under 10ms
@@ -641,10 +601,8 @@ describe('Edge Cases Integration Tests', () => {
         // Performance should not degrade over iterations
         const firstHalf = durations.slice(0, 50);
         const secondHalf = durations.slice(50);
-        const firstHalfAvg =
-          firstHalf.reduce((sum, d) => sum + d, 0) / firstHalf.length;
-        const secondHalfAvg =
-          secondHalf.reduce((sum, d) => sum + d, 0) / secondHalf.length;
+        const firstHalfAvg = firstHalf.reduce((sum, d) => sum + d, 0) / firstHalf.length;
+        const secondHalfAvg = secondHalf.reduce((sum, d) => sum + d, 0) / secondHalf.length;
 
         expect(secondHalfAvg).toBeLessThan(firstHalfAvg * 2); // Less than 2x degradation
       }

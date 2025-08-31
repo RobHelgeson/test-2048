@@ -1,11 +1,12 @@
 import { Tile } from '@/components/game/Tile';
+import { useGestures } from '@/hooks/useGestures';
+import { useKeyboard } from '@/hooks/useKeyboard';
 import { useThemeColors } from '@/hooks/useTheme';
 import { useGameStore } from '@/stores/gameStore';
-import { useGestures } from '@/hooks/useGestures';
-import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, useWindowDimensions, View, ViewStyle } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
 import { Direction } from '@/types';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Platform, StyleSheet, TouchableOpacity, useWindowDimensions, View, ViewStyle } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
 
 // Simple constants
 const MAX_BOARD_SIZE = 640;
@@ -32,6 +33,15 @@ interface GameBoardProps {
    * Test ID for the board container
    */
   testID?: string;
+
+  /**
+   * Optional callback to provide keyboard state to parent components
+   */
+  onKeyboardStateChange?: (keyboardState: {
+    activeDirections?: Set<Direction>;
+    pressedDirection?: Direction | null;
+    isEnabled?: boolean;
+  }) => void;
 }
 
 /**
@@ -44,7 +54,13 @@ interface GameBoardProps {
  * - Theme integration
  * - Accessibility support
  */
-export function GameBoard({ style, disabled = false, onTilePress, testID = 'game-board' }: GameBoardProps) {
+export function GameBoard({
+  style,
+  disabled = false,
+  onTilePress,
+  testID = 'game-board',
+  onKeyboardStateChange,
+}: GameBoardProps) {
   const { width } = useWindowDimensions();
 
   const [boardSize, setBoardSize] = useState<number>(Math.max(Math.min(width - BOARD_MARGIN, MAX_BOARD_SIZE), 224));
@@ -85,14 +101,55 @@ export function GameBoard({ style, disabled = false, onTilePress, testID = 'game
     onTilePress?.(row, col);
   };
 
-  // Gesture handling callback
-  const handleSwipe = useCallback(
+  // Unified move handler for both gestures and keyboard
+  const handleMove = useCallback(
     (direction: Direction) => {
       if (disabled || isAnimating) return;
       makeMove(direction);
     },
     [disabled, isAnimating, makeMove]
   );
+
+  // Gesture handling callback
+  const handleSwipe = useCallback(
+    (direction: Direction) => {
+      handleMove(direction);
+    },
+    [handleMove]
+  );
+
+  // Keyboard handling with state feedback
+  const keyboardState = useKeyboard({
+    onKeyPress: handleMove,
+    disabled: disabled || isAnimating,
+  });
+
+  // Provide keyboard state to parent component for visual feedback
+  useEffect(() => {
+    if (onKeyboardStateChange) {
+      const activeDirections = new Set<Direction>();
+
+      // Check which directions have active keys
+      if (keyboardState.isDirectionActive(Direction.UP)) {
+        activeDirections.add(Direction.UP);
+      }
+      if (keyboardState.isDirectionActive(Direction.DOWN)) {
+        activeDirections.add(Direction.DOWN);
+      }
+      if (keyboardState.isDirectionActive(Direction.LEFT)) {
+        activeDirections.add(Direction.LEFT);
+      }
+      if (keyboardState.isDirectionActive(Direction.RIGHT)) {
+        activeDirections.add(Direction.RIGHT);
+      }
+
+      onKeyboardStateChange({
+        activeDirections,
+        pressedDirection: keyboardState.pressedDirection,
+        isEnabled: keyboardState.isEnabled,
+      });
+    }
+  }, [keyboardState, onKeyboardStateChange]);
 
   // Create gesture detector
   const gesture = useGestures({
@@ -103,6 +160,12 @@ export function GameBoard({ style, disabled = false, onTilePress, testID = 'game
   const tileCount = board.flat().filter((tile) => tile !== null).length;
   const accessibilityLabel = `Game board with 4 by 4 grid, ${tileCount} tiles currently placed`;
 
+  // Enhanced accessibility hint that includes keyboard controls on web
+  const accessibilityHint =
+    Platform.OS === 'web'
+      ? 'Swipe in any direction or use arrow keys or WASD to move tiles and merge numbers'
+      : 'Swipe in any direction to move tiles and merge numbers';
+
   return (
     <GestureDetector gesture={gesture}>
       <View
@@ -110,7 +173,14 @@ export function GameBoard({ style, disabled = false, onTilePress, testID = 'game
         testID={testID}
         accessible
         accessibilityLabel={accessibilityLabel}
-        accessibilityHint="Swipe in any direction to move tiles and merge numbers"
+        accessibilityHint={accessibilityHint}
+        // Add focusable property for keyboard navigation on web
+        {...(Platform.OS === 'web'
+          ? {
+              tabIndex: keyboardState.isEnabled ? 0 : -1,
+              accessibilityRole: 'none' as const,
+            }
+          : {})}
       >
         {board.map((row, rowIndex) =>
           row.map((tile, colIndex) => (

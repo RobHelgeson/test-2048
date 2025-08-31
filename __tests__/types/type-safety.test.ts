@@ -118,9 +118,7 @@ describe('Type Safety and Compilation Tests', () => {
       // Test enum contains only expected values
       const allStatuses = Object.values(GameStatus);
       expect(allStatuses).toHaveLength(3);
-      expect(allStatuses.every((status) => typeof status === 'string')).toBe(
-        true
-      );
+      expect(allStatuses.every((status) => typeof status === 'string')).toBe(true);
     });
 
     it('should work with switch statements without default case', () => {
@@ -220,8 +218,7 @@ describe('Type Safety and Compilation Tests', () => {
 
       // Optional properties should be accessible with proper types
       const mergedFrom: string[] | undefined = tileWithOptionals.mergedFrom;
-      const previousPosition: Position | undefined =
-        tileWithOptionals.previousPosition;
+      const previousPosition: Position | undefined = tileWithOptionals.previousPosition;
 
       expect(Array.isArray(mergedFrom)).toBe(true);
       expect(typeof previousPosition).toBe('object');
@@ -254,10 +251,8 @@ describe('Type Safety and Compilation Tests', () => {
       };
 
       // Optional properties should be accessible with proper types
-      const previousBoard: Board | undefined =
-        gameStateWithOptionals.previousBoard;
-      const previousScore: number | undefined =
-        gameStateWithOptionals.previousScore;
+      const previousBoard: Board | undefined = gameStateWithOptionals.previousBoard;
+      const previousScore: number | undefined = gameStateWithOptionals.previousScore;
 
       expect(Array.isArray(previousBoard)).toBe(true);
       expect(typeof previousScore).toBe('number');
@@ -279,9 +274,7 @@ describe('Type Safety and Compilation Tests', () => {
 
   describe('Function Type Safety', () => {
     it('should enforce InitialGameStateFactory type signature', () => {
-      const factory: InitialGameStateFactory = (
-        config?: InitialGameConfig
-      ): GameState => {
+      const factory: InitialGameStateFactory = (config?: InitialGameConfig): GameState => {
         return {
           board: [
             [null, null, null, null],

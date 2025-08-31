@@ -18,9 +18,7 @@ export function calculateLuminance(color: string): number {
 
   // Apply gamma correction
   const sRGBtoLin = (colorChannel: number) => {
-    return colorChannel <= 0.03928
-      ? colorChannel / 12.92
-      : Math.pow((colorChannel + 0.055) / 1.055, 2.4);
+    return colorChannel <= 0.03928 ? colorChannel / 12.92 : Math.pow((colorChannel + 0.055) / 1.055, 2.4);
   };
 
   const rLin = sRGBtoLin(r);
@@ -144,9 +142,7 @@ export function validateThemeAccessibility(colors: ThemeColors) {
 
   tileChecks.forEach(({ value, color }) => {
     // For small tiles (2, 4), we use dark text
-    const textColor = ['2', '4'].includes(value)
-      ? colors.text
-      : colors.textOnPrimary;
+    const textColor = ['2', '4'].includes(value) ? colors.text : colors.textOnPrimary;
 
     validations.push({
       context: `Text on tile ${value}`,
@@ -166,10 +162,7 @@ export function validateThemeAccessibility(colors: ThemeColors) {
  * @param steps Number of steps in the progression
  * @returns Array of hex colors
  */
-export function generateTileColorProgression(
-  baseColor: string,
-  steps: number = 11
-): string[] {
+export function generateTileColorProgression(baseColor: string, steps: number = 11): string[] {
   const colors: string[] = [];
 
   // Parse base color
@@ -186,15 +179,9 @@ export function generateTileColorProgression(
     const saturationMultiplier = 0.3 + progress * 0.7; // 30% to 100%
     const brightnessMultiplier = 0.9 - progress * 0.6; // 90% to 30%
 
-    const newR = Math.round(
-      r * saturationMultiplier + (255 - 255 * brightnessMultiplier)
-    );
-    const newG = Math.round(
-      g * saturationMultiplier + (255 - 255 * brightnessMultiplier)
-    );
-    const newB = Math.round(
-      b * saturationMultiplier + (255 - 255 * brightnessMultiplier)
-    );
+    const newR = Math.round(r * saturationMultiplier + (255 - 255 * brightnessMultiplier));
+    const newG = Math.round(g * saturationMultiplier + (255 - 255 * brightnessMultiplier));
+    const newB = Math.round(b * saturationMultiplier + (255 - 255 * brightnessMultiplier));
 
     const clampedR = Math.max(0, Math.min(255, newR));
     const clampedG = Math.max(0, Math.min(255, newG));
@@ -355,8 +342,7 @@ export function getPlatformShadow(shadowConfig: {
     };
   } else {
     // Web uses CSS box-shadow
-    const { shadowColor, shadowOffset, shadowOpacity, shadowRadius } =
-      shadowConfig;
+    const { shadowColor, shadowOffset, shadowOpacity, shadowRadius } = shadowConfig;
     const alpha = shadowOpacity;
     const color = hexToRgba(shadowColor, alpha);
 
@@ -371,9 +357,7 @@ export function getPlatformShadow(shadowConfig: {
  * @param weight Font weight ('regular' | 'medium' | 'bold')
  * @returns Platform-appropriate font family
  */
-export function getPlatformFontFamily(
-  weight: 'regular' | 'medium' | 'bold' = 'regular'
-): string {
+export function getPlatformFontFamily(weight: 'regular' | 'medium' | 'bold' = 'regular'): string {
   if (Platform.OS === 'ios') {
     switch (weight) {
       case 'bold':
@@ -483,9 +467,7 @@ export function getPlatformTextInputStyle() {
  * @param variant Button variant
  * @returns Platform-specific button styles
  */
-export function getPlatformButtonStyle(
-  variant: 'primary' | 'secondary' = 'primary'
-) {
+export function getPlatformButtonStyle(variant: 'primary' | 'secondary' = 'primary') {
   const baseStyle = {
     paddingVertical: 12,
     paddingHorizontal: 24,
@@ -554,7 +536,5 @@ export function supportsHaptics(): boolean {
  * @returns True if dark mode detection is supported
  */
 export function supportsDarkModeDetection(): boolean {
-  return (
-    Platform.OS === 'ios' || Platform.OS === 'android' || Platform.OS === 'web'
-  );
+  return Platform.OS === 'ios' || Platform.OS === 'android' || Platform.OS === 'web';
 }

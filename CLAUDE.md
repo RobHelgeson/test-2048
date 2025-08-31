@@ -9,14 +9,16 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 ## Commands
 
 ### Development Commands
+
 - `npm install` - Install dependencies
 - `npx expo start` - Start development server with Metro bundler
 - `npx expo start --clear` - Start with cleared Metro cache
 - `npm run android` - Launch on Android emulator
-- `npm run ios` - Launch on iOS simulator  
+- `npm run ios` - Launch on iOS simulator
 - `npm run web` - Launch web version
 
 ### Code Quality
+
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Run ESLint with auto-fix
 - `npm run format` - Format code with Prettier
@@ -24,11 +26,13 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 - `npm run type-check` - Run TypeScript type checking
 
 ### Testing
+
 - `npm test` - Run Jest unit tests
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:coverage` - Run tests with coverage report
 
 ### Build Commands
+
 - `npm run build:web` - Build static web export (no auth required)
 - `npm run build:ios:dev` - Build iOS development build (requires EAS auth)
 - `npm run build:android:dev` - Build Android development build (requires EAS auth)
@@ -39,6 +43,7 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 ## Architecture
 
 ### Technology Stack
+
 - **Frontend:** React Native 0.76+ with New Architecture enabled
 - **Framework:** Expo SDK 53.0.20 with EAS Build
 - **Language:** TypeScript 5.3+ with strict mode
@@ -50,6 +55,7 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 - **Testing:** Jest + React Native Testing Library
 
 ### Project Structure
+
 - `app/` - Expo Router file-based routing (screens and layouts)
 - `components/` - Reusable UI components organized by feature
 - `stores/` - Zustand stores for global state management
@@ -62,6 +68,7 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 - `__tests__/` - Test files organized by component/feature
 
 ### Key Patterns
+
 - **New Architecture:** Uses bridgeless mode for enhanced performance
 - **File-based Routing:** Expo Router with automatically generated typed routes
 - **Custom Hooks + Zustand:** Game logic in hooks interfacing with Zustand stores
@@ -69,17 +76,19 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 - **SQLite for Persistence:** Structured game data storage with transactions
 
 ### Important Configuration
+
 - **Path Aliases:** `@/*` maps to project root for imports
 - **New Architecture:** Enabled via `newArchEnabled: true` in app.config.ts
 - **TypeScript:** Strict mode with comprehensive type safety
-- **Bundle Identifiers:** 
+- **Bundle Identifiers:**
   - Production: `com.rvh.test2048`
-  - Preview: `com.rvh.test2048.preview`  
+  - Preview: `com.rvh.test2048.preview`
   - Development: `com.rvh.test2048.dev`
 
 ## Development Guidelines
 
 ### Code Style
+
 - Use TypeScript strict mode for all new code
 - Follow Expo Router conventions for file-based routing
 - Organize components by feature, not by type
@@ -88,13 +97,15 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 - Use expo-sqlite for any persistent data storage
 
 ### Testing Requirements
+
 - Write unit tests for game logic in `services/gameEngine.ts`
 - Test React components with React Native Testing Library
 - Mock Zustand stores in component tests
 - Maintain test coverage above 80% for critical paths
 - Use `jest.setup.js` for test environment configuration
 
-### Platform Considerations  
+### Platform Considerations
+
 - Code must work across iOS, Android, and web platforms
 - Use platform-specific styling when necessary
 - Test gesture handling on actual devices when possible
@@ -102,6 +113,7 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 - Consider performance implications of animations across platforms
 
 ### Documentation
+
 - All major architectural decisions are documented in `docs/architecture/`
 - Game requirements and specifications are in `docs/prd/`
 - Build and deployment processes are in `docs/BUILD_PROCESS.md`
@@ -110,17 +122,20 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 ## Deployment
 
 ### Web Deployment
+
 - Web builds generate static files in `dist/` directory
 - Can be deployed to any static hosting service (Vercel, Netlify, etc.)
 - No authentication required for web builds
 
 ### Mobile Deployment
+
 - Uses EAS Build for iOS and Android builds
 - Requires EAS CLI authentication: `eas login`
 - Development builds support Expo Dev Client for enhanced development
 - Multiple environment support via different bundle identifiers
 
 ### Updates
+
 - Expo Updates configured for over-the-air updates
 - Different channels for development, preview, and production
 - Runtime version policy based on app version
@@ -136,8 +151,9 @@ Test 2048 is a cross-platform 2048 puzzle game built with Expo SDK 53+ and React
 ## Learning Focus Areas
 
 This project prioritizes educational value in:
+
 - Expo ecosystem mastery through practical implementation
-- React Native patterns and performance optimization  
+- React Native patterns and performance optimization
 - Cross-platform development and platform-specific considerations
 - Complete deployment pipeline from development to production
 - Modern React Native architecture patterns with New Architecture

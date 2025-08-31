@@ -2,8 +2,8 @@ describe('Navigation Structure', () => {
   describe('Tab Configuration', () => {
     it('should have proper tab structure', () => {
       const expectedTabs = ['index', 'settings'];
-      
-      expectedTabs.forEach(tab => {
+
+      expectedTabs.forEach((tab) => {
         expect(typeof tab).toBe('string');
         expect(tab.length).toBeGreaterThan(0);
       });
@@ -23,8 +23,8 @@ describe('Navigation Structure', () => {
   describe('Navigation Types', () => {
     it('should validate route parameter types', () => {
       const routes = ['/', '/settings'];
-      
-      routes.forEach(route => {
+
+      routes.forEach((route) => {
         expect(typeof route).toBe('string');
         expect(route.startsWith('/')).toBe(true);
       });
@@ -33,7 +33,7 @@ describe('Navigation Structure', () => {
     it('should support navigation state management', () => {
       const navigationState = {
         canGoBack: false,
-        currentRoute: '/'
+        currentRoute: '/',
       };
 
       expect(typeof navigationState.canGoBack).toBe('boolean');

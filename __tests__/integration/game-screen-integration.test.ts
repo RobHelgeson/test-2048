@@ -57,12 +57,8 @@ describe('Complete Game Screen Integration', () => {
       };
 
       // Responsive breakpoints should be properly defined
-      expect(responsiveBreakpoints.narrow).toBeLessThan(
-        responsiveBreakpoints.tablet
-      );
-      expect(responsiveBreakpoints.standard).toEqual(
-        responsiveBreakpoints.tablet
-      );
+      expect(responsiveBreakpoints.narrow).toBeLessThan(responsiveBreakpoints.tablet);
+      expect(responsiveBreakpoints.standard).toEqual(responsiveBreakpoints.tablet);
 
       // Touch targets should meet platform requirements
       expect(touchTargets.ios).toBeGreaterThanOrEqual(44);
@@ -126,9 +122,7 @@ describe('Complete Game Screen Integration', () => {
       };
 
       expect(designSystemFeatures.eightPointGrid).toBe(8);
-      expect(designSystemFeatures.colorContrastRatio).toBeGreaterThanOrEqual(
-        4.5
-      );
+      expect(designSystemFeatures.colorContrastRatio).toBeGreaterThanOrEqual(4.5);
       expect(designSystemFeatures.visualHierarchy).toBe(true);
       expect(designSystemFeatures.consistentTypography).toBe(true);
       expect(designSystemFeatures.properShadowsAndDepth).toBe(true);
@@ -238,11 +232,9 @@ describe('Complete Game Screen Integration', () => {
       });
 
       // Overall integration success
-      const overallIntegrationScore =
-        Object.values(acceptanceCriteria).filter(Boolean).length;
+      const overallIntegrationScore = Object.values(acceptanceCriteria).filter(Boolean).length;
       const totalCriteria = Object.keys(acceptanceCriteria).length;
-      const integrationSuccessRate =
-        (overallIntegrationScore / totalCriteria) * 100;
+      const integrationSuccessRate = (overallIntegrationScore / totalCriteria) * 100;
 
       expect(integrationSuccessRate).toBe(100);
     });

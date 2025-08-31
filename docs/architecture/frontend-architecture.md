@@ -177,24 +177,22 @@ interface ThemeActions {
   toggleTheme: () => void;
 }
 
-export const useThemeStore = create<ThemeState & ThemeActions>()(
-  (set, get) => ({
-    currentTheme: 'classic',
-    colors: classicTheme,
-    isDark: false,
+export const useThemeStore = create<ThemeState & ThemeActions>()((set, get) => ({
+  currentTheme: 'classic',
+  colors: classicTheme,
+  isDark: false,
 
-    setTheme: (theme) => {
-      const colors = getThemeColors(theme);
-      set({ currentTheme: theme, colors, isDark: theme.includes('dark') });
-    },
+  setTheme: (theme) => {
+    const colors = getThemeColors(theme);
+    set({ currentTheme: theme, colors, isDark: theme.includes('dark') });
+  },
 
-    toggleTheme: () => {
-      const current = get().currentTheme;
-      const newTheme = current === 'classic' ? 'cool' : 'classic';
-      get().setTheme(newTheme);
-    },
-  })
-);
+  toggleTheme: () => {
+    const current = get().currentTheme;
+    const newTheme = current === 'classic' ? 'cool' : 'classic';
+    get().setTheme(newTheme);
+  },
+}));
 ```
 
 ### State Management Patterns
@@ -345,11 +343,7 @@ class GameEngineService {
 
 // Animation Service - Reanimated 3 integration
 class AnimationService {
-  animateTileMovement(
-    tileId: string,
-    fromPosition: Position,
-    toPosition: Position
-  ): Promise<void> {
+  animateTileMovement(tileId: string, fromPosition: Position, toPosition: Position): Promise<void> {
     return new Promise((resolve) => {
       const translateX = useSharedValue(fromPosition.x);
       const translateY = useSharedValue(fromPosition.y);

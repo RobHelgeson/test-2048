@@ -26,8 +26,7 @@ export function usePlatformTheme() {
     const baseTokens = theme.tokens;
 
     // Apply platform-specific overrides if they exist
-    const platformOverrides: PlatformThemeOverrides | undefined = (theme as any)
-      .platformOverrides;
+    const platformOverrides: PlatformThemeOverrides | undefined = (theme as any).platformOverrides;
 
     if (!platformOverrides) {
       return baseTokens;

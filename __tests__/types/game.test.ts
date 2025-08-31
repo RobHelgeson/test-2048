@@ -191,9 +191,7 @@ describe('Game Type Definitions', () => {
 
       expect(Array.isArray(emptyBoard)).toBe(true);
       expect(emptyBoard.length).toBe(4);
-      expect(
-        emptyBoard.every((row) => Array.isArray(row) && row.length === 4)
-      ).toBe(true);
+      expect(emptyBoard.every((row) => Array.isArray(row) && row.length === 4)).toBe(true);
     });
 
     it('should support mixed tile and null values', () => {

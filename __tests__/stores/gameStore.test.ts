@@ -145,9 +145,7 @@ describe('Game Store', () => {
       expect(state.score).toBe(0);
       expect(state.gameStatus).toBe('playing');
       expect(state.highScore).toBe(5000);
-      expect(state.board.every((row) => row.every((cell) => cell === 0))).toBe(
-        true
-      );
+      expect(state.board.every((row) => row.every((cell) => cell === 0))).toBe(true);
     });
 
     it('should handle partial state updates', () => {

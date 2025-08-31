@@ -55,14 +55,7 @@ interface AppError {
   };
 }
 
-type ErrorCategory =
-  | 'GAME_LOGIC'
-  | 'STORAGE'
-  | 'ANIMATION'
-  | 'NAVIGATION'
-  | 'VALIDATION'
-  | 'PERFORMANCE'
-  | 'UNKNOWN';
+type ErrorCategory = 'GAME_LOGIC' | 'STORAGE' | 'ANIMATION' | 'NAVIGATION' | 'VALIDATION' | 'PERFORMANCE' | 'UNKNOWN';
 
 type ErrorSeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
@@ -386,9 +379,7 @@ class StorageService {
         }
 
         // Wait before retrying with exponential backoff
-        await new Promise((resolve) =>
-          setTimeout(resolve, delay * Math.pow(2, attempt - 1))
-        );
+        await new Promise((resolve) => setTimeout(resolve, delay * Math.pow(2, attempt - 1)));
       }
     }
 
@@ -474,10 +465,7 @@ class GameEngine {
     }
 
     return board.every(
-      (row) =>
-        Array.isArray(row) &&
-        row.length === 4 &&
-        row.every((tile) => tile === null || this.validateTile(tile))
+      (row) => Array.isArray(row) && row.length === 4 && row.every((tile) => tile === null || this.validateTile(tile))
     );
   }
 

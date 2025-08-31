@@ -139,9 +139,7 @@ export function generateMergeableBoard(direction: Direction): Board {
 /**
  * Generate game state for different scenarios
  */
-export function generateGameState(
-  scenario: 'initial' | 'mid-game' | 'winning' | 'losing'
-): GameState {
+export function generateGameState(scenario: 'initial' | 'mid-game' | 'winning' | 'losing'): GameState {
   const baseState = {
     score: 0,
     bestScore: 1024,
@@ -213,9 +211,7 @@ export function generateGameState(
 /**
  * Generate mock statistics for testing
  */
-export function generateMockStatistics(
-  scenario: 'empty' | 'active-player' | 'experienced-player'
-): GameStatistics {
+export function generateMockStatistics(scenario: 'empty' | 'active-player' | 'experienced-player'): GameStatistics {
   const baseStats = {
     totalGamesPlayed: 0,
     totalScore: 0,
@@ -266,9 +262,7 @@ export function generateMockStatistics(
 /**
  * Generate game result for statistics testing
  */
-export function generateGameResult(
-  scenario: 'quick-loss' | 'average-game' | 'winning-game'
-): GameResult {
+export function generateGameResult(scenario: 'quick-loss' | 'average-game' | 'winning-game'): GameResult {
   const baseResult = {
     finalScore: 0,
     highestTile: 0,

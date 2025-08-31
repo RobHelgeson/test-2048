@@ -124,13 +124,7 @@ export function ThemedText({
 
       // Platform-specific font family
       fontFamily:
-        theme.tokens.typography.fontFamily[
-          weight === 'bold'
-            ? 'bold'
-            : weight === 'medium'
-              ? 'medium'
-              : 'regular'
-        ],
+        theme.tokens.typography.fontFamily[weight === 'bold' ? 'bold' : weight === 'medium' ? 'medium' : 'regular'],
     },
   });
 
@@ -178,12 +172,7 @@ function getLineHeight(lineHeight: string, fontSize: number): number {
 /**
  * Heading component for titles and headers
  */
-export function ThemedHeading({
-  children,
-  size = '2xl',
-  weight = 'bold',
-  ...props
-}: ThemedTextProps) {
+export function ThemedHeading({ children, size = '2xl', weight = 'bold', ...props }: ThemedTextProps) {
   return (
     <ThemedText size={size} weight={weight} lineHeight="tight" {...props}>
       {children}
@@ -194,12 +183,7 @@ export function ThemedHeading({
 /**
  * Subheading component for section titles
  */
-export function ThemedSubheading({
-  children,
-  size = 'lg',
-  weight = 'semibold',
-  ...props
-}: ThemedTextProps) {
+export function ThemedSubheading({ children, size = 'lg', weight = 'semibold', ...props }: ThemedTextProps) {
   return (
     <ThemedText size={size} weight={weight} color="textSecondary" {...props}>
       {children}
@@ -221,11 +205,7 @@ export function ThemedBody({ children, ...props }: ThemedTextProps) {
 /**
  * Caption text component for small supplementary text
  */
-export function ThemedCaption({
-  children,
-  size = 'sm',
-  ...props
-}: ThemedTextProps) {
+export function ThemedCaption({ children, size = 'sm', ...props }: ThemedTextProps) {
   return (
     <ThemedText size={size} color="textSecondary" {...props}>
       {children}
@@ -236,20 +216,9 @@ export function ThemedCaption({
 /**
  * Score text component for game scores
  */
-export function ThemedScore({
-  children,
-  size = 'xl',
-  weight = 'bold',
-  ...props
-}: ThemedTextProps) {
+export function ThemedScore({ children, size = 'xl', weight = 'bold', ...props }: ThemedTextProps) {
   return (
-    <ThemedText
-      size={size}
-      weight={weight}
-      color="primary"
-      align="center"
-      {...props}
-    >
+    <ThemedText size={size} weight={weight} color="primary" align="center" {...props}>
       {children}
     </ThemedText>
   );
@@ -271,13 +240,7 @@ export function ThemedTileText({
   const textColor = tileValue && tileValue <= 4 ? 'text' : 'textOnPrimary';
 
   return (
-    <ThemedText
-      size={size}
-      weight={weight}
-      color={textColor}
-      align="center"
-      {...props}
-    >
+    <ThemedText size={size} weight={weight} color={textColor} align="center" {...props}>
       {children}
     </ThemedText>
   );
@@ -288,13 +251,7 @@ export function ThemedTileText({
  */
 export function ThemedButtonText({ children, ...props }: ThemedTextProps) {
   return (
-    <ThemedText
-      size="base"
-      weight="semibold"
-      color="textOnPrimary"
-      align="center"
-      {...props}
-    >
+    <ThemedText size="base" weight="semibold" color="textOnPrimary" align="center" {...props}>
       {children}
     </ThemedText>
   );

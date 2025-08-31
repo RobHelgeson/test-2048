@@ -1,5 +1,5 @@
+import { GameResult, GameStatistics } from '@/hooks/useScore';
 import { GameState } from '@/types';
-import { GameStatistics, GameResult } from '@/hooks/useScore';
 import { ThemeType } from '@/types/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -47,9 +47,7 @@ class StorageService {
    */
   async loadGameState(): Promise<GameState | null> {
     try {
-      const serializedState = await AsyncStorage.getItem(
-        STORAGE_KEYS.GAME_STATE
-      );
+      const serializedState = await AsyncStorage.getItem(STORAGE_KEYS.GAME_STATE);
       if (serializedState) {
         const gameState = JSON.parse(serializedState) as GameState;
         return this.validateGameState(gameState) ? gameState : null;
@@ -119,10 +117,7 @@ class StorageService {
         ...currentStats,
         totalGamesPlayed: currentStats.totalGamesPlayed + 1,
         totalScore: currentStats.totalScore + gameResult.finalScore,
-        bestTileAchieved: Math.max(
-          currentStats.bestTileAchieved,
-          gameResult.highestTile
-        ),
+        bestTileAchieved: Math.max(currentStats.bestTileAchieved, gameResult.highestTile),
         totalMoves: currentStats.totalMoves + gameResult.totalMoves,
         totalPlayTime: currentStats.totalPlayTime + gameResult.playDuration,
         winCount: currentStats.winCount + (isWin ? 1 : 0),
@@ -131,8 +126,7 @@ class StorageService {
       };
 
       // Calculate average score
-      updatedStats.averageScore =
-        updatedStats.totalScore / updatedStats.totalGamesPlayed;
+      updatedStats.averageScore = updatedStats.totalScore / updatedStats.totalGamesPlayed;
 
       // Save updated statistics
       await this.saveStatistics(updatedStats);
@@ -146,14 +140,10 @@ class StorageService {
    */
   async loadStatistics(): Promise<GameStatistics> {
     try {
-      const serializedStats = await AsyncStorage.getItem(
-        STORAGE_KEYS.STATISTICS
-      );
+      const serializedStats = await AsyncStorage.getItem(STORAGE_KEYS.STATISTICS);
       if (serializedStats) {
         const stats = JSON.parse(serializedStats) as GameStatistics;
-        return this.validateStatistics(stats)
-          ? stats
-          : this.createDefaultStatistics();
+        return this.validateStatistics(stats) ? stats : this.createDefaultStatistics();
       }
       return this.createDefaultStatistics();
     } catch (error) {
@@ -243,9 +233,7 @@ class StorageService {
   /**
    * Save user preferences (including theme) to persistent storage
    */
-  async saveUserPreferences(
-    preferences: Partial<UserPreferences>
-  ): Promise<void> {
+  async saveUserPreferences(preferences: Partial<UserPreferences>): Promise<void> {
     try {
       // Load existing preferences and merge with new ones
       const currentPrefs = await this.loadUserPreferences();
@@ -256,10 +244,7 @@ class StorageService {
       };
 
       const serializedPrefs = JSON.stringify(updatedPrefs);
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.USER_PREFERENCES,
-        serializedPrefs
-      );
+      await AsyncStorage.setItem(STORAGE_KEYS.USER_PREFERENCES, serializedPrefs);
     } catch (error) {
       console.error('Failed to save user preferences:', error);
       throw error; // Re-throw for theme store error handling
@@ -271,14 +256,10 @@ class StorageService {
    */
   async loadUserPreferences(): Promise<UserPreferences> {
     try {
-      const serializedPrefs = await AsyncStorage.getItem(
-        STORAGE_KEYS.USER_PREFERENCES
-      );
+      const serializedPrefs = await AsyncStorage.getItem(STORAGE_KEYS.USER_PREFERENCES);
       if (serializedPrefs) {
         const prefs = JSON.parse(serializedPrefs) as UserPreferences;
-        return this.validateUserPreferences(prefs)
-          ? prefs
-          : this.createDefaultUserPreferences();
+        return this.validateUserPreferences(prefs) ? prefs : this.createDefaultUserPreferences();
       }
       return this.createDefaultUserPreferences();
     } catch (error) {
@@ -290,9 +271,7 @@ class StorageService {
   /**
    * Get specific user preference value
    */
-  async getUserPreference<K extends keyof UserPreferences>(
-    key: K
-  ): Promise<UserPreferences[K]> {
+  async getUserPreference<K extends keyof UserPreferences>(key: K): Promise<UserPreferences[K]> {
     try {
       const preferences = await this.loadUserPreferences();
       return preferences[key];
@@ -306,10 +285,7 @@ class StorageService {
   /**
    * Update specific user preference
    */
-  async setUserPreference<K extends keyof UserPreferences>(
-    key: K,
-    value: UserPreferences[K]
-  ): Promise<void> {
+  async setUserPreference<K extends keyof UserPreferences>(key: K, value: UserPreferences[K]): Promise<void> {
     try {
       await this.saveUserPreferences({
         [key]: value,

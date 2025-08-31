@@ -32,18 +32,10 @@ describe('Build Infrastructure Tests', () => {
       const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'));
 
       // Verify build scripts exist
-      expect(packageJson.scripts['build:ios:dev']).toContain(
-        'eas build --platform ios --profile development'
-      );
-      expect(packageJson.scripts['build:android:dev']).toContain(
-        'eas build --platform android --profile development'
-      );
-      expect(packageJson.scripts['build:web']).toContain(
-        'npx expo export --platform web'
-      );
-      expect(packageJson.scripts['build:all:dev']).toContain(
-        'eas build --platform all --profile development'
-      );
+      expect(packageJson.scripts['build:ios:dev']).toContain('eas build --platform ios --profile development');
+      expect(packageJson.scripts['build:android:dev']).toContain('eas build --platform android --profile development');
+      expect(packageJson.scripts['build:web']).toContain('npx expo export --platform web');
+      expect(packageJson.scripts['build:all:dev']).toContain('eas build --platform all --profile development');
     });
   });
 
@@ -58,7 +50,7 @@ describe('Build Infrastructure Tests', () => {
       // Updates for OTA functionality
       expect(packageJson.dependencies['expo-updates']).toBeDefined();
 
-      // Core Expo SDK  
+      // Core Expo SDK
       expect(packageJson.dependencies['expo']).toMatch(/\^53\.0\.22/);
     });
   });

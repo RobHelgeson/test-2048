@@ -1,9 +1,9 @@
-import React from 'react';
-import { StyleSheet, ViewStyle, TextStyle, Platform } from 'react-native';
-import { ThemedView } from '@/components/themed/ThemedView';
 import { ThemedText } from '@/components/themed/ThemedText';
+import { ThemedView } from '@/components/themed/ThemedView';
 import { useThemeColors } from '@/hooks/useTheme';
 import { GameStatus } from '@/types';
+import React from 'react';
+import { Platform, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 interface StatusIndicatorProps {
   /** Current game status */
@@ -42,26 +42,14 @@ interface StatusIndicatorProps {
  * />
  * ```
  */
-export function StatusIndicator({
-  status,
-  style,
-  textStyle,
-  testID,
-  animated = true,
-}: StatusIndicatorProps) {
+export function StatusIndicator({ status, style, textStyle, testID, animated = true }: StatusIndicatorProps) {
   const colors = useThemeColors();
 
   // Get status-specific message and styling
-  const statusConfig = React.useMemo(
-    () => getStatusConfig(status, colors),
-    [status, colors]
-  );
+  const statusConfig = React.useMemo(() => getStatusConfig(status, colors), [status, colors]);
 
   // Create dynamic styles based on theme and status
-  const dynamicStyles = React.useMemo(
-    () => createStatusStyles(colors, status),
-    [colors, status]
-  );
+  const dynamicStyles = React.useMemo(() => createStatusStyles(colors, status), [colors, status]);
 
   // Generate accessibility properties with live region for status changes
   const accessibilityProps = React.useMemo(
@@ -81,18 +69,9 @@ export function StatusIndicator({
       accessible
       {...accessibilityProps}
     >
-      <ThemedView
-        style={[
-          dynamicStyles.badge,
-          { backgroundColor: statusConfig.backgroundColor },
-        ]}
-      >
+      <ThemedView style={[dynamicStyles.badge, { backgroundColor: statusConfig.backgroundColor }]}>
         <ThemedText
-          style={[
-            dynamicStyles.text,
-            { color: statusConfig.textColor },
-            textStyle,
-          ]}
+          style={[dynamicStyles.text, { color: statusConfig.textColor }, textStyle]}
           testID={testID ? `${testID}-text` : 'status-indicator-text'}
           accessibilityElementsHidden // Hide from accessibility since parent provides context
         >

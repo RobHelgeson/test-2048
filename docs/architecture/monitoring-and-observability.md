@@ -120,10 +120,7 @@ class PerformanceMonitor {
   }
 
   // Measure database operations
-  async measureDatabaseOperation<T>(
-    operation: () => Promise<T>,
-    operationType: string
-  ): Promise<T> {
+  async measureDatabaseOperation<T>(operation: () => Promise<T>, operationType: string): Promise<T> {
     const startTime = performance.now();
 
     try {
@@ -139,9 +136,7 @@ class PerformanceMonitor {
 
       // Alert if database operation is slow
       if (duration > 100) {
-        console.warn(
-          `Slow database operation: ${duration}ms for ${operationType}`
-        );
+        console.warn(`Slow database operation: ${duration}ms for ${operationType}`);
       }
 
       return result;
@@ -179,9 +174,7 @@ class PerformanceMonitor {
       return null;
     }
 
-    const durations = metrics
-      .filter((m) => typeof m.duration === 'number')
-      .map((m) => m.duration);
+    const durations = metrics.filter((m) => typeof m.duration === 'number').map((m) => m.duration);
 
     if (durations.length === 0) {
       return null;
@@ -197,8 +190,7 @@ class PerformanceMonitor {
       p99: sorted[Math.floor(sorted.length * 0.99)],
       min: sorted[0],
       max: sorted[sorted.length - 1],
-      successRate:
-        metrics.filter((m) => m.success !== false).length / metrics.length,
+      successRate: metrics.filter((m) => m.success !== false).length / metrics.length,
     };
   }
 
@@ -251,11 +243,7 @@ class PerformanceMonitor {
       alerts.push({
         type: 'MEMORY',
         severity: 'MEDIUM',
-        message: `High memory usage detected (${(
-          memoryUsage /
-          1024 /
-          1024
-        ).toFixed(2)}MB)`,
+        message: `High memory usage detected (${(memoryUsage / 1024 / 1024).toFixed(2)}MB)`,
         metric: 'memory_usage',
         threshold: 100 * 1024 * 1024,
         actual: memoryUsage,
@@ -450,8 +438,7 @@ const gameStateHealthCheck: HealthCheckFunction = async () => {
 
 const memoryHealthCheck: HealthCheckFunction = async () => {
   try {
-    const memoryUsage =
-      'memory' in performance ? (performance as any).memory.usedJSHeapSize : 0;
+    const memoryUsage = 'memory' in performance ? (performance as any).memory.usedJSHeapSize : 0;
 
     const memoryMB = memoryUsage / 1024 / 1024;
     const healthy = memoryMB < 100; // 100MB threshold
@@ -547,8 +534,7 @@ class DevMonitor {
 
     // Log performance summary
     setInterval(() => {
-      const gameStats =
-        this.performanceMonitor.getPerformanceStats('game_move');
+      const gameStats = this.performanceMonitor.getPerformanceStats('game_move');
       if (gameStats) {
         console.info('Game Performance Summary:', {
           averageMoveTime: `${gameStats.average.toFixed(2)}ms`,

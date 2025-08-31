@@ -146,10 +146,7 @@ class AnimationOptimizer {
     // Reduce animation complexity during rapid moves
   }
 
-  static createPerformantTileAnimation(
-    from: Position,
-    to: Position
-  ): Promise<void> {
+  static createPerformantTileAnimation(from: Position, to: Position): Promise<void> {
     'worklet';
     return new Promise((resolve) => {
       runOnUI(() => {
@@ -180,11 +177,7 @@ class DatabaseOptimizer {
       await this.executeBatched([
         {
           query: statement,
-          params: [
-            JSON.stringify(gameState.board),
-            gameState.score,
-            Date.now(),
-          ],
+          params: [JSON.stringify(gameState.board), gameState.score, Date.now()],
         },
       ]);
     } catch (error) {
@@ -278,8 +271,7 @@ const PERFORMANCE_BUDGETS = {
 
 class PerformanceAlerts {
   static checkBudgets(): void {
-    const moveDuration =
-      PerformanceMonitor.getAverageMetric('game_move_duration');
+    const moveDuration = PerformanceMonitor.getAverageMetric('game_move_duration');
     if (moveDuration > PERFORMANCE_BUDGETS.MAX_MOVE_DURATION) {
       console.warn(`Game move duration exceeded budget: ${moveDuration}ms`);
     }

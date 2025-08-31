@@ -1,6 +1,6 @@
-import { useReducer, useCallback, useEffect, useState, useMemo } from 'react';
-import { GameStatus } from '@/types/game';
 import { storageService } from '@/services/storageService';
+import { GameStatus } from '@/types/game';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 
 /**
  * Score state interface for current scoring information and animations
@@ -270,8 +270,7 @@ export function useScore(): UseScoreReturn {
 
   // Local state for async operations and statistics
   const [isLoading, setIsLoading] = useState(false);
-  const [statistics, setStatistics] =
-    useState<GameStatistics>(initialStatistics);
+  const [statistics, setStatistics] = useState<GameStatistics>(initialStatistics);
 
   // Load persisted data on hook initialization
   useEffect(() => {
@@ -305,10 +304,7 @@ export function useScore(): UseScoreReturn {
 
   // Calculate average score when statistics change
   const calculatedStatistics = useMemo(() => {
-    const averageScore =
-      statistics.totalGamesPlayed > 0
-        ? statistics.totalScore / statistics.totalGamesPlayed
-        : 0;
+    const averageScore = statistics.totalGamesPlayed > 0 ? statistics.totalScore / statistics.totalGamesPlayed : 0;
 
     return {
       ...statistics,
@@ -407,10 +403,7 @@ export function useScore(): UseScoreReturn {
           ...statistics,
           totalGamesPlayed: statistics.totalGamesPlayed + 1,
           totalScore: statistics.totalScore + gameResult.finalScore,
-          bestTileAchieved: Math.max(
-            statistics.bestTileAchieved,
-            gameResult.highestTile
-          ),
+          bestTileAchieved: Math.max(statistics.bestTileAchieved, gameResult.highestTile),
           totalMoves: statistics.totalMoves + gameResult.totalMoves,
           totalPlayTime: statistics.totalPlayTime + gameResult.playDuration,
           winCount: statistics.winCount + (isWin ? 1 : 0),
@@ -419,8 +412,7 @@ export function useScore(): UseScoreReturn {
         };
 
         // Calculate average score
-        updatedStats.averageScore =
-          updatedStats.totalScore / updatedStats.totalGamesPlayed;
+        updatedStats.averageScore = updatedStats.totalScore / updatedStats.totalGamesPlayed;
 
         setStatistics(updatedStats);
 

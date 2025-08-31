@@ -42,12 +42,9 @@ describe('Game Engine Integration Tests', () => {
       expect(checkWinCondition(gameState.board)).toBe(false);
 
       // Make move that creates 2048 tile
-      const { result: moveResult } = await global.measureAsync(
-        'Win condition move',
-        async () => {
-          return processMove(gameState, Direction.LEFT);
-        }
-      );
+      const { result: moveResult } = await global.measureAsync('Win condition move', async () => {
+        return processMove(gameState, Direction.LEFT);
+      });
 
       // Verify win condition is detected
       expect(moveResult.gameStatus).toBe(GameStatus.WON);
@@ -63,9 +60,7 @@ describe('Game Engine Integration Tests', () => {
 
       const finalMove = processMove(continueState, Direction.DOWN);
       // Should remain playing unless game over, but might stay won if no valid moves
-      expect([GameStatus.PLAYING, GameStatus.WON]).toContain(
-        finalMove.gameStatus
-      );
+      expect([GameStatus.PLAYING, GameStatus.WON]).toContain(finalMove.gameStatus);
     });
 
     it('should complete a full game from initialization to loss condition', async () => {
@@ -79,25 +74,15 @@ describe('Game Engine Integration Tests', () => {
       expect(validation.isWon).toBe(false);
 
       // Attempt moves on game over board
-      const directions = [
-        Direction.LEFT,
-        Direction.RIGHT,
-        Direction.UP,
-        Direction.DOWN,
-      ];
+      const directions = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN];
 
       for (const direction of directions) {
-        const { result: moveResult } = await global.measureAsync(
-          `Game over move ${direction}`,
-          async () => {
-            return processMove(gameState, direction);
-          }
-        );
+        const { result: moveResult } = await global.measureAsync(`Game over move ${direction}`, async () => {
+          return processMove(gameState, direction);
+        });
 
         // Should either remain unchanged or transition to lost state
-        expect([GameStatus.PLAYING, GameStatus.LOST]).toContain(
-          moveResult.gameStatus
-        );
+        expect([GameStatus.PLAYING, GameStatus.LOST]).toContain(moveResult.gameStatus);
         if (moveResult.gameStatus === GameStatus.LOST) {
           expect(checkGameOver(moveResult.board)).toBe(true);
         }
@@ -118,9 +103,7 @@ describe('Game Engine Integration Tests', () => {
       const nextMove = processMove(continuedState, Direction.UP);
       expect(nextMove.gameStatus).toBe(GameStatus.PLAYING);
       // Move count should only increment if actual movement occurred
-      expect(nextMove.moveCount).toBeGreaterThanOrEqual(
-        continuedState.moveCount
-      );
+      expect(nextMove.moveCount).toBeGreaterThanOrEqual(continuedState.moveCount);
     });
 
     it('should maintain consistent state across multiple game sessions', async () => {
@@ -134,12 +117,7 @@ describe('Game Engine Integration Tests', () => {
 
         // Play until game ends or max moves reached
         while (gameState.gameStatus === GameStatus.PLAYING && moveCount < 50) {
-          const direction = [
-            Direction.LEFT,
-            Direction.UP,
-            Direction.RIGHT,
-            Direction.DOWN,
-          ][moveCount % 4];
+          const direction = [Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN][moveCount % 4];
           const prevState = { ...gameState };
 
           gameState = processMove(gameState, direction);
@@ -147,16 +125,10 @@ describe('Game Engine Integration Tests', () => {
           moveCount++;
 
           // Validate state consistency
-          expect(gameState.moveCount).toBe(
-            prevState.moveCount + (gameState.board !== prevState.board ? 1 : 0)
-          );
+          expect(gameState.moveCount).toBe(prevState.moveCount + (gameState.board !== prevState.board ? 1 : 0));
           expect(gameState.score).toBeGreaterThanOrEqual(prevState.score);
-          expect(gameState.bestScore).toBeGreaterThanOrEqual(
-            prevState.bestScore
-          );
-          expect(gameState.lastMoveTime).toBeGreaterThanOrEqual(
-            prevState.lastMoveTime
-          );
+          expect(gameState.bestScore).toBeGreaterThanOrEqual(prevState.bestScore);
+          expect(gameState.lastMoveTime).toBeGreaterThanOrEqual(prevState.lastMoveTime);
         }
 
         sessions.push({
@@ -196,13 +168,9 @@ describe('Game Engine Integration Tests', () => {
       const continuedMove = processMove(resumedState, Direction.RIGHT);
 
       // Verify consistency
-      expect(continuedMove.moveCount).toBeGreaterThanOrEqual(
-        resumedState.moveCount
-      );
+      expect(continuedMove.moveCount).toBeGreaterThanOrEqual(resumedState.moveCount);
       expect(continuedMove.score).toBeGreaterThanOrEqual(resumedState.score);
-      expect(continuedMove.lastMoveTime).toBeGreaterThanOrEqual(
-        resumedState.lastMoveTime
-      );
+      expect(continuedMove.lastMoveTime).toBeGreaterThanOrEqual(resumedState.lastMoveTime);
     });
   });
 
@@ -218,12 +186,7 @@ describe('Game Engine Integration Tests', () => {
       expect(checkGameOver(fullBoard)).toBe(true);
 
       // Attempt all possible moves
-      const directions = [
-        Direction.LEFT,
-        Direction.RIGHT,
-        Direction.UP,
-        Direction.DOWN,
-      ];
+      const directions = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN];
       const results = [];
 
       for (const direction of directions) {
@@ -259,12 +222,7 @@ describe('Game Engine Integration Tests', () => {
         };
 
         // Test all directions
-        const directions = [
-          Direction.LEFT,
-          Direction.RIGHT,
-          Direction.UP,
-          Direction.DOWN,
-        ];
+        const directions = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN];
 
         for (const direction of directions) {
           const result = processMove(gameState, direction);
@@ -277,18 +235,13 @@ describe('Game Engine Integration Tests', () => {
           }
 
           // New tile should be spawned if movement occurred
-          const tileCount = result.board
-            .flat()
-            .filter((tile) => tile !== null).length;
+          const tileCount = result.board.flat().filter((tile) => tile !== null).length;
           expect(tileCount).toBeGreaterThanOrEqual(1);
 
           // Performance check - should complete quickly
-          const { duration } = await global.measureAsync(
-            `Single tile move ${index}-${direction}`,
-            async () => {
-              return processMove(gameState, direction);
-            }
-          );
+          const { duration } = await global.measureAsync(`Single tile move ${index}-${direction}`, async () => {
+            return processMove(gameState, direction);
+          });
           expect(duration).toBeLessThan(10); // Should complete in under 10ms
         }
       }
@@ -379,9 +332,7 @@ describe('Game Engine Integration Tests', () => {
       const result = processMove(gameState, Direction.LEFT);
 
       // Verify tile was spawned in correct location
-      const tileCount = result.board
-        .flat()
-        .filter((tile) => tile !== null).length;
+      const tileCount = result.board.flat().filter((tile) => tile !== null).length;
       expect(tileCount).toBeGreaterThan(0);
 
       // Verify spawning logic worked correctly
@@ -408,12 +359,9 @@ describe('Game Engine Integration Tests', () => {
         board: multiMergeBoard,
       };
 
-      const { result, duration } = await global.measureAsync(
-        'Multiple merge move',
-        async () => {
-          return processMove(gameState, Direction.LEFT);
-        }
-      );
+      const { result, duration } = await global.measureAsync('Multiple merge move', async () => {
+        return processMove(gameState, Direction.LEFT);
+      });
 
       // Should complete multiple merges efficiently
       expect(duration).toBeLessThan(50); // Should complete in under 50ms
@@ -503,10 +451,7 @@ describe('Game Engine Integration Tests', () => {
       expect(positionCounts.has('1-1')).toBe(false); // Occupied space
 
       // Verify total spawns match iterations
-      const totalSpawns = Array.from(positionCounts.values()).reduce(
-        (sum, count) => sum + count,
-        0
-      );
+      const totalSpawns = Array.from(positionCounts.values()).reduce((sum, count) => sum + count, 0);
       expect(totalSpawns).toBe(iterations);
     });
 

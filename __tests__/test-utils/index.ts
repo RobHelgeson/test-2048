@@ -8,17 +8,10 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 }
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return React.createElement(
-    View,
-    { testID: 'test-provider-wrapper' },
-    children
-  );
+  return React.createElement(View, { testID: 'test-provider-wrapper' }, children);
 };
 
-export const customRender = (
-  ui: React.ReactElement,
-  options?: CustomRenderOptions
-) => {
+export const customRender = (ui: React.ReactElement, options?: CustomRenderOptions) => {
   const { withProviders = true, ...renderOptions } = options || {};
   const wrapper = withProviders ? AllTheProviders : undefined;
   return render(ui, { wrapper, ...renderOptions });

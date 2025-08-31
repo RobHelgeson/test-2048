@@ -1,4 +1,4 @@
-import { GameState, Direction, Tile, Board, GameStatus } from '@/types';
+import { Board, Direction, GameState, GameStatus, Tile } from '@/types';
 
 /**
  * Result of a tile movement operation
@@ -59,10 +59,7 @@ function validateBoard(board: Board): boolean {
     }
 
     for (const cell of row) {
-      if (
-        cell !== null &&
-        (!cell.value || cell.value <= 0 || !Number.isInteger(cell.value))
-      ) {
+      if (cell !== null && (!cell.value || cell.value <= 0 || !Number.isInteger(cell.value))) {
         return false;
       }
     }
@@ -103,9 +100,7 @@ export function processMove(state: GameState, direction: Direction): GameState {
 
   // Spawn a new tile on the updated board
   const spawnResult = spawnRandomTile(moveResult.board);
-  const finalBoard = spawnResult.tile
-    ? placeTileOnBoard(moveResult.board, spawnResult.tile)
-    : moveResult.board;
+  const finalBoard = spawnResult.tile ? placeTileOnBoard(moveResult.board, spawnResult.tile) : moveResult.board;
 
   // Calculate new score
   const newScore = state.score + moveResult.score;
@@ -213,9 +208,7 @@ function moveRight(board: Board): MoveResult {
     const { newRow, score, rowMoved, mergedIds } = processRow(reversedRow);
 
     // Reverse back and update column positions correctly
-    const finalRow = [...newRow]
-      .reverse()
-      .map((tile, col) => (tile ? { ...tile, col, row } : tile));
+    const finalRow = [...newRow].reverse().map((tile, col) => (tile ? { ...tile, col, row } : tile));
 
     newBoard.push(finalRow);
     totalScore += score;
@@ -517,10 +510,7 @@ export function checkGameOver(board: Board): boolean {
  * const score = calculateScore(mergedIds, tiles); // Returns 4 (2+2)
  * ```
  */
-export function calculateScore(
-  mergedTileIds: string[],
-  allTiles: Tile[]
-): number {
+export function calculateScore(mergedTileIds: string[], allTiles: Tile[]): number {
   if (!mergedTileIds.length || !allTiles.length) {
     return 0;
   }

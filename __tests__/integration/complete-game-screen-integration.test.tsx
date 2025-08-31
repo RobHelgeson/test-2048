@@ -27,9 +27,7 @@ jest.mock('react-native-reanimated', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const AnimatedView = React.forwardRef((props, ref) =>
-    React.createElement(View, { ...props, ref })
-  );
+  const AnimatedView = React.forwardRef((props, ref) => React.createElement(View, { ...props, ref }));
 
   return {
     default: {
@@ -76,17 +74,13 @@ jest.mock('@/components/game/GameHeader', () => ({
         key: 'scores',
         testID: 'game-header-scores',
       }),
-      React.createElement(
-        View,
-        { key: 'controls', testID: 'game-header-controls' },
-        [
-          React.createElement('TouchableOpacity', {
-            key: 'new-game',
-            testID: 'game-header-new-game',
-            onPress: onNewGame,
-          }),
-        ]
-      ),
+      React.createElement(View, { key: 'controls', testID: 'game-header-controls' }, [
+        React.createElement('TouchableOpacity', {
+          key: 'new-game',
+          testID: 'game-header-new-game',
+          onPress: onNewGame,
+        }),
+      ]),
     ]);
   },
 }));
@@ -103,9 +97,7 @@ jest.mock('react-native', () => {
 });
 
 const mockUseGame = useGame as jest.MockedFunction<typeof useGame>;
-const mockUseGameStore = useGameStore as jest.MockedFunction<
-  typeof useGameStore
->;
+const mockUseGameStore = useGameStore as jest.MockedFunction<typeof useGameStore>;
 
 describe('Complete Game Screen Integration', () => {
   const mockGameState = {
@@ -155,9 +147,7 @@ describe('Complete Game Screen Integration', () => {
     });
   });
 
-  const renderGameScreenWithTheme = (
-    initialTheme: 'light' | 'dark' = 'light'
-  ) => {
+  const renderGameScreenWithTheme = (initialTheme: 'light' | 'dark' = 'light') => {
     return render(
       <ThemeProvider initialTheme={initialTheme}>
         <GameScreen />
@@ -243,9 +233,7 @@ describe('Complete Game Screen Integration', () => {
     it('handles new game action from GameHeader', () => {
       renderGameScreenWithTheme();
 
-      const newGameButton =
-        screen.getByTestId('game-header-new-game') ||
-        screen.getByText('New Game');
+      const newGameButton = screen.getByTestId('game-header-new-game') || screen.getByText('New Game');
 
       fireEvent.press(newGameButton);
 

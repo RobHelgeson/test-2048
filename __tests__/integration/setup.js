@@ -93,9 +93,7 @@ beforeEach(() => {
   console.error = (message, ...args) => {
     if (
       typeof message === 'string' &&
-      (message.includes('Warning:') ||
-        message.includes('Failed to') ||
-        message.includes('Invalid'))
+      (message.includes('Warning:') || message.includes('Failed to') || message.includes('Invalid'))
     ) {
       return;
     }

@@ -30,9 +30,7 @@ describe('Theme System', () => {
     });
 
     it('should have accessibility compliant colors', () => {
-      const validations = validateThemeAccessibility(
-        ClassicTheme.tokens.colors
-      );
+      const validations = validateThemeAccessibility(ClassicTheme.tokens.colors);
       const failures = validations.filter((v) => !v.result.passes);
 
       // Log any failures for debugging
@@ -41,8 +39,7 @@ describe('Theme System', () => {
       }
 
       // Should have mostly passing contrast ratios
-      const passRate =
-        (validations.length - failures.length) / validations.length;
+      const passRate = (validations.length - failures.length) / validations.length;
       expect(passRate).toBeGreaterThan(0.8); // At least 80% should pass
     });
   });
@@ -83,17 +80,14 @@ describe('Theme System', () => {
       }
 
       // Should have mostly passing contrast ratios
-      const passRate =
-        (validations.length - failures.length) / validations.length;
+      const passRate = (validations.length - failures.length) / validations.length;
       expect(passRate).toBeGreaterThan(0.8); // At least 80% should pass
     });
   });
 
   describe('Theme Design Tokens', () => {
     it('should have consistent typography tokens', () => {
-      expect(ClassicTheme.tokens.typography).toEqual(
-        CoolTheme.tokens.typography
-      );
+      expect(ClassicTheme.tokens.typography).toEqual(CoolTheme.tokens.typography);
     });
 
     it('should have consistent spacing tokens', () => {

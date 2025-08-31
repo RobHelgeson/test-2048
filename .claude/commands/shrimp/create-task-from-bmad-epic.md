@@ -27,6 +27,7 @@ RESULT: A shrimp task for the story that is linked to the Start and Completion n
      ```
 
    - If this epic is not epic number one, use Shrimp to add the prior epic's `Completing Epic {epic number} {description}` taskId as a dependency of this task. This will link the completion of the prior epic to the start of this one.
+
 3. Use Shrimp to add a task called `Completing Epic {epic number} {description}` to the existing plan. The implementationGuide for this task is:
 
    ```

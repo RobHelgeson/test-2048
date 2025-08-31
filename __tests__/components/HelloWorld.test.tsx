@@ -53,9 +53,7 @@ describe('HelloWorldScreen', () => {
     render(<HelloWorldScreen />);
 
     // Check platform name is displayed
-    const platformText = screen.getByText(
-      new RegExp(`Platform: ${Platform.OS}`)
-    );
+    const platformText = screen.getByText(new RegExp(`Platform: ${Platform.OS}`));
     expect(platformText).toBeTruthy();
 
     // Check version label is displayed (version might be undefined in tests)

@@ -22,16 +22,12 @@ describe('ScoreDisplay Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useThemeColors as jest.Mock).mockReturnValue(mockThemeColors);
-    (formatScore as jest.Mock).mockImplementation((score) =>
-      score.toLocaleString()
-    );
+    (formatScore as jest.Mock).mockImplementation((score) => score.toLocaleString());
   });
 
   describe('Component Rendering', () => {
     it('renders ScoreDisplay with correct label and value', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       const container = getByTestId('score-display-score');
       const label = getByTestId('score-label-score', {
@@ -48,37 +44,23 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('renders with custom testID', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Best" value={4096} testID="custom-score" />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Best" value={4096} testID="custom-score" />);
 
       expect(getByTestId('custom-score')).toBeTruthy();
-      expect(
-        getByTestId('custom-score-label', { includeHiddenElements: true })
-      ).toBeTruthy();
-      expect(
-        getByTestId('custom-score-value', { includeHiddenElements: true })
-      ).toBeTruthy();
+      expect(getByTestId('custom-score-label', { includeHiddenElements: true })).toBeTruthy();
+      expect(getByTestId('custom-score-value', { includeHiddenElements: true })).toBeTruthy();
     });
 
     it('generates default testIDs when not provided', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Best Score" value={2048} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Best Score" value={2048} />);
 
       expect(getByTestId('score-display-best score')).toBeTruthy();
-      expect(
-        getByTestId('score-label-best score', { includeHiddenElements: true })
-      ).toBeTruthy();
-      expect(
-        getByTestId('score-value-best score', { includeHiddenElements: true })
-      ).toBeTruthy();
+      expect(getByTestId('score-label-best score', { includeHiddenElements: true })).toBeTruthy();
+      expect(getByTestId('score-value-best score', { includeHiddenElements: true })).toBeTruthy();
     });
 
     it('renders label in uppercase', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="best score" value={512} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="best score" value={512} />);
 
       const label = getByTestId('score-label-best score', {
         includeHiddenElements: true,
@@ -107,9 +89,7 @@ describe('ScoreDisplay Component', () => {
     it('handles large scores', () => {
       (formatScore as jest.Mock).mockReturnValue('1,500,000');
 
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1500000} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1500000} />);
 
       const valueElement = getByTestId('score-value-score', {
         includeHiddenElements: true,
@@ -121,9 +101,7 @@ describe('ScoreDisplay Component', () => {
     it('handles negative scores', () => {
       (formatScore as jest.Mock).mockReturnValue('-1,024');
 
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={-1024} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={-1024} />);
 
       const valueElement = getByTestId('score-value-score', {
         includeHiddenElements: true,
@@ -135,27 +113,21 @@ describe('ScoreDisplay Component', () => {
 
   describe('Highlighted State', () => {
     it('renders without highlighted state by default', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       const container = getByTestId('score-display-score');
       expect(container).toBeTruthy();
     });
 
     it('applies highlighted styling when highlighted prop is true', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Best" value={2048} highlighted={true} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Best" value={2048} highlighted={true} />);
 
       const container = getByTestId('score-display-best');
       expect(container).toBeTruthy();
     });
 
     it('removes highlighted styling when highlighted prop is false', () => {
-      const { rerender, getByTestId } = render(
-        <ScoreDisplay label="Best" value={2048} highlighted={true} />
-      );
+      const { rerender, getByTestId } = render(<ScoreDisplay label="Best" value={2048} highlighted={true} />);
 
       let container = getByTestId('score-display-best');
       expect(container).toBeTruthy();
@@ -178,17 +150,13 @@ describe('ScoreDisplay Component', () => {
       };
       (useThemeColors as jest.Mock).mockReturnValue(customColors);
 
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       expect(getByTestId('score-display-score')).toBeTruthy();
     });
 
     it('handles theme changes properly', () => {
-      const { rerender, getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { rerender, getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       // Change theme colors
       const darkColors = {
@@ -207,9 +175,7 @@ describe('ScoreDisplay Component', () => {
 
   describe('Accessibility Features', () => {
     it('provides proper accessibility labels', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       const container = getByTestId('score-display-score');
       expect(container.props.accessibilityRole).toBe('text');
@@ -218,9 +184,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('updates accessibility properties when value changes', () => {
-      const { rerender, getByTestId } = render(
-        <ScoreDisplay label="Best" value={2048} />
-      );
+      const { rerender, getByTestId } = render(<ScoreDisplay label="Best" value={2048} />);
 
       let container = getByTestId('score-display-best');
       expect(container.props.accessibilityLabel).toBe('Best: 2,048');
@@ -233,9 +197,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('hides child elements from accessibility tree', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       // The container should have proper accessibility properties
       const container = getByTestId('score-display-score');
@@ -255,9 +217,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('provides accessibility value text', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       const container = getByTestId('score-display-score');
       expect(container.props.accessibilityValue).toEqual({ text: '1,024' });
@@ -267,18 +227,14 @@ describe('ScoreDisplay Component', () => {
   describe('Custom Styling', () => {
     it('applies custom container style', () => {
       const customStyle = { marginTop: 10, backgroundColor: '#red' };
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} style={customStyle} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1024} style={customStyle} />);
 
       const container = getByTestId('score-display-score');
       expect(container.props.style).toContainEqual(customStyle);
     });
 
     it('merges custom style with default styles', () => {
-      const { getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} style={{ marginLeft: 5 }} />
-      );
+      const { getByTestId } = render(<ScoreDisplay label="Score" value={1024} style={{ marginLeft: 5 }} />);
 
       const container = getByTestId('score-display-score');
       expect(container.props.style).toBeTruthy();
@@ -287,9 +243,7 @@ describe('ScoreDisplay Component', () => {
 
   describe('Performance Optimizations', () => {
     it('memoizes styles when theme colors remain the same', () => {
-      const { rerender, getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { rerender, getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       rerender(<ScoreDisplay label="Score" value={2048} />);
 
@@ -298,9 +252,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('updates styles when theme colors change', () => {
-      const { rerender, getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { rerender, getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       const newColors = { ...mockThemeColors, accent: '#ff0000' };
       (useThemeColors as jest.Mock).mockReturnValue(newColors);
@@ -311,9 +263,7 @@ describe('ScoreDisplay Component', () => {
     });
 
     it('memoizes accessibility properties correctly', () => {
-      const { rerender, getByTestId } = render(
-        <ScoreDisplay label="Score" value={1024} />
-      );
+      const { rerender, getByTestId } = render(<ScoreDisplay label="Score" value={1024} />);
 
       // Same props should use memoized accessibility properties
       rerender(<ScoreDisplay label="Score" value={1024} />);

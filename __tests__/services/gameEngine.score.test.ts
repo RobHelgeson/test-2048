@@ -1,7 +1,4 @@
-import {
-  calculateScore,
-  calculateScoreFromValues,
-} from '@/services/gameEngine';
+import { calculateScore, calculateScoreFromValues } from '@/services/gameEngine';
 import { Tile } from '@/types/game';
 
 describe('GameEngine Score Calculations', () => {

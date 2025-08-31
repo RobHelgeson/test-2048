@@ -5,7 +5,7 @@ describe('Error Boundary Functionality', () => {
         hasError: false,
         componentDidCatch: true,
         getDerivedStateFromError: true,
-        render: true
+        render: true,
       };
 
       expect(errorBoundaryConfig.hasError).toBe(false);
@@ -19,10 +19,10 @@ describe('Error Boundary Functionality', () => {
         catchError: true,
         logError: true,
         showFallbackUI: true,
-        preventCrash: true
+        preventCrash: true,
       };
 
-      Object.values(errorHandling).forEach(value => {
+      Object.values(errorHandling).forEach((value) => {
         expect(value).toBe(true);
       });
     });
@@ -30,12 +30,9 @@ describe('Error Boundary Functionality', () => {
 
   describe('Error UI Fallback', () => {
     it('should provide user-friendly error messages', () => {
-      const errorMessages = [
-        'Oops! Something went wrong',
-        'The app encountered an unexpected error'
-      ];
+      const errorMessages = ['Oops! Something went wrong', 'The app encountered an unexpected error'];
 
-      errorMessages.forEach(message => {
+      errorMessages.forEach((message) => {
         expect(typeof message).toBe('string');
         expect(message.length).toBeGreaterThan(0);
       });
@@ -45,10 +42,10 @@ describe('Error Boundary Functionality', () => {
       const recoveryOptions = {
         retryAvailable: true,
         restartSuggested: true,
-        userFriendlyMessage: true
+        userFriendlyMessage: true,
       };
 
-      Object.values(recoveryOptions).forEach(option => {
+      Object.values(recoveryOptions).forEach((option) => {
         expect(option).toBe(true);
       });
     });

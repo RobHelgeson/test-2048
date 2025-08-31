@@ -4,11 +4,7 @@
  */
 
 import { storageService } from '@/services/storageService';
-import {
-  generateGameState,
-  generateGameResult,
-  generateMockStatistics,
-} from './utils/testDataGenerators';
+import { generateGameState, generateGameResult, generateMockStatistics } from './utils/testDataGenerators';
 import { GameStatus } from '@/types/game';
 
 describe('Storage Integration Tests', () => {
@@ -23,20 +19,16 @@ describe('Storage Integration Tests', () => {
       const testGameState = generateGameState('mid-game');
 
       // Save game state
-      const { duration: saveTime } = await global.measureAsync(
-        'Save game state',
-        async () => {
-          await storageService.saveGameState(testGameState);
-        }
-      );
+      const { duration: saveTime } = await global.measureAsync('Save game state', async () => {
+        await storageService.saveGameState(testGameState);
+      });
 
       expect(saveTime).toBeLessThan(50); // Should save quickly
 
       // Load game state
-      const { result: loadedState, duration: loadTime } =
-        await global.measureAsync('Load game state', async () => {
-          return await storageService.loadGameState();
-        });
+      const { result: loadedState, duration: loadTime } = await global.measureAsync('Load game state', async () => {
+        return await storageService.loadGameState();
+      });
 
       expect(loadTime).toBeLessThan(50); // Should load quickly
       expect(loadedState).toBeTruthy();
@@ -92,16 +84,10 @@ describe('Storage Integration Tests', () => {
     });
 
     it('should handle concurrent save/load operations', async () => {
-      const states = [
-        generateGameState('initial'),
-        generateGameState('mid-game'),
-        generateGameState('winning'),
-      ];
+      const states = [generateGameState('initial'), generateGameState('mid-game'), generateGameState('winning')];
 
       // Perform concurrent saves
-      const savePromises = states.map((state) =>
-        storageService.saveGameState(state)
-      );
+      const savePromises = states.map((state) => storageService.saveGameState(state));
       await Promise.all(savePromises);
 
       // The last save should win
@@ -325,9 +311,7 @@ describe('Storage Integration Tests', () => {
       // Should handle gracefully or return null for incomplete data
       const loadedState = await storageService.loadGameState();
       // Depending on validation strictness, this might be null or have defaults
-      expect(loadedState === null || typeof loadedState === 'object').toBe(
-        true
-      );
+      expect(loadedState === null || typeof loadedState === 'object').toBe(true);
     });
 
     it('should handle backup and recovery mechanisms', async () => {
@@ -343,9 +327,7 @@ describe('Storage Integration Tests', () => {
       // Verify data is saved
       expect(await storageService.loadGameState()).toBeTruthy();
       expect(await storageService.loadBestScore()).toBe(originalScore);
-      expect(
-        (await storageService.loadStatistics()).totalGamesPlayed
-      ).toBeGreaterThan(0);
+      expect((await storageService.loadStatistics()).totalGamesPlayed).toBeGreaterThan(0);
 
       // Clear all data
       await storageService.clearAllData();

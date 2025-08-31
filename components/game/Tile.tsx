@@ -1,12 +1,8 @@
-import React from 'react';
-import { StyleSheet, View, ViewStyle, TextStyle, Platform } from 'react-native';
 import { ThemedText } from '@/components/themed/ThemedText';
-import {
-  useThemeColors,
-  useTileColor,
-  useTileTextColor,
-} from '@/hooks/useTheme';
+import { useThemeColors, useTileColor, useTileTextColor } from '@/hooks/useTheme';
 import { Tile as TileData } from '@/types/game';
+import React from 'react';
+import { Platform, StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
 
 interface TileProps {
   /** Tile data containing value, position, and metadata */

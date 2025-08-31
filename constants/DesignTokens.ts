@@ -1,10 +1,4 @@
-import {
-  TypographyTokens,
-  SpacingTokens,
-  BorderRadiusTokens,
-  ShadowTokens,
-  AnimationTokens,
-} from '@/types/theme';
+import { AnimationTokens, BorderRadiusTokens, ShadowTokens, SpacingTokens, TypographyTokens } from '@/types/theme';
 
 /**
  * 8pt Grid System - Base unit: 8px

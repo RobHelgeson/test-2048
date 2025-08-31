@@ -9,12 +9,7 @@ import {
 import { GameState, Direction, Tile, Board, GameStatus } from '@/types/game';
 
 // Test utilities for creating board configurations
-const createTile = (
-  value: number,
-  row: number,
-  col: number,
-  id?: string
-): Tile => ({
+const createTile = (value: number, row: number, col: number, id?: string): Tile => ({
   id: id || `tile-${row}-${col}-${Date.now()}`,
   value,
   row,
@@ -64,12 +59,7 @@ describe('Game Engine Core Logic', () => {
 
     it('should merge two identical tiles', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0, 'tile1'),
-          createTile(2, 0, 1, 'tile2'),
-          null,
-          null,
-        ],
+        [createTile(2, 0, 0, 'tile1'), createTile(2, 0, 1, 'tile2'), null, null],
         [null, null, null, null],
         [null, null, null, null],
         [null, null, null, null],
@@ -86,12 +76,7 @@ describe('Game Engine Core Logic', () => {
 
     it('should handle multiple merges in one row', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(2, 0, 1),
-          createTile(4, 0, 2),
-          createTile(4, 0, 3),
-        ],
+        [createTile(2, 0, 0), createTile(2, 0, 1), createTile(4, 0, 2), createTile(4, 0, 3)],
         [null, null, null, null],
         [null, null, null, null],
         [null, null, null, null],
@@ -125,12 +110,7 @@ describe('Game Engine Core Logic', () => {
 
     it('should not move tiles that are already at leftmost positions', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
         [null, null, null, null],
         [null, null, null, null],
         [null, null, null, null],
@@ -258,30 +238,10 @@ describe('Game Engine Core Logic', () => {
 
     it('should return null when board is full', () => {
       const fullBoard: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(32, 1, 0),
-          createTile(64, 1, 1),
-          createTile(128, 1, 2),
-          createTile(256, 1, 3),
-        ],
-        [
-          createTile(512, 2, 0),
-          createTile(1024, 2, 1),
-          createTile(2, 2, 2),
-          createTile(4, 2, 3),
-        ],
-        [
-          createTile(8, 3, 0),
-          createTile(16, 3, 1),
-          createTile(32, 3, 2),
-          createTile(64, 3, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(32, 1, 0), createTile(64, 1, 1), createTile(128, 1, 2), createTile(256, 1, 3)],
+        [createTile(512, 2, 0), createTile(1024, 2, 1), createTile(2, 2, 2), createTile(4, 2, 3)],
+        [createTile(8, 3, 0), createTile(16, 3, 1), createTile(32, 3, 2), createTile(64, 3, 3)],
       ];
 
       const result = spawnRandomTile(fullBoard);
@@ -311,18 +271,8 @@ describe('Game Engine Core Logic', () => {
   describe('checkWinCondition', () => {
     it('should return true when 2048 tile exists', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(32, 1, 0),
-          createTile(2048, 1, 1),
-          createTile(128, 1, 2),
-          null,
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(32, 1, 0), createTile(2048, 1, 1), createTile(128, 1, 2), null],
         [null, null, null, null],
         [null, null, null, null],
       ];
@@ -343,18 +293,8 @@ describe('Game Engine Core Logic', () => {
 
     it('should return false when no 2048+ tile exists', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(32, 1, 0),
-          createTile(64, 1, 1),
-          createTile(128, 1, 2),
-          createTile(256, 1, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(32, 1, 0), createTile(64, 1, 1), createTile(128, 1, 2), createTile(256, 1, 3)],
         [createTile(512, 2, 0), createTile(1024, 2, 1), null, null],
         [null, null, null, null],
       ];
@@ -366,18 +306,8 @@ describe('Game Engine Core Logic', () => {
   describe('checkGameOver', () => {
     it('should return false when empty cells exist', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(32, 1, 0),
-          createTile(64, 1, 1),
-          null,
-          createTile(256, 1, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(32, 1, 0), createTile(64, 1, 1), null, createTile(256, 1, 3)],
         [null, null, null, null],
         [null, null, null, null],
       ];
@@ -387,30 +317,10 @@ describe('Game Engine Core Logic', () => {
 
     it('should return false when horizontal merges are possible', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(2, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(32, 1, 0),
-          createTile(64, 1, 1),
-          createTile(128, 1, 2),
-          createTile(256, 1, 3),
-        ],
-        [
-          createTile(512, 2, 0),
-          createTile(1024, 2, 1),
-          createTile(4, 2, 2),
-          createTile(8, 2, 3),
-        ],
-        [
-          createTile(16, 3, 0),
-          createTile(32, 3, 1),
-          createTile(64, 3, 2),
-          createTile(128, 3, 3),
-        ],
+        [createTile(2, 0, 0), createTile(2, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(32, 1, 0), createTile(64, 1, 1), createTile(128, 1, 2), createTile(256, 1, 3)],
+        [createTile(512, 2, 0), createTile(1024, 2, 1), createTile(4, 2, 2), createTile(8, 2, 3)],
+        [createTile(16, 3, 0), createTile(32, 3, 1), createTile(64, 3, 2), createTile(128, 3, 3)],
       ];
 
       expect(checkGameOver(board)).toBe(false);
@@ -418,30 +328,10 @@ describe('Game Engine Core Logic', () => {
 
     it('should return false when vertical merges are possible', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(2, 1, 0),
-          createTile(64, 1, 1),
-          createTile(128, 1, 2),
-          createTile(256, 1, 3),
-        ],
-        [
-          createTile(512, 2, 0),
-          createTile(1024, 2, 1),
-          createTile(4, 2, 2),
-          createTile(8, 2, 3),
-        ],
-        [
-          createTile(16, 3, 0),
-          createTile(32, 3, 1),
-          createTile(64, 3, 2),
-          createTile(128, 3, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(2, 1, 0), createTile(64, 1, 1), createTile(128, 1, 2), createTile(256, 1, 3)],
+        [createTile(512, 2, 0), createTile(1024, 2, 1), createTile(4, 2, 2), createTile(8, 2, 3)],
+        [createTile(16, 3, 0), createTile(32, 3, 1), createTile(64, 3, 2), createTile(128, 3, 3)],
       ];
 
       expect(checkGameOver(board)).toBe(false);
@@ -449,30 +339,10 @@ describe('Game Engine Core Logic', () => {
 
     it('should return true when no moves are possible', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(32, 1, 0),
-          createTile(64, 1, 1),
-          createTile(128, 1, 2),
-          createTile(256, 1, 3),
-        ],
-        [
-          createTile(512, 2, 0),
-          createTile(1024, 2, 1),
-          createTile(2048, 2, 2),
-          createTile(4, 2, 3),
-        ],
-        [
-          createTile(8, 3, 0),
-          createTile(16, 3, 1),
-          createTile(32, 3, 2),
-          createTile(64, 3, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(32, 1, 0), createTile(64, 1, 1), createTile(128, 1, 2), createTile(256, 1, 3)],
+        [createTile(512, 2, 0), createTile(1024, 2, 1), createTile(2048, 2, 2), createTile(4, 2, 3)],
+        [createTile(8, 3, 0), createTile(16, 3, 1), createTile(32, 3, 2), createTile(64, 3, 3)],
       ];
 
       expect(checkGameOver(board)).toBe(true);
@@ -495,30 +365,10 @@ describe('Game Engine Core Logic', () => {
 
     it('should detect game over condition', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(32, 1, 0),
-          createTile(64, 1, 1),
-          createTile(128, 1, 2),
-          createTile(256, 1, 3),
-        ],
-        [
-          createTile(512, 2, 0),
-          createTile(1024, 2, 1),
-          createTile(2, 2, 2),
-          createTile(4, 2, 3),
-        ],
-        [
-          createTile(8, 3, 0),
-          createTile(16, 3, 1),
-          createTile(32, 3, 2),
-          createTile(64, 3, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(32, 1, 0), createTile(64, 1, 1), createTile(128, 1, 2), createTile(256, 1, 3)],
+        [createTile(512, 2, 0), createTile(1024, 2, 1), createTile(2, 2, 2), createTile(4, 2, 3)],
+        [createTile(8, 3, 0), createTile(16, 3, 1), createTile(32, 3, 2), createTile(64, 3, 3)],
       ];
 
       const result = validateGameState(board);
@@ -561,12 +411,7 @@ describe('Game Engine Core Logic', () => {
 
     it('should not change state when no movement occurs', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
         [null, null, null, null],
         [null, null, null, null],
         [null, null, null, null],
@@ -600,30 +445,10 @@ describe('Game Engine Core Logic', () => {
     it('should set game status to LOST when no moves remain', () => {
       // Create a board that after the move and spawn will have no valid moves
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(32, 1, 0),
-          createTile(64, 1, 1),
-          createTile(128, 1, 2),
-          createTile(256, 1, 3),
-        ],
-        [
-          createTile(512, 2, 0),
-          createTile(1024, 2, 1),
-          createTile(8, 2, 2),
-          createTile(4, 2, 3),
-        ],
-        [
-          createTile(16, 3, 0),
-          createTile(32, 3, 1),
-          createTile(64, 3, 2),
-          null,
-        ], // one empty space
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(32, 1, 0), createTile(64, 1, 1), createTile(128, 1, 2), createTile(256, 1, 3)],
+        [createTile(512, 2, 0), createTile(1024, 2, 1), createTile(8, 2, 2), createTile(4, 2, 3)],
+        [createTile(16, 3, 0), createTile(32, 3, 1), createTile(64, 3, 2), null], // one empty space
       ];
 
       // Mock spawn to place a tile that results in no possible moves
@@ -658,24 +483,9 @@ describe('Game Engine Core Logic', () => {
   describe('Performance Tests', () => {
     it('should complete move within 100ms performance requirement', () => {
       const board: Board = [
-        [
-          createTile(2, 0, 0),
-          createTile(4, 0, 1),
-          createTile(8, 0, 2),
-          createTile(16, 0, 3),
-        ],
-        [
-          createTile(32, 1, 0),
-          createTile(64, 1, 1),
-          createTile(128, 1, 2),
-          createTile(256, 1, 3),
-        ],
-        [
-          createTile(512, 2, 0),
-          createTile(1024, 2, 1),
-          createTile(2, 2, 2),
-          null,
-        ],
+        [createTile(2, 0, 0), createTile(4, 0, 1), createTile(8, 0, 2), createTile(16, 0, 3)],
+        [createTile(32, 1, 0), createTile(64, 1, 1), createTile(128, 1, 2), createTile(256, 1, 3)],
+        [createTile(512, 2, 0), createTile(1024, 2, 1), createTile(2, 2, 2), null],
         [createTile(4, 3, 0), null, null, null],
       ];
 

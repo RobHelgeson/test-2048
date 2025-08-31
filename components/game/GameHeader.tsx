@@ -3,11 +3,13 @@ import { Button } from '@/components/ui/Button';
 import { StatusIndicator } from '@/components/ui/StatusIndicator';
 import { useThemeColors } from '@/hooks/useTheme';
 import { useGameStore } from '@/stores/gameStore';
+import { Direction } from '@/types';
 import React from 'react';
 import { Dimensions, Platform, StyleSheet, ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring } from 'react-native-reanimated';
 
 import { ScoreDisplay } from './GameHeader/ScoreDisplay';
+import { KeyboardIndicator } from './KeyboardIndicator';
 
 interface GameHeaderProps {
   /** Optional custom styling for the header container */
@@ -16,6 +18,12 @@ interface GameHeaderProps {
   onNewGame?: () => void;
   /** Test ID for testing */
   testID?: string;
+  /** Keyboard indicator state from useKeyboard hook */
+  keyboardState?: {
+    activeDirections?: Set<Direction>;
+    pressedDirection?: Direction | null;
+    isEnabled?: boolean;
+  };
 }
 
 /**
@@ -47,10 +55,15 @@ interface GameHeaderProps {
  * <GameHeader
  *   onNewGame={() => console.log('New game started')}
  *   testID="game-header"
+ *   keyboardState={{
+ *     activeDirections: new Set([Direction.UP]),
+ *     pressedDirection: Direction.UP,
+ *     isEnabled: true
+ *   }}
  * />
  * ```
  */
-export function GameHeader({ style, onNewGame, testID }: GameHeaderProps) {
+export function GameHeader({ style, onNewGame, testID, keyboardState }: GameHeaderProps) {
   const colors = useThemeColors();
 
   // Game store integration with optimized selectors
@@ -170,6 +183,17 @@ export function GameHeader({ style, onNewGame, testID }: GameHeaderProps) {
           accessibilityHint="Starts a new 2048 game session, resetting the board and score"
         />
       </ThemedView>
+
+      {/* Keyboard Controls Indicator for Web */}
+      {keyboardState?.isEnabled && Platform.OS === 'web' && (
+        <KeyboardIndicator
+          activeDirections={keyboardState.activeDirections}
+          pressedDirection={keyboardState.pressedDirection}
+          visible={true}
+          compact={dynamicStyles.isSmallScreen}
+          testID={testID ? `${testID}-keyboard` : 'game-header-keyboard'}
+        />
+      )}
     </ThemedView>
   );
 }

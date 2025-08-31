@@ -7,10 +7,7 @@ import { renderHook, act } from '@testing-library/react-native';
 import { GameStatus, Direction } from '@/types/game';
 import { useGame } from '@/hooks/useGame';
 import { useScore } from '@/hooks/useScore';
-import {
-  generateGameState,
-  generateGameResult,
-} from './utils/testDataGenerators';
+import { generateGameState, generateGameResult } from './utils/testDataGenerators';
 
 describe('Hooks Integration Tests', () => {
   beforeEach(async () => {
@@ -36,9 +33,7 @@ describe('Hooks Integration Tests', () => {
 
       // Score should remain coordinated
       expect(typeof scoreHook.current.scoreState.currentScore).toBe('number');
-      expect(scoreHook.current.scoreState.currentScore).toBeGreaterThanOrEqual(
-        initialScore
-      );
+      expect(scoreHook.current.scoreState.currentScore).toBeGreaterThanOrEqual(initialScore);
     });
 
     it('should handle game completion with statistics update', async () => {
@@ -57,12 +52,8 @@ describe('Hooks Integration Tests', () => {
       });
 
       // Statistics should be updated
-      expect(scoreHook.current.statistics.totalGamesPlayed).toBeGreaterThan(
-        initialStats.totalGamesPlayed
-      );
-      expect(scoreHook.current.statistics.totalScore).toBeGreaterThan(
-        initialStats.totalScore
-      );
+      expect(scoreHook.current.statistics.totalGamesPlayed).toBeGreaterThan(initialStats.totalGamesPlayed);
+      expect(scoreHook.current.statistics.totalScore).toBeGreaterThan(initialStats.totalScore);
     });
 
     it('should maintain consistency during rapid state changes', async () => {
@@ -80,12 +71,7 @@ describe('Hooks Integration Tests', () => {
 
       // Perform rapid moves
       await act(async () => {
-        const moves = [
-          Direction.LEFT,
-          Direction.UP,
-          Direction.RIGHT,
-          Direction.DOWN,
-        ];
+        const moves = [Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN];
         for (const move of moves) {
           gameHook.current.actions.makeMove(move);
           // Small delay to allow state updates
@@ -94,12 +80,8 @@ describe('Hooks Integration Tests', () => {
       });
 
       // State should remain consistent
-      expect(gameHook.current.gameState.score).toBeGreaterThanOrEqual(
-        initialState.gameScore
-      );
-      expect(scoreHook.current.scoreState.currentScore).toBeGreaterThanOrEqual(
-        initialState.scoreState
-      );
+      expect(gameHook.current.gameState.score).toBeGreaterThanOrEqual(initialState.gameScore);
+      expect(scoreHook.current.scoreState.currentScore).toBeGreaterThanOrEqual(initialState.scoreState);
     });
 
     it('should handle game reset scenarios properly', async () => {
@@ -131,12 +113,8 @@ describe('Hooks Integration Tests', () => {
       expect(gameHook.current.gameState.score).toBe(0);
       expect(gameHook.current.gameState.moveCount).toBe(0);
       expect(scoreHook.current.scoreState.currentScore).toBe(0);
-      expect(scoreHook.current.scoreState.bestScore).toBe(
-        beforeReset.bestScore
-      );
-      expect(scoreHook.current.statistics.totalGamesPlayed).toBe(
-        beforeReset.statistics.totalGamesPlayed
-      );
+      expect(scoreHook.current.scoreState.bestScore).toBe(beforeReset.bestScore);
+      expect(scoreHook.current.statistics.totalGamesPlayed).toBe(beforeReset.statistics.totalGamesPlayed);
     });
   });
 
@@ -168,18 +146,11 @@ describe('Hooks Integration Tests', () => {
         });
 
         // Verify cumulative calculations
-        expect(scoreHook.current.statistics.totalScore).toBe(
-          expectedTotalScore
-        );
-        expect(scoreHook.current.statistics.totalGamesPlayed).toBe(
-          expectedGamesPlayed
-        );
+        expect(scoreHook.current.statistics.totalScore).toBe(expectedTotalScore);
+        expect(scoreHook.current.statistics.totalGamesPlayed).toBe(expectedGamesPlayed);
 
         const expectedAverage = expectedTotalScore / expectedGamesPlayed;
-        expect(scoreHook.current.statistics.averageScore).toBeCloseTo(
-          expectedAverage,
-          2
-        );
+        expect(scoreHook.current.statistics.averageScore).toBeCloseTo(expectedAverage, 2);
       }
     });
 
@@ -342,12 +313,7 @@ describe('Hooks Integration Tests', () => {
 
       await act(async () => {
         for (let i = 0; i < iterations; i++) {
-          const direction = [
-            Direction.LEFT,
-            Direction.UP,
-            Direction.RIGHT,
-            Direction.DOWN,
-          ][i % 4];
+          const direction = [Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN][i % 4];
           gameHook.current.actions.makeMove(direction);
           scoreHook.current.actions.updateScore(2 * (i + 1));
 
@@ -368,12 +334,8 @@ describe('Hooks Integration Tests', () => {
     });
 
     it('should handle hook cleanup properly', async () => {
-      const { result: gameHook, unmount: unmountGame } = renderHook(() =>
-        useGame()
-      );
-      const { result: scoreHook, unmount: unmountScore } = renderHook(() =>
-        useScore()
-      );
+      const { result: gameHook, unmount: unmountGame } = renderHook(() => useGame());
+      const { result: scoreHook, unmount: unmountScore } = renderHook(() => useScore());
 
       await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 100));

@@ -1,7 +1,7 @@
-import {ThemedText} from '@/components/themed/ThemedText';
-import {useThemeColors} from '@/hooks/useTheme';
+import { ThemedText } from '@/components/themed/ThemedText';
+import { useThemeColors } from '@/hooks/useTheme';
 import React from 'react';
-import {Platform, StyleSheet, TextStyle, TouchableOpacity, ViewStyle} from 'react-native';
+import { Platform, StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 
 interface ButtonProps {
   /** Button text content */

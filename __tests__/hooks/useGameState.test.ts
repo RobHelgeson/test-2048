@@ -9,9 +9,7 @@ const useGameState = (initialBoard?: number[][]) => {
     ]
   );
   const [score, setScore] = useState(0);
-  const [gameStatus, setGameStatus] = useState(
-    'playing' as 'playing' | 'won' | 'lost'
-  );
+  const [gameStatus, setGameStatus] = useState('playing' as 'playing' | 'won' | 'lost');
 
   const resetGame = () => {
     setBoard([
@@ -192,11 +190,7 @@ describe('useGameState Hook', () => {
 
       const hook = useGameState();
 
-      const validStatuses: ('playing' | 'won' | 'lost')[] = [
-        'playing',
-        'won',
-        'lost',
-      ];
+      const validStatuses: ('playing' | 'won' | 'lost')[] = ['playing', 'won', 'lost'];
 
       validStatuses.forEach((status) => {
         hook.setGameStatus(status);
