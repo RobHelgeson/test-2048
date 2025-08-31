@@ -58,6 +58,7 @@ export function GameBoard({ style, disabled = false, onTilePress, testID = 'game
     [null, null, null, null],
   ];
   const makeMove = useGameStore((state) => state.makeMove);
+  const initGame = useGameStore((state) => state.initGame);
 
   const isAnimating = false;
   const colors = useThemeColors();
@@ -73,6 +74,11 @@ export function GameBoard({ style, disabled = false, onTilePress, testID = 'game
   useEffect(() => {
     setStyles(createStyles(colors, boardSize, tileSize));
   }, [colors, boardSize, tileSize]);
+
+  // Initialize game on component mount
+  useEffect(() => {
+    initGame();
+  }, [initGame]);
 
   const handleTilePress = (row: number, col: number) => {
     if (disabled || isAnimating) return;

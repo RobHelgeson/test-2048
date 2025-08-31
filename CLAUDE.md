@@ -141,3 +141,4 @@ This project prioritizes educational value in:
 - Cross-platform development and platform-specific considerations
 - Complete deployment pipeline from development to production
 - Modern React Native architecture patterns with New Architecture
+- If you attempt to run the server, and it's already running, don't kill the other server. If you can do your work from that server, do so. if you need a new server (for instance you need to see the logs) then start a new server without killing the existing one.

@@ -2,7 +2,7 @@ import { GameBoard } from '@/components/game/GameBoard';
 import { GameHeader } from '@/components/game/GameHeader';
 import { ThemedSafeAreaView } from '@/components/themed/ThemedSafeAreaView';
 import { ThemedView } from '@/components/themed/ThemedView';
-import { useGame } from '@/hooks/useGame';
+import { useGameStore } from '@/stores/gameStore';
 import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
 import { Dimensions, Platform, ScrollView, StyleSheet, Text } from 'react-native';
@@ -92,17 +92,29 @@ class GameErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 }
 
 export default function GameScreen() {
-  // Game logic integration with optimized selectors to prevent unnecessary re-renders
-  const { actions, isLoading } = useGame();
+  // Subscribe to Zustand store for real-time updates
+  const initGame = useGameStore((state) => state.initGame);
+  const resetGame = useGameStore((state) => state.resetGame);
 
-  // Subscribe to Zustand store for real-time updates (as specified in story)
-  // These values are used by child components through the store subscriptions
   const { colors } = useTheme();
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  // Initialize game on mount
+  React.useEffect(() => {
+    const initializeGame = async () => {
+      setIsLoading(true);
+      initGame();
+      // Small delay for smoother initialization
+      setTimeout(() => setIsLoading(false), 300);
+    };
+
+    initializeGame();
+  }, [initGame]);
 
   // Handle new game action
   const handleNewGame = React.useCallback(() => {
-    actions.resetGame();
-  }, [actions]);
+    resetGame();
+  }, [resetGame]);
 
   // Dynamic styles based on screen size and theme
   const dynamicStyles = React.useMemo(() => createGameScreenStyles(colors), [colors]);
