@@ -107,105 +107,118 @@ const createStyles = (colors: any, variant: string, disabled: boolean) =>
 
 ## State Management Architecture
 
-### State Structure
+### Layered Architecture Pattern
 
-Zustand stores are organized by domain with clear separation of concerns and type-safe interfaces.
+The application uses a **layered architecture** for state management that ensures clear separation of concerns, maintainability, and consistency across all components.
+
+```text
+┌─────────────────────────────────────┐
+│             Components              │ ← Only use useGame() hook
+├─────────────────────────────────────┤
+│     useGame Hook (Public API)      │ ← Persistence, validation, public API
+├─────────────────────────────────────┤
+│   useGameStore (Internal Store)    │ ← Pure state management (Zustand)
+├─────────────────────────────────────┤
+│        Game Engine                  │ ← Pure business logic functions
+└─────────────────────────────────────┘
+```
+
+#### Layer Responsibilities
+
+1. **Components Layer**: UI components that only interact with the `useGame()` hook
+2. **Public API Layer**: `useGame()` hook provides persistence, validation, and consistent API
+3. **State Management Layer**: `useGameStore()` handles pure state updates (internal only)
+4. **Business Logic Layer**: `gameEngine.ts` contains pure game logic functions
+
+### Component Usage Guidelines
 
 ```typescript
-// Game Store - Core game state management
+// ✅ CORRECT - Components should only use useGame
+import { useGame } from '@/hooks/useGame';
+
+function GameBoard() {
+  const { gameState, actions, isLoading } = useGame();
+
+  return (
+    <View>
+      <Text>Score: {gameState.score}</Text>
+      <Button onPress={() => actions.startNewGame()}>New Game</Button>
+    </View>
+  );
+}
+
+// ❌ WRONG - Never import useGameStore directly in components
+import { useGameStore } from '@/stores/gameStore'; // DON'T DO THIS!
+```
+
+### State Structure and Types
+
+```typescript
+// Game State - Shared by both useGame and useGameStore
 interface GameState {
   board: (Tile | null)[][];
   score: number;
   bestScore: number;
-  gameStatus: 'playing' | 'won' | 'lost';
+  gameStatus: GameStatus;
   moveCount: number;
+  startTime: number;
+  lastMoveTime: number;
   canUndo: boolean;
-  isAnimating: boolean;
+  previousBoard?: (Tile | null)[][];
+  previousScore?: number;
 }
 
-interface GameActions {
+// Public API exposed by useGame hook
+interface UseGameReturn {
+  gameState: GameState;
+  actions: {
+    startNewGame: () => void;
+    makeMove: (direction: Direction) => void;
+    resetGame: () => void;
+    continueAfterWin: () => void;
+  };
+  isLoading: boolean;
+  canMove: boolean;
+}
+
+// Internal store interface (not exposed to components)
+interface GameStore extends GameState {
   makeMove: (direction: Direction) => void;
-  newGame: () => void;
-  undoMove: () => void;
-  updateScore: (points: number) => void;
-  setAnimating: (animating: boolean) => void;
-  saveGame: () => Promise<void>;
-  loadGame: () => Promise<void>;
+  resetGame: () => void;
+  continueAfterWin: () => void;
+  loadGame: (gameState: GameState) => void;
 }
-
-export const useGameStore = create<GameState & GameActions>()((set, get) => ({
-  // State
-  board: createEmptyBoard(),
-  score: 0,
-  bestScore: 0,
-  gameStatus: 'playing',
-  moveCount: 0,
-  canUndo: false,
-  isAnimating: false,
-
-  // Actions
-  makeMove: (direction) => {
-    const currentState = get();
-    if (currentState.isAnimating) return;
-
-    const newState = gameEngine.processMove(currentState, direction);
-    set(newState);
-  },
-
-  newGame: () => {
-    set({
-      board: gameEngine.initializeBoard(),
-      score: 0,
-      gameStatus: 'playing',
-      moveCount: 0,
-      canUndo: false,
-    });
-  },
-
-  // Additional actions...
-}));
-
-// Theme Store - UI theming state
-interface ThemeState {
-  currentTheme: ThemeType;
-  colors: ThemeColors;
-  isDark: boolean;
-}
-
-interface ThemeActions {
-  setTheme: (theme: ThemeType) => void;
-  toggleTheme: () => void;
-}
-
-export const useThemeStore = create<ThemeState & ThemeActions>()((set, get) => ({
-  currentTheme: 'classic',
-  colors: classicTheme,
-  isDark: false,
-
-  setTheme: (theme) => {
-    const colors = getThemeColors(theme);
-    set({ currentTheme: theme, colors, isDark: theme.includes('dark') });
-  },
-
-  toggleTheme: () => {
-    const current = get().currentTheme;
-    const newTheme = current === 'classic' ? 'cool' : 'classic';
-    get().setTheme(newTheme);
-  },
-}));
 ```
+
+### Architecture Benefits
+
+- **Single Source of Truth**: All components use the same API through useGame
+- **Separation of Concerns**: Persistence logic separate from pure state management
+- **Maintainability**: Clear boundaries between layers make refactoring easier
+- **Testability**: Each layer can be tested independently
+- **Consistency**: Prevents direct store access that could bypass validation/persistence
+- **Future-Proof**: Easy to modify persistence or add middleware without touching components
+
+### Migration and Extension Guidelines
+
+When adding new game functionality:
+
+1. **Add pure logic** to `services/gameEngine.ts`
+2. **Add state management** to `stores/gameStore.ts` (keep internal)
+3. **Expose through public API** in `hooks/useGame.ts`
+4. **Components only import** `useGame` hook
+
+This ensures architectural consistency and makes future refactoring much easier.
 
 ### State Management Patterns
 
-- **Single Source of Truth:** Each domain has one Zustand store as the authoritative state source
-- **Immutable Updates:** All state updates use immutable patterns to prevent unintended mutations
-- **Computed Properties:** Derived state calculated in selectors rather than stored redundantly
-- **Action-Based Updates:** All state changes happen through well-defined action methods
-- **Async Action Handling:** Promise-based actions for database operations with proper error handling
-- **State Persistence:** Automatic persistence to SQLite for game state and user preferences
-- **Optimistic Updates:** UI updates immediately with database sync happening asynchronously
-- **State Normalization:** Complex nested data structures normalized for efficient updates
-- **Selective Subscriptions:** Components subscribe only to specific state slices they need
+- **Layered Architecture**: Clear separation between public API, state management, and business logic
+- **Single Public API**: All components use useGame hook exclusively
+- **Internal Store Isolation**: useGameStore never imported directly by components
+- **Persistence Integration**: Automatic save/load handled in useGame layer
+- **Validation at API Layer**: Move validation happens in useGame before store updates
+- **Immutable Updates**: All state changes follow immutable patterns
+- **Async Handling**: Persistence operations handled gracefully with loading states
 
 ## Routing Architecture
 

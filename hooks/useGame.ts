@@ -57,6 +57,43 @@ function validateMove(gameState: GameState, _direction: Direction): boolean {
  * }
  * ```
  */
+/**
+ * # Game State Architecture - Public API
+ * 
+ * This hook serves as the **PUBLIC API** for all game state interactions in components.
+ * It implements a layered architecture pattern where:
+ * 
+ * ## Architecture Layers:
+ * 1. **Components** → Only interact with `useGame()` (this hook)
+ * 2. **useGame** → Provides persistence, validation, and public API
+ * 3. **useGameStore** → Internal pure state management (Zustand store)
+ * 4. **gameEngine** → Pure business logic functions
+ * 
+ * ## Why This Architecture?
+ * - **Single Source of Truth**: All components use the same API
+ * - **Separation of Concerns**: Persistence logic separate from pure state
+ * - **Maintainability**: Clear boundaries between layers
+ * - **Testability**: Each layer can be tested independently
+ * 
+ * ## Component Usage Guidelines:
+ * ```typescript
+ * // ✅ CORRECT - Components should only use useGame
+ * const { gameState, actions, isLoading } = useGame();
+ * 
+ * // ❌ WRONG - Never import useGameStore directly in components  
+ * const store = useGameStore(); // This breaks the architecture!
+ * ```
+ * 
+ * ## Migration Notes:
+ * If you need to add new game functionality:
+ * 1. Add pure logic to gameEngine.ts
+ * 2. Add state management to gameStore.ts (internal)
+ * 3. Expose through useGame.ts (public API)
+ * 4. Components only import useGame
+ * 
+ * This ensures consistency and makes future refactoring easier.
+ */
+
 export function useGame(): UseGameReturn {
   // Get store state and actions
   const store = useGameStore();

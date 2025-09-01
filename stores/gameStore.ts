@@ -55,6 +55,40 @@ function createInitialBoard() {
  * - No persistence logic (handled by useGame)
  * - Optimized for internal use with minimal API surface
  */
+/**
+ * # Game Store - Internal State Management
+ * 
+ * ⚠️  **INTERNAL USE ONLY** - Do not import this directly in components!
+ * 
+ * This Zustand store handles pure state management for the 2048 game.
+ * It should only be accessed through the `useGame` hook, which provides
+ * the public API with additional features like persistence and validation.
+ * 
+ * ## Architecture Role:
+ * - **Pure State Management**: Handles game state updates without side effects
+ * - **Internal Implementation**: Components should never import this directly
+ * - **Single Responsibility**: Only manages state, no persistence or validation
+ * 
+ * ## Usage Guidelines:
+ * ```typescript
+ * // ✅ CORRECT - Only useGame hook should access this store
+ * // In hooks/useGame.ts:
+ * const store = useGameStore();
+ * 
+ * // ❌ WRONG - Components should never import this directly
+ * // In components:
+ * import { useGameStore } from '../stores/gameStore'; // DON'T DO THIS!
+ * ```
+ * 
+ * ## Why This Pattern?
+ * By keeping this internal, we ensure:
+ * - All persistence logic stays in useGame
+ * - Consistent API across all components
+ * - Easier testing and refactoring
+ * - Clear separation of concerns
+ * 
+ * If you need to modify game behavior, update the public API in useGame.ts instead.
+ */
 export const useGameStore = create<GameStore>((set, get) => ({
   // Initial game state
   board: [
