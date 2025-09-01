@@ -2,7 +2,7 @@ import { ThemedView } from '@/components/themed/ThemedView';
 import { Button } from '@/components/ui/Button';
 import { StatusIndicator } from '@/components/ui/StatusIndicator';
 import { useThemeColors } from '@/hooks/useTheme';
-import { useGameStore } from '@/stores/gameStore';
+import { useGame } from '@/hooks/useGame';
 import { Direction } from '@/types';
 import React from 'react';
 import { Dimensions, Platform, StyleSheet, ViewStyle } from 'react-native';
@@ -41,7 +41,7 @@ interface GameHeaderProps {
  * - Score change animations with special effects for new best scores
  * - Platform-specific styling following design guidelines
  * - Full accessibility support with proper labels and hints
- * - Integration with game store for real-time state updates
+ * - Integration with useGame hook for real-time state updates
  *
  * Layout Structure:
  * - Responsive flexbox layout that adapts to screen width
@@ -66,11 +66,10 @@ interface GameHeaderProps {
 export function GameHeader({ style, onNewGame, testID, keyboardState }: GameHeaderProps) {
   const colors = useThemeColors();
 
-  // Game store integration with optimized selectors
-  const score = useGameStore((state) => state.score);
-  const bestScore = useGameStore((state) => state.bestScore);
-  const gameStatus = useGameStore((state) => state.gameStatus);
-  const resetGame = useGameStore((state) => state.resetGame);
+  // Game state integration via useGame hook
+  const { gameState, actions } = useGame();
+  const { score, bestScore, gameStatus } = gameState;
+  const { resetGame } = actions;
 
   // Animation values for score changes and new best score celebration
   const scoreAnimationScale = useSharedValue(1);

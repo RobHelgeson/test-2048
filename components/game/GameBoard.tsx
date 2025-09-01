@@ -1,8 +1,8 @@
 import { Tile } from '@/components/game/Tile';
+import { useGame } from '@/hooks/useGame';
 import { useGestures } from '@/hooks/useGestures';
 import { useKeyboard } from '@/hooks/useKeyboard';
 import { useThemeColors } from '@/hooks/useTheme';
-import { useGameStore } from '@/stores/gameStore';
 import { Direction } from '@/types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Platform, StyleSheet, TouchableOpacity, useWindowDimensions, View, ViewStyle } from 'react-native';
@@ -67,14 +67,16 @@ export function GameBoard({
   const [tileSize, setTileSize] = useState<number>((boardSize - GRID_GAP * 6) / 4);
   const [styles, setStyles] = useState(createStyles(useThemeColors(), boardSize, tileSize));
 
-  const board = useGameStore((state) => state.board) || [
+  const { gameState, actions } = useGame();
+
+  const board = gameState.board || [
     [null, null, null, null],
     [null, null, null, null],
     [null, null, null, null],
     [null, null, null, null],
   ];
-  const makeMove = useGameStore((state) => state.makeMove);
-  const initGame = useGameStore((state) => state.initGame);
+  const makeMove = actions.makeMove;
+  const startNewGame = actions.startNewGame;
 
   const isAnimating = false;
   const colors = useThemeColors();
@@ -93,8 +95,8 @@ export function GameBoard({
 
   // Initialize game on component mount
   useEffect(() => {
-    initGame();
-  }, [initGame]);
+    startNewGame();
+  }, [startNewGame]);
 
   const handleTilePress = (row: number, col: number) => {
     if (disabled || isAnimating) return;
@@ -191,7 +193,7 @@ export function GameBoard({
               disabled={disabled || isAnimating}
               testID={`${testID}-cell-${rowIndex}-${colIndex}`}
               accessible
-              accessibilityRole="button"
+              accessibilityRole="imagebutton"
               accessibilityLabel={
                 tile
                   ? `Tile with value ${tile.value} at row ${rowIndex + 1}, column ${colIndex + 1}`

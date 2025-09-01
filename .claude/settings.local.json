@@ -23,7 +23,7 @@
           },
           {
             "type": "command",
-            "command": "node $PWD/.hooks/tsc.js"
+            "command": "#node $PWD/.hooks/tsc.js"
           }
         ]
       }

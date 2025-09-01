@@ -2,7 +2,7 @@ import { GameBoard } from '@/components/game/GameBoard';
 import { GameHeader } from '@/components/game/GameHeader';
 import { ThemedSafeAreaView } from '@/components/themed/ThemedSafeAreaView';
 import { ThemedView } from '@/components/themed/ThemedView';
-import { useGameStore } from '@/stores/gameStore';
+import { useGame } from '@/hooks/useGame';
 import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
 import { Dimensions, Platform, ScrollView, StyleSheet, Text } from 'react-native';
@@ -92,29 +92,14 @@ class GameErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 }
 
 export default function GameScreen() {
-  // Subscribe to Zustand store for real-time updates
-  const initGame = useGameStore((state) => state.initGame);
-  const resetGame = useGameStore((state) => state.resetGame);
-
+  // Use the useGame hook for game state and actions
+  const { gameState, actions, isLoading } = useGame();
   const { colors } = useTheme();
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  // Initialize game on mount
-  React.useEffect(() => {
-    const initializeGame = async () => {
-      setIsLoading(true);
-      initGame();
-      // Small delay for smoother initialization
-      setTimeout(() => setIsLoading(false), 300);
-    };
-
-    initializeGame();
-  }, [initGame]);
 
   // Handle new game action
   const handleNewGame = React.useCallback(() => {
-    resetGame();
-  }, [resetGame]);
+    actions.startNewGame();
+  }, [actions]);
 
   // Dynamic styles based on screen size and theme
   const dynamicStyles = React.useMemo(() => createGameScreenStyles(colors), [colors]);
@@ -180,12 +165,24 @@ export default function GameScreen() {
               </ThemedView>
             ) : (
               <>
-                {/* Game Header with scores and controls */}
-                <GameHeader style={dynamicStyles.header} onNewGame={handleNewGame} testID="game-header" />
+                {/* Game Header with Score Display and Controls */}
+                <GameHeader
+                  onNewGame={handleNewGame}
+                  testID="game-header"
+                  keyboardState={{
+                    activeDirections: new Set(),
+                    pressedDirection: null,
+                    isEnabled: Platform.OS === 'web',
+                  }}
+                />
 
-                {/* Main Game Board - central focal point */}
-                <ThemedView style={dynamicStyles.boardContainer} testID="board-container">
-                  <GameBoard style={dynamicStyles.board} testID="game-board" />
+                {/* Main Game Board Container */}
+                <ThemedView
+                  style={[styles.boardContainer, dynamicStyles.boardContainer]}
+                  testID="board-container"
+                  backgroundColor="background"
+                >
+                  <GameBoard testID="game-board" style={dynamicStyles.gameBoard} />
                 </ThemedView>
               </>
             )}

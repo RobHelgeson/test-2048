@@ -365,7 +365,8 @@ function tilesEqual(row1: (Tile | null)[], row2: (Tile | null)[]): boolean {
 
     if (tile1 === null && tile2 === null) continue;
     if (tile1 === null || tile2 === null) return false;
-    if (tile1.value !== tile2.value || tile1.col !== tile2.col) return false;
+    // Compare values and positions in the array, not stored coordinates
+    if (tile1.value !== tile2.value) return false;
   }
 
   return true;

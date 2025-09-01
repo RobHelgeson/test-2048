@@ -1,13 +1,13 @@
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { GameHeader } from '@/components/game/GameHeader';
-import { useGameStore } from '@/stores/gameStore';
+import { useGame } from '@/hooks/useGame';
 import { useThemeColors } from '@/hooks/useTheme';
 import { GameStatus } from '@/types';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import React from 'react';
 
 // Mock dependencies
-jest.mock('@/stores/gameStore', () => ({
-  useGameStore: jest.fn(),
+jest.mock('@/hooks/useGame', () => ({
+  useGame: jest.fn(),
 }));
 
 jest.mock('@/hooks/useTheme', () => ({
@@ -79,10 +79,28 @@ jest.mock('@/components/ui/Button', () => ({
 
 describe('GameHeader Component', () => {
   const mockGameState = {
+    board: [
+      [null, null, null, null],
+      [null, null, null, null],
+      [null, null, null, null],
+      [null, null, null, null],
+    ],
     score: 1024,
     bestScore: 4096,
     gameStatus: GameStatus.PLAYING,
+    moveCount: 0,
+    startTime: Date.now(),
+    lastMoveTime: Date.now(),
+    canUndo: false,
+    previousBoard: null,
+    previousScore: 0,
+  };
+
+  const mockActions = {
+    startNewGame: jest.fn(),
+    makeMove: jest.fn(),
     resetGame: jest.fn(),
+    continueAfterWin: jest.fn(),
   };
 
   const mockThemeColors = {
@@ -95,9 +113,12 @@ describe('GameHeader Component', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) =>
-      selector(mockGameState)
-    );
+    (useGame as jest.MockedFunction<typeof useGame>).mockReturnValue({
+      gameState: mockGameState,
+      actions: mockActions,
+      isLoading: false,
+      canMove: true,
+    });
     (useThemeColors as jest.Mock).mockReturnValue(mockThemeColors);
   });
 
@@ -136,9 +157,12 @@ describe('GameHeader Component', () => {
   describe('Score Display Tests', () => {
     it('handles zero scores correctly', () => {
       const zeroScoreState = { ...mockGameState, score: 0, bestScore: 0 };
-      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) =>
-        selector(zeroScoreState)
-      );
+      (useGame as jest.MockedFunction<typeof useGame>).mockReturnValue({
+        gameState: zeroScoreState,
+        actions: mockActions,
+        isLoading: false,
+        canMove: true,
+      });
 
       const { getByText } = render(<GameHeader />);
 
@@ -152,9 +176,12 @@ describe('GameHeader Component', () => {
         score: 1500000,
         bestScore: 2500000,
       };
-      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) =>
-        selector(largeScoreState)
-      );
+      (useGame as jest.MockedFunction<typeof useGame>).mockReturnValue({
+        gameState: largeScoreState,
+        actions: mockActions,
+        isLoading: false,
+        canMove: true,
+      });
 
       const { getByText } = render(<GameHeader />);
 
@@ -167,9 +194,12 @@ describe('GameHeader Component', () => {
 
       // Update score
       const updatedState = { ...mockGameState, score: 2048 };
-      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) =>
-        selector(updatedState)
-      );
+      (useGame as jest.MockedFunction<typeof useGame>).mockReturnValue({
+        gameState: updatedState,
+        actions: mockActions,
+        isLoading: false,
+        canMove: true,
+      });
 
       rerender(<GameHeader />);
 
@@ -188,7 +218,12 @@ describe('GameHeader Component', () => {
 
     it('displays "You Won!" status when game is won', () => {
       const wonState = { ...mockGameState, gameStatus: GameStatus.WON };
-      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) => selector(wonState));
+      (useGame as jest.MockedFunction<typeof useGame>).mockReturnValue({
+        gameState: wonState,
+        actions: mockActions,
+        isLoading: false,
+        canMove: true,
+      });
 
       const { getByText } = render(<GameHeader />);
 
@@ -197,7 +232,12 @@ describe('GameHeader Component', () => {
 
     it('displays "Game Over" status when game is lost', () => {
       const lostState = { ...mockGameState, gameStatus: GameStatus.LOST };
-      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) => selector(lostState));
+      (useGame as jest.MockedFunction<typeof useGame>).mockReturnValue({
+        gameState: lostState,
+        actions: mockActions,
+        isLoading: false,
+        canMove: false,
+      });
 
       const { getByText } = render(<GameHeader />);
 
@@ -212,7 +252,7 @@ describe('GameHeader Component', () => {
 
       fireEvent.press(newGameButton);
 
-      expect(mockGameState.resetGame).toHaveBeenCalledTimes(1);
+      expect(mockActions.resetGame).toHaveBeenCalledTimes(1);
     });
 
     it('calls onNewGame callback when provided', () => {
@@ -223,7 +263,7 @@ describe('GameHeader Component', () => {
       fireEvent.press(newGameButton);
 
       expect(mockOnNewGame).toHaveBeenCalledTimes(1);
-      expect(mockGameState.resetGame).toHaveBeenCalledTimes(1);
+      expect(mockActions.resetGame).toHaveBeenCalledTimes(1);
     });
 
     it('works without onNewGame callback', () => {
@@ -235,7 +275,7 @@ describe('GameHeader Component', () => {
         fireEvent.press(newGameButton);
       }).not.toThrow();
 
-      expect(mockGameState.resetGame).toHaveBeenCalledTimes(1);
+      expect(mockActions.resetGame).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -332,7 +372,12 @@ describe('GameHeader Component', () => {
 
       // Update score to trigger animation
       const newState = { ...mockGameState, score: 2048 };
-      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) => selector(newState));
+      (useGame as jest.MockedFunction<typeof useGame>).mockReturnValue({
+        gameState: newState,
+        actions: mockActions,
+        isLoading: false,
+        canMove: true,
+      });
 
       expect(() => {
         rerender(<GameHeader />);
@@ -344,7 +389,12 @@ describe('GameHeader Component', () => {
 
       // Update best score to trigger animation
       const newState = { ...mockGameState, bestScore: 8192 };
-      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation((selector) => selector(newState));
+      (useGame as jest.MockedFunction<typeof useGame>).mockReturnValue({
+        gameState: newState,
+        actions: mockActions,
+        isLoading: false,
+        canMove: true,
+      });
 
       expect(() => {
         rerender(<GameHeader />);
@@ -362,7 +412,25 @@ describe('GameHeader Component', () => {
     });
 
     it('handles missing game state gracefully', () => {
-      (useGameStore as jest.MockedFunction<typeof useGameStore>).mockImplementation(() => undefined as any);
+      // Provide minimal valid game state instead of undefined
+      const minimalGameState = {
+        board: [[null]],
+        score: 0,
+        bestScore: 0,
+        gameStatus: GameStatus.PLAYING,
+        moveCount: 0,
+        startTime: Date.now(),
+        lastMoveTime: Date.now(),
+        canUndo: false,
+        previousBoard: null,
+        previousScore: 0,
+      };
+      (useGame as jest.MockedFunction<typeof useGame>).mockReturnValue({
+        gameState: minimalGameState,
+        actions: mockActions,
+        isLoading: false,
+        canMove: false,
+      });
 
       expect(() => {
         render(<GameHeader />);

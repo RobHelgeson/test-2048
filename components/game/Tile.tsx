@@ -108,11 +108,19 @@ export function Tile({ tile, size, onPress, style, testID }: TileProps) {
       fontSize: fontSize,
       fontWeight: '700', // Bold weight for better readability
       textAlign: 'center',
-      // Prevent text from wrapping
-      numberOfLines: 1,
-      // Ensure text scales properly
-      includeFontPadding: false,
-      textAlignVertical: 'center',
+      // Platform-specific text properties to prevent truncation
+      ...Platform.select({
+        ios: {
+          lineHeight: fontSize * 1.2, // Explicit line height for iOS
+        },
+        android: {
+          includeFontPadding: false,
+          textAlignVertical: 'center',
+        },
+        web: {
+          lineHeight: fontSize * 1.2,
+        },
+      }),
     } as TextStyle,
   });
 

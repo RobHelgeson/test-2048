@@ -1,12 +1,13 @@
 import GameBoard from '@/components/game/GameBoard';
-import { useThemeColors, useTileColor, useTileTextColor } from '@/hooks/useTheme';
-import { useGameStore } from '@/stores/gameStore';
-import { GameStatus, Tile } from '@/types';
-import { fireEvent, render } from '@testing-library/react-native';
+import {useGame} from '@/hooks/useGame';
+import {useGestures} from '@/hooks/useGestures';
+import {useThemeColors, useTileColor, useTileTextColor} from '@/hooks/useTheme';
+import {GameStatus, Tile} from '@/types';
+import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 
 // Mock dependencies
-jest.mock('@/stores/gameStore');
+jest.mock('@/hooks/useGame');
 jest.mock('@/hooks/useTheme');
 jest.mock('@/hooks/useGestures');
 
@@ -41,13 +42,12 @@ jest.mock('@/components/game/Tile', () => ({
   },
 }));
 
-const mockUseGameStore = useGameStore as jest.MockedFunction<typeof useGameStore>;
+const mockUseGame = useGame as jest.MockedFunction<typeof useGame>;
 const mockUseThemeColors = useThemeColors as jest.MockedFunction<typeof useThemeColors>;
 const mockUseTileColor = useTileColor as jest.MockedFunction<typeof useTileColor>;
 const mockUseTileTextColor = useTileTextColor as jest.MockedFunction<typeof useTileTextColor>;
 
 // Mock gesture hook
-import { useGestures } from '@/hooks/useGestures';
 const mockUseGestures = useGestures as jest.MockedFunction<typeof useGestures>;
 
 // Mock theme colors - complete ThemeColors object
@@ -164,8 +164,8 @@ describe('GameBoard Component', () => {
     });
 
     // Default game store mock
-    mockUseGameStore.mockImplementation((selector: any) =>
-      selector({
+    mockUseGame.mockReturnValue({
+      gameState: {
         board: mockEmptyBoard,
         gameStatus: GameStatus.PLAYING,
         score: 0,
@@ -174,9 +174,18 @@ describe('GameBoard Component', () => {
         startTime: Date.now(),
         lastMoveTime: Date.now(),
         canUndo: false,
+        previousBoard: null,
+        previousScore: 0,
+      },
+      actions: {
+        startNewGame: jest.fn(),
         makeMove: mockMakeMove,
-      })
-    );
+        resetGame: jest.fn(),
+        continueAfterWin: jest.fn(),
+      },
+      isLoading: false,
+      canMove: true,
+    });
 
     // Default gesture hook mock
     mockUseGestures.mockReturnValue(mockGesture);
@@ -206,8 +215,8 @@ describe('GameBoard Component', () => {
     });
 
     it('renders with populated board state', () => {
-      mockUseGameStore.mockImplementation((selector: any) =>
-        selector({
+      mockUseGame.mockReturnValue({
+        gameState: {
           board: mockBoardWithTiles,
           gameStatus: GameStatus.PLAYING,
           score: 100,
@@ -216,8 +225,18 @@ describe('GameBoard Component', () => {
           startTime: Date.now(),
           lastMoveTime: Date.now(),
           canUndo: true,
-        })
-      );
+          previousBoard: null,
+          previousScore: 0,
+        },
+        actions: {
+          startNewGame: jest.fn(),
+          makeMove: mockMakeMove,
+          resetGame: jest.fn(),
+          continueAfterWin: jest.fn(),
+        },
+        isLoading: false,
+        canMove: true,
+      });
 
       const { getByTestId } = render(<GameBoard />);
 
@@ -326,8 +345,8 @@ describe('GameBoard Component', () => {
     });
 
     it('provides cell-specific accessibility labels for occupied cells', () => {
-      mockUseGameStore.mockImplementation((selector: any) =>
-        selector({
+      mockUseGame.mockReturnValue({
+      gameState: {
           board: mockBoardWithTiles,
           gameStatus: GameStatus.PLAYING,
           score: 0,
@@ -346,8 +365,8 @@ describe('GameBoard Component', () => {
     });
 
     it('updates accessibility label based on tile count', () => {
-      mockUseGameStore.mockImplementation((selector: any) =>
-        selector({
+      mockUseGame.mockReturnValue({
+      gameState: {
           board: mockBoardWithTiles,
           gameStatus: GameStatus.PLAYING,
           score: 0,
@@ -453,8 +472,8 @@ describe('GameBoard Component', () => {
       const initialLabel = getByTestId('game-board').props.accessibilityLabel;
 
       // Change board state
-      mockUseGameStore.mockImplementation((selector: any) =>
-        selector({
+      mockUseGame.mockReturnValue({
+      gameState: {
           board: mockBoardWithTiles,
           gameStatus: GameStatus.PLAYING,
           score: 0,
@@ -641,8 +660,8 @@ describe('GameBoard Component', () => {
     });
 
     it('handles undefined board state', () => {
-      mockUseGameStore.mockImplementation((selector: any) =>
-        selector({
+      mockUseGame.mockReturnValue({
+      gameState: {
           board: undefined as any,
           gameStatus: GameStatus.PLAYING,
           score: 0,

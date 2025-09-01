@@ -1,19 +1,9 @@
-import { processMove } from '@/services/gameEngine';
 import { storageService } from '@/services/storageService';
-import { Direction, GameState, GameStatus, Tile } from '@/types/game';
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { useGameStore } from '@/stores/gameStore';
+import { Direction, GameState, GameStatus } from '@/types/game';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-/**
- * Game action types for useReducer
- */
-export interface GameAction {
-  type: 'START_NEW_GAME' | 'MAKE_MOVE' | 'RESET_GAME' | 'CONTINUE_AFTER_WIN' | 'SET_ANIMATING' | 'LOAD_GAME';
-  payload?: {
-    direction?: Direction;
-    isAnimating?: boolean;
-    gameState?: GameState;
-  };
-}
+// GameAction interface removed - now using useGameStore actions directly
 
 /**
  * Return type for useGame hook
@@ -30,129 +20,8 @@ export interface UseGameReturn {
   canMove: boolean;
 }
 
-/**
- * Creates an empty 4x4 board
- */
-function createEmptyBoard(): (Tile | null)[][] {
-  return Array(4)
-    .fill(null)
-    .map(() => Array(4).fill(null));
-}
-
-/**
- * Generates a unique tile ID
- */
-function generateTileId(): string {
-  return `tile-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-}
-
-/**
- * Creates initial tiles for a new game
- */
-function createInitialTiles(): Tile[] {
-  const tiles: Tile[] = [];
-  const positions = [
-    { row: 0, col: 0 },
-    { row: 3, col: 3 },
-  ];
-
-  for (let i = 0; i < 2; i++) {
-    const value = Math.random() < 0.9 ? 2 : 4;
-    tiles.push({
-      id: generateTileId(),
-      value,
-      row: positions[i].row,
-      col: positions[i].col,
-      isNew: true,
-    });
-  }
-
-  return tiles;
-}
-
-/**
- * Creates initial game state
- */
-function createInitialGameState(): GameState {
-  const board = createEmptyBoard();
-  const initialTiles = createInitialTiles();
-
-  // Place initial tiles on board
-  for (const tile of initialTiles) {
-    board[tile.row][tile.col] = tile;
-  }
-
-  return {
-    board,
-    score: 0,
-    bestScore: 0,
-    gameStatus: GameStatus.PLAYING,
-    moveCount: 0,
-    startTime: Date.now(),
-    lastMoveTime: Date.now(),
-    canUndo: false,
-  };
-}
-
-/**
- * Game reducer function for managing game state transitions
- */
-function gameReducer(state: GameState, action: GameAction): GameState {
-  switch (action.type) {
-    case 'START_NEW_GAME': {
-      const newState = createInitialGameState();
-      return {
-        ...newState,
-        bestScore: state.bestScore, // Preserve best score
-      };
-    }
-
-    case 'MAKE_MOVE': {
-      if (!action.payload?.direction) {
-        return state;
-      }
-
-      // Validate move before processing
-      if (state.gameStatus === GameStatus.LOST) {
-        return state;
-      }
-
-      // Process the move using game engine
-      return processMove(state, action.payload.direction);
-    }
-
-    case 'RESET_GAME': {
-      const newState = createInitialGameState();
-      return {
-        ...newState,
-        bestScore: state.bestScore, // Preserve best score
-      };
-    }
-
-    case 'CONTINUE_AFTER_WIN': {
-      return {
-        ...state,
-        gameStatus: GameStatus.PLAYING,
-      };
-    }
-
-    case 'SET_ANIMATING': {
-      // Animation state is handled at component level
-      // This action is reserved for future animation state management
-      return state;
-    }
-
-    case 'LOAD_GAME': {
-      if (!action.payload?.gameState) {
-        return state;
-      }
-      return action.payload.gameState;
-    }
-
-    default:
-      return state;
-  }
-}
+// Helper functions and reducer logic moved to useGameStore
+// This hook now wraps the store and adds persistence logic
 
 /**
  * Validates if a move is possible
@@ -189,34 +58,68 @@ function validateMove(gameState: GameState, _direction: Direction): boolean {
  * ```
  */
 export function useGame(): UseGameReturn {
-  // Main game state managed by useReducer
-  const [gameState, dispatch] = useReducer(gameReducer, null, createInitialGameState);
+  // Get store state and actions
+  const store = useGameStore();
+
+  // Extract state and actions from store
+  const gameState: GameState = useMemo<GameState>(
+    () => ({
+      board: store.board,
+      score: store.score,
+      bestScore: store.bestScore,
+      gameStatus: store.gameStatus,
+      moveCount: store.moveCount,
+      startTime: store.startTime,
+      lastMoveTime: store.lastMoveTime,
+      canUndo: store.canUndo,
+      previousBoard: store.previousBoard,
+      previousScore: store.previousScore,
+    }),
+    [
+      store.board,
+      store.score,
+      store.bestScore,
+      store.gameStatus,
+      store.moveCount,
+      store.startTime,
+      store.lastMoveTime,
+      store.canUndo,
+      store.previousBoard,
+      store.previousScore,
+    ]
+  );
 
   // Local state for loading operations
   const [isLoading, setIsLoading] = useState(false);
+  // Flag to ensure persistence loading only happens once
+  const [hasLoadedPersistence, setHasLoadedPersistence] = useState(false);
 
-  // Load persisted game state on hook initialization
+  // Load persisted game state on hook initialization - only once
   useEffect(() => {
+    if (hasLoadedPersistence) return;
+
     const loadPersistedGame = async () => {
       setIsLoading(true);
       try {
         const persistedState = await storageService.loadGameState();
         if (persistedState) {
-          dispatch({
-            type: 'LOAD_GAME',
-            payload: { gameState: persistedState },
-          });
+          store.loadGame(persistedState);
+        } else {
+          // Initialize game with starting tiles if no persisted state
+          store.resetGame();
         }
       } catch (error) {
         console.error('Failed to load game state:', error);
-        // Continue with initial state if loading fails
+        // Initialize game with starting tiles if loading fails
+        store.resetGame();
       } finally {
         setIsLoading(false);
+        setHasLoadedPersistence(true);
       }
     };
 
     loadPersistedGame();
-  }, []);
+  }, [hasLoadedPersistence, store.loadGame, store.resetGame]);
 
   // Save game state after each update
   useEffect(() => {
@@ -230,15 +133,15 @@ export function useGame(): UseGameReturn {
     };
 
     // Only save after actual moves, not on initial state or loading
-    if (gameState.moveCount > 0 && !isLoading) {
+    if (gameState.moveCount > 0 && !isLoading && hasLoadedPersistence) {
       saveGameState();
     }
-  }, [gameState, isLoading]);
+  }, [gameState, isLoading, hasLoadedPersistence]);
 
   // Action creators with useCallback for performance
   const startNewGame = useCallback(() => {
-    dispatch({ type: 'START_NEW_GAME' });
-  }, []);
+    store.resetGame();
+  }, [store.resetGame]);
 
   const makeMove = useCallback(
     (direction: Direction) => {
@@ -246,21 +149,18 @@ export function useGame(): UseGameReturn {
         return;
       }
 
-      dispatch({
-        type: 'MAKE_MOVE',
-        payload: { direction },
-      });
+      store.makeMove(direction);
     },
-    [gameState]
+    [gameState, store.makeMove]
   );
 
   const resetGame = useCallback(() => {
-    dispatch({ type: 'RESET_GAME' });
-  }, []);
+    store.resetGame();
+  }, [store.resetGame]);
 
   const continueAfterWin = useCallback(() => {
-    dispatch({ type: 'CONTINUE_AFTER_WIN' });
-  }, []);
+    store.continueAfterWin();
+  }, [store.continueAfterWin]);
 
   // Calculate if moves are currently possible
   const canMove = gameState.gameStatus !== GameStatus.LOST && !isLoading;

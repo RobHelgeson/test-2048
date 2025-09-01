@@ -1,11 +1,11 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
-import { Dimensions } from 'react-native';
-import { GameStatus } from '@/types/game';
+import GameScreen from '@/app/(tabs)';
+import { ThemeProvider } from '@/components/themed/ThemeProvider';
 import { useGame } from '@/hooks/useGame';
 import { useGameStore } from '@/stores/gameStore';
-import { ThemeProvider } from '@/components/themed/ThemeProvider';
-import GameScreen from '@/app/(tabs)/index';
+import { GameStatus } from '@/types/game';
+import { fireEvent, render, screen } from '@testing-library/react-native';
+import React from 'react';
+import { Dimensions } from 'react-native';
 
 // Mock the hooks
 jest.mock('@/hooks/useGame');
@@ -237,7 +237,8 @@ describe('Complete Game Screen Integration', () => {
 
       fireEvent.press(newGameButton);
 
-      expect(mockActions.resetGame).toHaveBeenCalledTimes(1);
+      // The integration test expects startNewGame to be called when the new game button is pressed
+      expect(mockActions.startNewGame).toHaveBeenCalledTimes(1);
     });
   });
 

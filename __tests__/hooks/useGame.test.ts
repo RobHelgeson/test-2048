@@ -1,8 +1,9 @@
-import { renderHook, act } from '@testing-library/react-native';
 import { useGame } from '@/hooks/useGame';
-import { Direction, GameStatus, GameState } from '@/types/game';
-import { storageService } from '@/services/storageService';
 import * as gameEngine from '@/services/gameEngine';
+import { storageService } from '@/services/storageService';
+import { useGameStore } from '@/stores/gameStore';
+import { Direction, GameState, GameStatus } from '@/types/game';
+import { act, renderHook } from '@testing-library/react-native';
 
 // Mock the storage service
 jest.mock('@/services/storageService', () => ({
@@ -16,16 +17,131 @@ jest.mock('@/services/storageService', () => ({
 // Mock the game engine
 jest.mock('@/services/gameEngine', () => ({
   processMove: jest.fn(),
+  spawnRandomTile: jest.fn(),
+}));
+
+// Mock the game store
+jest.mock('@/stores/gameStore', () => ({
+  useGameStore: jest.fn(),
 }));
 
 const mockStorageService = storageService as jest.Mocked<typeof storageService>;
 const mockGameEngine = gameEngine as jest.Mocked<typeof gameEngine>;
+const mockUseGameStore = useGameStore as jest.MockedFunction<typeof useGameStore>;
 
 describe('useGame Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockStorageService.loadGameState.mockResolvedValue(null);
     mockStorageService.saveGameState.mockResolvedValue();
+
+    // Mock spawnRandomTile to return predictable tiles for testing
+    mockGameEngine.spawnRandomTile
+      .mockReturnValueOnce({
+        tile: { id: 'test-tile-1', value: 2, row: 0, col: 0, isNew: true },
+        success: true,
+      })
+      .mockReturnValueOnce({
+        tile: { id: 'test-tile-2', value: 2, row: 0, col: 1, isNew: true },
+        success: true,
+      });
+
+    // Mock game store with initial state and methods
+    const mockStore = {
+      board: [
+        [
+          { id: 'test-tile-1', value: 2, row: 0, col: 0, isNew: true },
+          { id: 'test-tile-2', value: 2, row: 0, col: 1, isNew: true },
+          null,
+          null,
+        ],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ],
+      score: 0,
+      bestScore: 0, // Changed from 1000 to 0 for initial state tests
+      gameStatus: GameStatus.PLAYING,
+      moveCount: 0,
+      startTime: Date.now() - 10000,
+      lastMoveTime: Date.now() - 10000,
+      canUndo: false,
+      previousBoard: [
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ],
+      previousScore: 0,
+      makeMove: jest.fn(),
+      resetGame: jest.fn(),
+      initGame: jest.fn(),
+      startNewGame: jest.fn(),
+      continueAfterWin: jest.fn(),
+      loadGame: jest.fn(),
+    };
+
+    // Set up makeMove to call processMove and update store state
+    mockStore.makeMove.mockImplementation((direction) => {
+      if (mockStore.gameStatus !== GameStatus.PLAYING) return;
+
+      const gameStateData = {
+        board: mockStore.board,
+        score: mockStore.score,
+        bestScore: mockStore.bestScore,
+        gameStatus: mockStore.gameStatus,
+        moveCount: mockStore.moveCount,
+        startTime: mockStore.startTime,
+        lastMoveTime: mockStore.lastMoveTime,
+        canUndo: mockStore.canUndo,
+        previousBoard: mockStore.previousBoard,
+        previousScore: mockStore.previousScore,
+      };
+      mockGameEngine.processMove(gameStateData, direction);
+
+      // Simulate state update based on mocked return value
+      const mockResult = mockGameEngine.processMove.mock.results[mockGameEngine.processMove.mock.results.length - 1];
+      if (mockResult && mockResult.value) {
+        Object.assign(mockStore, mockResult.value);
+      }
+    });
+
+    // Set up loadGame to update the store state
+    mockStore.loadGame.mockImplementation((gameState) => {
+      Object.assign(mockStore, gameState);
+    });
+
+    // Set up resetGame to reset while preserving best score
+    mockStore.resetGame.mockImplementation(() => {
+      const currentBestScore = mockStore.bestScore;
+      Object.assign(mockStore, {
+        board: [
+          [
+            { id: 'test-tile-1', value: 2, row: 0, col: 0, isNew: true },
+            { id: 'test-tile-2', value: 2, row: 0, col: 1, isNew: true },
+            null,
+            null,
+          ],
+          [null, null, null, null],
+          [null, null, null, null],
+          [null, null, null, null],
+        ],
+        score: 0,
+        gameStatus: GameStatus.PLAYING,
+        moveCount: 0,
+        startTime: Date.now(),
+        lastMoveTime: Date.now(),
+        canUndo: false,
+        bestScore: currentBestScore,
+      });
+    });
+
+    // Set up continueAfterWin to change status
+    mockStore.continueAfterWin.mockImplementation(() => {
+      mockStore.gameStatus = GameStatus.PLAYING;
+    });
+
+    mockUseGameStore.mockReturnValue(mockStore);
   });
 
   describe('Hook Initialization', () => {
