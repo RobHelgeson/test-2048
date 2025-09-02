@@ -234,7 +234,7 @@ export function ThemedTileText({
   weight = 'bold',
   ...props
 }: ThemedTextProps & { tileValue?: number }) {
-  const colors = useThemeColors();
+  // const colors = useThemeColors(); // Available for future theme customization
 
   // Determine text color based on tile value
   const textColor = tileValue && tileValue <= 4 ? 'text' : 'textOnPrimary';

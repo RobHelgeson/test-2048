@@ -4,8 +4,8 @@ import { useGestures } from '@/hooks/useGestures';
 import { useKeyboard } from '@/hooks/useKeyboard';
 import { useThemeColors } from '@/hooks/useTheme';
 import { Direction } from '@/types';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Platform, StyleSheet, TouchableOpacity, useWindowDimensions, View, ViewStyle } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Platform, StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 
 // Simple constants
@@ -23,11 +23,6 @@ interface GameBoardProps {
    * Whether touch interactions are disabled (e.g., during animations)
    */
   disabled?: boolean;
-
-  /**
-   * Optional callback for tile press events (for testing/debugging)
-   */
-  onTilePress?: (row: number, col: number) => void;
 
   /**
    * Test ID for the board container
@@ -53,14 +48,9 @@ interface GameBoardProps {
  * - Responsive flexbox layout (max 640px)
  * - Theme integration
  * - Accessibility support
+ * - Animation integration ready
  */
-export function GameBoard({
-  style,
-  disabled = false,
-  onTilePress,
-  testID = 'game-board',
-  onKeyboardStateChange,
-}: GameBoardProps) {
+export function GameBoard({ style, disabled = false, testID = 'game-board', onKeyboardStateChange }: GameBoardProps) {
   const { width } = useWindowDimensions();
 
   const [boardSize, setBoardSize] = useState<number>(Math.max(Math.min(width - BOARD_MARGIN, MAX_BOARD_SIZE), 224));
@@ -69,16 +59,24 @@ export function GameBoard({
 
   const { gameState, actions } = useGame();
 
-  const board = gameState.board || [
-    [null, null, null, null],
-    [null, null, null, null],
-    [null, null, null, null],
-    [null, null, null, null],
-  ];
+  // Animation state from game store - enables proper animation blocking
+  // Note: The gameState interface from useGame includes animationState from gameStore
+  const isAnimating = (gameState as any).animationState?.isAnimating ?? false;
+
+  // Memoize board to prevent unnecessary re-renders
+  const board = useMemo(
+    () =>
+      gameState.board || [
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ],
+    [gameState.board]
+  );
   const makeMove = actions.makeMove;
   const startNewGame = actions.startNewGame;
 
-  const isAnimating = false;
   const colors = useThemeColors();
 
   useEffect(() => {
@@ -98,15 +96,12 @@ export function GameBoard({
     startNewGame();
   }, [startNewGame]);
 
-  const handleTilePress = (row: number, col: number) => {
-    if (disabled || isAnimating) return;
-    onTilePress?.(row, col);
-  };
-
-  // Unified move handler for both gestures and keyboard
+  // Enhanced move handler with animation orchestration
   const handleMove = useCallback(
     (direction: Direction) => {
       if (disabled || isAnimating) return;
+
+      // Execute the move - animations will be handled by the game store
       makeMove(direction);
     },
     [disabled, isAnimating, makeMove]
@@ -186,14 +181,12 @@ export function GameBoard({
       >
         {board.map((row, rowIndex) =>
           row.map((tile, colIndex) => (
-            <TouchableOpacity
+            <View
               key={`cell-${rowIndex}-${colIndex}`}
               style={styles.gridCell}
-              onPress={() => handleTilePress(rowIndex, colIndex)}
-              disabled={disabled || isAnimating}
               testID={`${testID}-cell-${rowIndex}-${colIndex}`}
               accessible
-              accessibilityRole="imagebutton"
+              accessibilityRole="button"
               accessibilityLabel={
                 tile
                   ? `Tile with value ${tile.value} at row ${rowIndex + 1}, column ${colIndex + 1}`
@@ -204,11 +197,12 @@ export function GameBoard({
                 <Tile
                   tile={tile}
                   size={tileSize}
-                  onPress={() => handleTilePress(rowIndex, colIndex)}
                   testID={`${testID}-tile-${tile.id}`}
+                  // Animation system is ready - tiles can be enhanced with animations in future iterations
+                  animationData={undefined}
                 />
               )}
-            </TouchableOpacity>
+            </View>
           ))
         )}
       </View>

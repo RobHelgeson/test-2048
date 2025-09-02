@@ -26,7 +26,7 @@ module.exports = {
       statements: 80,
     },
   },
-  transformIgnorePatterns: ['node_modules/(?!(react-native|@react-native|expo|@expo)/)'],
+  transformIgnorePatterns: ['node_modules/(?!(react-native|@react-native|expo|@expo|react-native-reanimated)/)'],
   // Extended timeout for integration tests
   testTimeout: 10000,
   // Integration test specific patterns

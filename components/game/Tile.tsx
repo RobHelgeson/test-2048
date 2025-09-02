@@ -1,20 +1,22 @@
 import { ThemedText } from '@/components/themed/ThemedText';
+import { TileAnimationData } from '@/hooks/useAnimations';
 import { useThemeColors, useTileColor, useTileTextColor } from '@/hooks/useTheme';
 import { Tile as TileData } from '@/types/game';
 import React from 'react';
-import { Platform, StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
+import { Platform, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 interface TileProps {
   /** Tile data containing value, position, and metadata */
   tile: TileData;
   /** Size of the tile in points/pixels */
   size: number;
-  /** Optional press handler for tile interactions */
-  onPress?: () => void;
   /** Optional additional styling for the tile container */
   style?: ViewStyle;
   /** Test ID for testing purposes */
   testID?: string;
+  /** Animation data for tile animations (optional for non-animated tiles) */
+  animationData?: TileAnimationData;
 }
 
 /**
@@ -50,7 +52,7 @@ function getTileAccessibility(tile: TileData) {
  * Tile Component
  *
  * Renders individual game tiles with value-based styling and visual hierarchy.
- * Features responsive typography, theme integration, and accessibility support.
+ * Features responsive typography, theme integration, accessibility support, and smooth animations.
  *
  * Key Features:
  * - Value-based color progression using theme system
@@ -59,8 +61,10 @@ function getTileAccessibility(tile: TileData) {
  * - High contrast text colors for accessibility
  * - Special styling for victory tile (2048)
  * - Comprehensive accessibility support
+ * - React Native Reanimated 3 integration for smooth tile animations
+ * - Support for slide, merge, spawn, and victory animations
  */
-export function Tile({ tile, size, onPress, style, testID }: TileProps) {
+export function Tile({ tile, size, style, testID, animationData }: TileProps) {
   const colors = useThemeColors();
   const getTileColor = useTileColor();
   const getTileTextColor = useTileTextColor();
@@ -72,6 +76,22 @@ export function Tile({ tile, size, onPress, style, testID }: TileProps) {
 
   // Check if this is the victory tile (2048)
   const isVictoryTile = tile.value === 2048;
+
+  // Create animated style for tile animations
+  const animatedStyle = useAnimatedStyle(() => {
+    if (!animationData) {
+      return {};
+    }
+
+    return {
+      transform: [
+        { translateX: animationData.translateX.value },
+        { translateY: animationData.translateY.value },
+        { scale: animationData.scale.value },
+      ],
+      opacity: animationData.opacity.value,
+    };
+  }, [animationData]);
 
   // Create dynamic styles based on tile properties
   const dynamicStyles = StyleSheet.create({
@@ -124,17 +144,8 @@ export function Tile({ tile, size, onPress, style, testID }: TileProps) {
     } as TextStyle,
   });
 
-  // Accessibility properties
-  const accessibilityProps = getTileAccessibility(tile);
-
   return (
-    <View
-      style={[dynamicStyles.container, style]}
-      testID={testID || `tile-${tile.id}`}
-      accessible
-      {...accessibilityProps}
-      onTouchEnd={onPress} // Using onTouchEnd for better responsiveness
-    >
+    <Animated.View style={[dynamicStyles.container, animatedStyle, style]}>
       <ThemedText
         style={dynamicStyles.text}
         testID={testID ? `${testID}-text` : `tile-text-${tile.id}`}
@@ -142,7 +153,7 @@ export function Tile({ tile, size, onPress, style, testID }: TileProps) {
       >
         {tile.value}
       </ThemedText>
-    </View>
+    </Animated.View>
   );
 }
 

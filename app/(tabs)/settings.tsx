@@ -1,10 +1,10 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useCurrentTheme, useThemeActions, useThemeColors } from '@/stores/themeStore';
 import { ClassicTheme } from '@/constants/themes/ClassicTheme';
 import { CoolTheme } from '@/constants/themes/CoolTheme';
+import { useCurrentTheme, useThemeActions, useThemeColors } from '@/stores/themeStore';
 import { ThemeType } from '@/types/theme';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const THEMES = {
   classic: ClassicTheme,

@@ -1,5 +1,68 @@
 require('@testing-library/jest-native/extend-expect');
 
+// Mock React Native Reanimated before setup
+jest.mock('react-native-reanimated', () => {
+  const View = require('react-native').View;
+
+  const mockSharedValue = (initialValue) => ({
+    value: initialValue,
+  });
+
+  const mockUseAnimatedStyle = (callback) => {
+    return callback();
+  };
+
+  const mockWithSpring = (value, config, callback) => {
+    if (callback) {
+      // Execute callback in next tick to simulate async behavior
+      setTimeout(() => callback(true), 0);
+    }
+    return value;
+  };
+
+  const mockWithTiming = (value, config, callback) => {
+    if (callback) {
+      setTimeout(() => callback(true), 0);
+    }
+    return value;
+  };
+
+  const mockWithSequence = (...animations) => {
+    return animations[animations.length - 1];
+  };
+
+  const mockWithDelay = (delay, animation) => {
+    // Return the animation, delay will be handled by Jest fake timers
+    return animation;
+  };
+
+  const mockRunOnJS = (callback) => {
+    return (...args) => callback(...args);
+  };
+
+  return {
+    useSharedValue: mockSharedValue,
+    useAnimatedStyle: mockUseAnimatedStyle,
+    withSpring: mockWithSpring,
+    withTiming: mockWithTiming,
+    withSequence: mockWithSequence,
+    withDelay: mockWithDelay,
+    runOnJS: mockRunOnJS,
+    Easing: {
+      out: jest.fn((fn) => fn),
+      inOut: jest.fn((fn) => fn),
+      quad: jest.fn(() => 'quad'),
+      back: jest.fn((value) => `back(${value})`),
+      elastic: jest.fn((value) => `elastic(${value})`),
+      ease: jest.fn(() => 'ease'),
+    },
+    default: View,
+    setUpTests: jest.fn(),
+    // Add other necessary exports
+    View,
+  };
+});
+
 // Suppress React Native warnings for tests
 console.warn = jest.fn();
 console.error = jest.fn();

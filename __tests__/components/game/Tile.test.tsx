@@ -161,7 +161,7 @@ describe('Tile Component', () => {
       const { getByTestId } = render(<Tile tile={tile} size={80} onPress={mockOnPress} testID="interactive-tile" />);
 
       const tileContainer = getByTestId('interactive-tile');
-      fireEvent(tileContainer, 'touchEnd');
+      fireEvent.press(tileContainer);
 
       expect(mockOnPress).toHaveBeenCalledTimes(1);
     });
@@ -171,7 +171,7 @@ describe('Tile Component', () => {
       const { getByTestId } = render(<Tile tile={tile} size={80} testID="no-handler" />);
 
       const tileContainer = getByTestId('no-handler');
-      expect(() => fireEvent(tileContainer, 'touchEnd')).not.toThrow();
+      expect(() => fireEvent.press(tileContainer)).not.toThrow();
     });
   });
 

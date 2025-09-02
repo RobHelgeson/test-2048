@@ -662,9 +662,9 @@
     {
       "id": "b5bfce4d-3d40-4290-a8cf-66df0267a30e",
       "name": "Story 4.3: Tile Movement Animations",
-      "description": "Implement smooth tile animations when making moves to visually track tile movements and understand game state changes.",
-      "notes": "Depends on input controls - adds visual feedback through animations",
-      "status": "pending",
+      "description": "Implement smooth tile animations when making moves to visually track tile movements and understand game state changes.\n\n## Acceptance Criteria\n\n1. React Native Reanimated 3 configured for tile animations\n2. Tile sliding animations with ~200ms duration for snappy feel\n3. Tile merge animations with ~100ms duration and visual effect\n4. Animation timing functions provide satisfying, natural movement\n5. Animations handle complex scenarios (multiple merges, long slides)\n6. Performance optimization ensures 60fps during animations per NFR1\n7. Animation testing verifies smooth movement across all supported devices",
+      "notes": "Depends on input controls - adds visual feedback through animations\n\n**QA REVIEW COMPLETED - GATE STATUS: FAIL**\n\n**Key QA Findings (2025-09-01):**\n\n**CRITICAL ISSUES (BLOCKING):**\n1. **Test Infrastructure Failure**: All React Native Reanimated animation tests are failing due to improper mocking setup - prevents validation of animation functionality\n2. **Performance Risk**: setTimeout usage in animation delays violates 60fps performance requirements (NFR1) - should use worklet-based timing mechanisms\n3. **Hook Architecture**: Original implementation violated React rules by calling useSharedValue in callbacks - fixed during QA review\n\n**QA REFACTORING PERFORMED:**\n- Fixed hook architecture violation: converted createTileAnimationData to getTileAnimationConfig\n- Replaced withDelay with setTimeout for delayed animations (needs further improvement)  \n- Fixed ESLint violations and dependency array issues\n- Updated test expectations to match refactored API\n\n**QUALITY SCORE: 40/100** (2 high issues, 1 medium issue)\n\n**IMMEDIATE ACTIONS REQUIRED:**\n1. Fix React Native Reanimated test mocking to enable test execution\n2. Replace setTimeout with proper worklet-based delay mechanisms\n3. Add comprehensive integration tests for animation + game logic\n4. Verify 60fps performance requirements on actual devices\n\n**FILES MODIFIED DURING QA:**\n- hooks/useAnimations.ts (critical architecture fixes)\n- __tests__/hooks/useAnimations.test.ts (updated API expectations)\n\nGate Decision: docs/qa/gates/4.3-tile-movement-animations.yml\nStatus: Changes Required - Critical issues must be resolved before production",
+      "status": "in_progress",
       "dependencies": [
         {
           "taskId": "b5f680d8-e692-4f29-bc7e-51f10b1a3687"
@@ -674,7 +674,7 @@
         }
       ],
       "createdAt": "2025-08-24T13:32:59.807Z",
-      "updatedAt": "2025-08-24T13:32:59.807Z",
+      "updatedAt": "2025-09-01T19:09:47.122Z",
       "relatedFiles": [
         {
           "path": "docs/stories/4.3-story.md",
@@ -1233,14 +1233,14 @@
       "id": "788e8161-e487-41b8-9f23-5de5057b31d8",
       "name": "Add architecture documentation",
       "description": "Create or update documentation explaining the new layered architecture, the relationship between useGame and useGameStore, and guidelines for future development.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "3dafa9b2-859a-4103-abf8-5f10dc89d6bc"
         }
       ],
       "createdAt": "2025-08-31T20:15:09.599Z",
-      "updatedAt": "2025-08-31T20:15:09.599Z",
+      "updatedAt": "2025-09-01T18:48:03.928Z",
       "relatedFiles": [
         {
           "path": "hooks/useGame.ts",
@@ -1255,7 +1255,9 @@
       ],
       "implementationGuide": "1. Add comments to useGame explaining its role as public API\n2. Add comments to useGameStore marking it as internal\n3. Update any existing architecture docs if present\n4. Document the layered architecture pattern\n5. Explain why components should only use useGame\n6. Add migration notes for any future developers",
       "verificationCriteria": "Clear documentation exists explaining the architecture, roles are well-defined, future maintenance is simplified",
-      "analysisResult": "Refactor the game state management architecture to eliminate duplication between useGame hook and useGameStore. Implement a layered architecture where useGameStore handles pure state management internally while useGame provides the public API with persistence and side effects. All components should use only useGame, creating a single source of truth for game state."
+      "analysisResult": "Refactor the game state management architecture to eliminate duplication between useGame hook and useGameStore. Implement a layered architecture where useGameStore handles pure state management internally while useGame provides the public API with persistence and side effects. All components should use only useGame, creating a single source of truth for game state.",
+      "summary": "Successfully completed architecture documentation task. Added comprehensive documentation explaining the layered architecture pattern with useGame as public API and useGameStore as internal implementation. Updated all code files with proper comments and architectural guidelines. Enhanced existing frontend architecture documentation with detailed usage patterns and migration guidelines. Architecture roles are clearly defined, component usage patterns are documented, and future maintenance guidelines are established.",
+      "completedAt": "2025-09-01T18:48:03.924Z"
     }
   ]
 }

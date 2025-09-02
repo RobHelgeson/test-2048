@@ -1,9 +1,9 @@
 import GameBoard from '@/components/game/GameBoard';
-import {useGame} from '@/hooks/useGame';
-import {useGestures} from '@/hooks/useGestures';
-import {useThemeColors, useTileColor, useTileTextColor} from '@/hooks/useTheme';
-import {GameStatus, Tile} from '@/types';
-import {fireEvent, render} from '@testing-library/react-native';
+import { useGame } from '@/hooks/useGame';
+import { useGestures } from '@/hooks/useGestures';
+import { useThemeColors, useTileColor, useTileTextColor } from '@/hooks/useTheme';
+import { GameStatus, Tile } from '@/types';
+import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
 
 // Mock dependencies
@@ -346,7 +346,7 @@ describe('GameBoard Component', () => {
 
     it('provides cell-specific accessibility labels for occupied cells', () => {
       mockUseGame.mockReturnValue({
-      gameState: {
+        gameState: {
           board: mockBoardWithTiles,
           gameStatus: GameStatus.PLAYING,
           score: 0,
@@ -355,8 +355,18 @@ describe('GameBoard Component', () => {
           startTime: Date.now(),
           lastMoveTime: Date.now(),
           canUndo: false,
-        })
-      );
+          previousBoard: null,
+          previousScore: 0,
+        },
+        actions: {
+          startNewGame: jest.fn(),
+          makeMove: jest.fn(),
+          resetGame: jest.fn(),
+          continueAfterWin: jest.fn(),
+        },
+        isLoading: false,
+        canMove: true,
+      });
 
       const { getByTestId } = render(<GameBoard />);
       const cell = getByTestId('game-board-cell-0-0');
@@ -366,7 +376,7 @@ describe('GameBoard Component', () => {
 
     it('updates accessibility label based on tile count', () => {
       mockUseGame.mockReturnValue({
-      gameState: {
+        gameState: {
           board: mockBoardWithTiles,
           gameStatus: GameStatus.PLAYING,
           score: 0,
@@ -375,8 +385,18 @@ describe('GameBoard Component', () => {
           startTime: Date.now(),
           lastMoveTime: Date.now(),
           canUndo: false,
-        })
-      );
+          previousBoard: null,
+          previousScore: 0,
+        },
+        actions: {
+          startNewGame: jest.fn(),
+          makeMove: jest.fn(),
+          resetGame: jest.fn(),
+          continueAfterWin: jest.fn(),
+        },
+        isLoading: false,
+        canMove: true,
+      });
 
       const { getByTestId } = render(<GameBoard />);
       const board = getByTestId('game-board');
@@ -418,8 +438,8 @@ describe('GameBoard Component', () => {
       const mockOnTilePress = jest.fn();
 
       // Mock animation state (using gameStatus as placeholder)
-      mockUseGameStore.mockImplementation((selector: any) => {
-        const mockState = {
+      mockUseGame.mockReturnValue({
+        gameState: {
           board: mockEmptyBoard,
           gameStatus: GameStatus.PLAYING,
           score: 0,
@@ -428,8 +448,17 @@ describe('GameBoard Component', () => {
           startTime: Date.now(),
           lastMoveTime: Date.now(),
           canUndo: false,
-        };
-        return selector(mockState);
+          previousBoard: null,
+          previousScore: 0,
+        },
+        actions: {
+          startNewGame: jest.fn(),
+          makeMove: mockMakeMove,
+          resetGame: jest.fn(),
+          continueAfterWin: jest.fn(),
+        },
+        isLoading: false,
+        canMove: true,
       });
 
       const { getByTestId } = render(<GameBoard onTilePress={mockOnTilePress} />);
@@ -473,7 +502,7 @@ describe('GameBoard Component', () => {
 
       // Change board state
       mockUseGame.mockReturnValue({
-      gameState: {
+        gameState: {
           board: mockBoardWithTiles,
           gameStatus: GameStatus.PLAYING,
           score: 0,
@@ -482,8 +511,18 @@ describe('GameBoard Component', () => {
           startTime: Date.now(),
           lastMoveTime: Date.now(),
           canUndo: false,
-        })
-      );
+          previousBoard: null,
+          previousScore: 0,
+        },
+        actions: {
+          startNewGame: jest.fn(),
+          makeMove: jest.fn(),
+          resetGame: jest.fn(),
+          continueAfterWin: jest.fn(),
+        },
+        isLoading: false,
+        canMove: true,
+      });
 
       rerender(<GameBoard />);
 
@@ -661,7 +700,7 @@ describe('GameBoard Component', () => {
 
     it('handles undefined board state', () => {
       mockUseGame.mockReturnValue({
-      gameState: {
+        gameState: {
           board: undefined as any,
           gameStatus: GameStatus.PLAYING,
           score: 0,
@@ -670,9 +709,18 @@ describe('GameBoard Component', () => {
           startTime: Date.now(),
           lastMoveTime: Date.now(),
           canUndo: false,
+          previousBoard: null,
+          previousScore: 0,
+        },
+        actions: {
+          startNewGame: jest.fn(),
           makeMove: mockMakeMove,
-        })
-      );
+          resetGame: jest.fn(),
+          continueAfterWin: jest.fn(),
+        },
+        isLoading: false,
+        canMove: true,
+      });
 
       // Should not crash, though functionality may be limited
       expect(() => render(<GameBoard />)).not.toThrow();
