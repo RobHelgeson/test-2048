@@ -9,6 +9,7 @@ I want to create a new Expo project with TypeScript and essential development to
 so that I have a solid foundation for cross-platform 2048 development.
 
 ### Acceptance Criteria
+
 1. Expo project initialized with SDK 50+ using TypeScript template
 2. Development environment includes Expo Dev Client configuration
 3. TypeScript configuration extends "expo/tsconfig.base" with strict mode enabled
@@ -24,6 +25,7 @@ I want to configure EAS Build for all target platforms,
 so that I can deploy the application to iOS, Android, and web from day one.
 
 ### Acceptance Criteria
+
 1. EAS CLI installed and project configured with eas.json for all platforms
 2. app.config.ts configured with proper bundle identifiers and platform settings
 3. Development builds successfully complete for iOS, Android, and web
@@ -39,8 +41,9 @@ I want to implement file-based routing with Expo Router,
 so that I have navigation foundation and can add screens systematically.
 
 ### Acceptance Criteria
+
 1. Expo Router installed and configured with file-based routing
-2. Root layout (_layout.tsx) created with proper error boundaries
+2. Root layout (\_layout.tsx) created with proper error boundaries
 3. Basic app structure includes home screen and placeholder settings screen
 4. Navigation works correctly across all platforms (iOS, Android, web)
 5. Deep linking configured and testable
@@ -54,6 +57,7 @@ I want comprehensive testing infrastructure in place,
 so that I can ensure code quality and learn testing patterns throughout development.
 
 ### Acceptance Criteria
+
 1. Jest configured for unit testing with TypeScript support
 2. React Native Testing Library installed and configured for component testing
 3. Test scripts added to package.json for different test types
@@ -69,9 +73,10 @@ I want to deploy a functional "Hello World" app to all platforms,
 so that I can verify the complete development and deployment pipeline works.
 
 ### Acceptance Criteria
+
 1. Simple interactive Hello World screen displaying platform information
 2. App successfully builds and deploys to iOS simulator/device
-3. App successfully builds and deploys to Android emulator/device  
+3. App successfully builds and deploys to Android emulator/device
 4. App successfully builds and deploys to web hosting (Vercel/Netlify)
 5. Over-the-air update capability demonstrated with minor content change
 6. Performance baseline established (load time, memory usage)

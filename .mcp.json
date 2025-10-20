@@ -2,16 +2,23 @@
   "mcpServers": {
     "context7": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"]
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
     },
     "playwright": {
       "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+      "args": [
+        "@playwright/mcp@latest"
+      ]
     },
     "shrimp-task-manager": {
       "type": "stdio",
       "command": "npx",
-      "args": ["mcp-shrimp-task-manager"],
+      "args": [
+        "mcp-shrimp-task-manager"
+      ],
       "env": {
         "ENABLE_GUI": "true",
         "WEB_PORT": "4400",

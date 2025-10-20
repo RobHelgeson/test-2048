@@ -22,6 +22,6 @@ The learning-first approach prioritizes deep understanding over rapid delivery, 
 
 ## Change Log
 
-| Date | Version | Description | Author |
-|------|---------|-------------|--------|
-| 2025-08-17 | 1.0 | Initial PRD creation with goals and background context | PM Agent |
+| Date       | Version | Description                                            | Author   |
+| ---------- | ------- | ------------------------------------------------------ | -------- |
+| 2025-08-17 | 1.0     | Initial PRD creation with goals and background context | PM Agent |

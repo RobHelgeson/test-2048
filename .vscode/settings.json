@@ -1,16 +1,43 @@
 {
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   },
+  "files.associations": {
+    "*.json": "jsonc"
+  },
+  "emmet.includeLanguages": {
+    "typescript": "typescriptreact",
+    "javascript": "javascriptreact"
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.expo": true,
+    "**/dist": true,
+    "**/web-build": true
+  },
   "cSpell.words": [
+    "assetmap",
     "AUTOINCREMENT",
     "bmad",
     "bridgeless",
     "Contentful",
+    "nent",
     "prebuild",
+    "Pressable",
     "rgba",
+    "robhelgeson",
+    "rollouts",
+    "romeovs",
+    "unimodules",
+    "unittests",
     "WCAG",
     "Wireframes",
     "worklet",

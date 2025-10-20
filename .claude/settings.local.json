@@ -3,12 +3,30 @@
     "allow": [
       "mcp__context7",
       "mcp__playwright",
-      "WebSearch"
+      "mcp__serena",
+      "mcp__shrimp-task-manager",
+      "WebSearch",
+      "Bash(npm ls:*)",
+      "Bash(node:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "context7",
-    "playwright"
-  ]
+  "enabledMcpjsonServers": ["context7", "playwright", "serena", "shrimp-task-manager"],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path // empty' | xargs -I {} npx --yes prettier --write {} 2>/dev/null || true"
+          },
+          {
+            "type": "command",
+            "command": "#node $PWD/.hooks/tsc.js"
+          }
+        ]
+      }
+    ]
+  }
 }

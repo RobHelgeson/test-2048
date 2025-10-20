@@ -1,0 +1,81 @@
+# Required fields (keep these first)
+schema: 1
+story: '4.3'
+story_title: 'Tile Movement Animations'
+gate: 'CONCERNS'
+status_reason: 'Animation system properly implemented and tested, but integration disabled in GameBoard component. Ready for final integration work.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2025-09-01T23:45:00Z'
+
+# Always present but only active when WAIVED
+waiver: { active: false }
+
+# Issues (if any) - Use fixed severity: low | medium | high
+top_issues:
+  - id: 'INTEGRATION-001'
+    severity: medium
+    finding: 'Animation system disabled in GameBoard component with hardcoded isAnimating = false'
+    suggested_action: 'Enable animation system integration and implement animation data management'
+    suggested_owner: 'dev'
+  - id: 'TEST-001'
+    severity: medium
+    finding: 'Animation integration not tested end-to-end with actual game moves'
+    suggested_action: 'Test complete animation flow from game moves to visual effects'
+    suggested_owner: 'dev'
+
+# Risk summary (from risk-profile task if run)
+risk_summary:
+  totals: { critical: 0, high: 0, medium: 2, low: 0 }
+  recommendations:
+    must_fix: []
+    monitor:
+      - 'Enable animation system integration in GameBoard component'
+      - 'Test end-to-end animation flow with actual game moves'
+      - 'Verify animation performance on actual devices across all platforms'
+
+# Extended fields (optional but recommended):
+quality_score: 75 # 100 - (0*20 high) - (2*10 medium) - 5 integration gap = 75
+expires: '2025-09-15T23:45:00Z' # 2 weeks from review
+
+evidence:
+  tests_reviewed: 21
+  risks_identified: 2
+  trace:
+    ac_covered: [1, 2, 3, 4, 6] # Most ACs have test coverage through animation hook tests
+    ac_gaps: [5, 7] # Complex scenarios and device testing need integration work
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'No security concerns - UI-layer animations only'
+  performance:
+    status: CONCERNS
+    notes: 'Proper Reanimated 3 worklet implementation, but real-world performance untested due to disabled integration'
+  reliability:
+    status: CONCERNS
+    notes: 'Core implementation solid, but integration reliability unverified'
+  maintainability:
+    status: PASS
+    notes: 'Clean architecture with proper separation of concerns'
+
+recommendations:
+  immediate: # Should address before production
+    - action: 'Enable animation system in GameBoard component'
+      refs: ['components/game/GameBoard.tsx:95']
+    - action: 'Implement animation shared value creation and management'
+      refs: ['components/game/GameBoard.tsx:72-76']
+  future: # Can be addressed later
+    - action: 'Fix accessibility test failures in Tile component'
+      refs: ['__tests__/components/game/Tile.test.tsx']
+    - action: 'Clean up unused lint warnings'
+      refs: ['components/game/Tile.tsx:41']
+    - action: 'Add animation accessibility preferences handling'
+      refs: ['hooks/useAnimations.ts']
+
+history: # Append-only audit trail
+  - at: '2025-09-01T22:30:00Z'
+    gate: FAIL
+    note: 'Initial QA review - critical test infrastructure and performance issues identified'
+  - at: '2025-09-01T23:45:00Z'
+    gate: CONCERNS
+    note: 'Significant improvement - animation tests passing, implementation solid, integration work remaining'
